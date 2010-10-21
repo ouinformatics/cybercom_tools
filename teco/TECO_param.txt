@@ -1,0 +1,12 @@
+Lat	Co2ca	output				
+35.9	3.70E-04	2				
+a1	Ds0	Vcmx0	extku	xfang	alpha	stom_n
+7.0	2000	0.80E-04	0.5	0	0.385	2
+Wsmax	Wsmin					
+35	6	
+rdepth	rfibre
+70.0	0.7
+SLA	LAIMAX	LAIMIN
+1.2E-2	4.5	0.1
+Rootmax	Stemmax	SenS	SenR
+1000.0	1000.0	0.0005	0.0005
