@@ -27,7 +27,7 @@ class TecoModel(Module):
         C_file=self.interpreter.filePool.create_file()
         H2O_file=self.interpreter.filePool.create_file()
         Pools_file=self.interpreter.filePool.create_file()
-        cargs=['/Users/blc/carbon/teco/teconew' ,param_file.name, data_file.name, C_file.name, H2O_file.name, Pools_file.name]
+        cargs=['/Users/blc/my_git/cybercom/teco/teconew' ,param_file.name, data_file.name, C_file.name, H2O_file.name, Pools_file.name]
         cline=list2cmdline(cargs)
         os.system(cline)
         self.setResult("C_File",C_file);

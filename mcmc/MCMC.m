@@ -147,6 +147,6 @@ for simu=1:nsim
     record_index=record_index+1;
 end
 FigurePlot(c_upgraded,cmin,cmax,J_record);
-save output_file
+save(output_file)
 quit
 end
