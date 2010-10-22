@@ -50,6 +50,9 @@ class TecoOutput(Module):
         copyline=['/bin/cp', Pools_file.name, Pools_Write]
         cline=list2cmdline(copyline)
         os.system(cline)
+        self.setResult("C_Out",C_file);
+        self.setResult("H2O_Out",H2O_file);
+        self.setResult("Pools_Out",Pools_file);
 ###############################################################################
 def initialize(*args, **keywords):
     reg = core.modules.module_registry.registry
@@ -92,3 +95,9 @@ def initialize(*args, **keywords):
                       (core.modules.basic_modules.String, 'Path to H2O File'))
     reg.add_input_port(TecoOutput, 'Pools_File',
                       (core.modules.basic_modules.String, 'Path to Pools File'))
+    reg.add_output_port(TecoOutput, 'C_Out',
+                      (core.modules.basic_modules.File, 'Path to Pools File'))
+    reg.add_output_port(TecoOutput, 'H2O_Out',
+                      (core.modules.basic_modules.File, 'Path to Pools File'))
+    reg.add_output_port(TecoOutput, 'Pools_Out',
+                      (core.modules.basic_modules.File, 'Path to Pools File'))

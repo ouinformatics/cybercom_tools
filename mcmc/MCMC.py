@@ -35,6 +35,7 @@ class MCMCOut(Module):
 		copyline=['/bin/cp', M_file.name+'.mat', Output_File]
 		cline=list2cmdline(copyline)
 		os.system(cline)
+		self.setResult("Result_Out", Output_File)		
 
 def initialize(*args, **keywords):
 	reg=core.modules.module_registry.registry
@@ -52,3 +53,5 @@ def initialize(*args, **keywords):
 		(core.modules.basic_modules.File, 'File From Model'))
 	reg.add_input_port(MCMCOut, 'Output_File',
 		(core.modules.basic_modules.String, 'File and path to save from model'))
+	reg.add_output_port(MCMCOut, 'Result_Out',
+		(core.modules.basic_modules.File, 'File From Model'))
