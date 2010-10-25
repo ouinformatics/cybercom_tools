@@ -146,7 +146,7 @@ for simu=1:nsim
     J_record(record_index)=J_last;
     record_index=record_index+1;
 end
-FigurePlot(c_upgraded,cmin,cmax,J_record);
+%FigurePlot(c_upgraded,cmin,cmax,J_record);
 save(output_file)
 quit
 end

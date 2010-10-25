@@ -14,8 +14,6 @@ class MCMCModel(Module):
 		run_type = self.getInputFromPort("RunType")
 		run_count = self.getInputFromPort("Count")
 		output_file = self.interpreter.filePool.create_file()
-#		test_string = '/Users/blc/my_git/cybercom/mcmc/test_this'
-#		os.system('cd /Users/blc/my_git/cybercom/mcmc;/usr/bin/matlab -nodisplay -r "MCMC 3 '+run_count +' '+ output_file.name+' "')
 		copyline=['cd','/Users/blc/my_git/cybercom/mcmc',';','/usr/bin/matlab','-nodisplay','-r','MCMC '+run_type+' '+run_count+' '+output_file.name]
 #		copyline=['cd','/Users/blc/my_git/cybercom/mcmc',';','/usr/bin/matlab','-nodisplay','-r','MCMC '+run_type+' '+run_count+' '+test_string]
 		cline=list2cmdline(copyline)
