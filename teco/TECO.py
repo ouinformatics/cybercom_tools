@@ -1,5 +1,6 @@
 import core.modules.module_registry
 import os
+from subprocess import Popen
 from core.system import list2cmdline
 from core.modules.vistrails_module import Module, ModuleError
 version = "0.0.1"
@@ -16,23 +17,22 @@ class TecoDataLoader(Module):
         os.system('cat '+ pfp + '>' +Param_File.name)
         self.setResult("DataFilePath", Data_File)
         self.setResult("ParameterFilePath", Param_File)
+
 class TecoModel(Module):
     """"TecoModel runs the TECO Carbon Model"""
     def compute(self):
         data_file=self.getInputFromPort("InputDataFile")
         param_file=self.getInputFromPort("InputParameterFile")
-#        C_file=self.getInputFromPort("C_File")
-#        H2O_file=self.getInputFromPort("H2O_File")
-#        Pools_file=self.getInputFromPort("Pools_File")
         C_file=self.interpreter.filePool.create_file()
         H2O_file=self.interpreter.filePool.create_file()
         Pools_file=self.interpreter.filePool.create_file()
         cargs=['/Users/blc/my_git/cybercom/teco/teconew' ,param_file.name, data_file.name, C_file.name, H2O_file.name, Pools_file.name]
-        cline=list2cmdline(cargs)
-        os.system(cline)
+#        cline=list2cmdline(cargs)
+        Popen(cargs)
         self.setResult("C_File",C_file);
         self.setResult("H2O_File",H2O_file);
         self.setResult("Pools_File",Pools_file);
+
 class TecoOutput(Module):
     def compute(self):
         C_file=self.getInputFromPort("C_Out")
@@ -42,14 +42,14 @@ class TecoOutput(Module):
         H2O_Write=self.getInputFromPort("H2O_File")
         Pools_Write=self.getInputFromPort("Pools_File")
         copyline=['/bin/cp', C_file.name, C_Write]
-        cline=list2cmdline(copyline)
-        os.system(cline)
+#        cline=list2cmdline(copyline)
+        Popen(copyline)
         copyline=['/bin/cp', H2O_file.name, H2O_Write]
-        cline=list2cmdline(copyline)
-        os.system(cline)
+#        cline=list2cmdline(copyline)
+        Popen(copyline)
         copyline=['/bin/cp', Pools_file.name, Pools_Write]
-        cline=list2cmdline(copyline)
-        os.system(cline)
+#        cline=list2cmdline(copyline)
+        Popen(copyline)
         self.setResult("C_Out",C_file);
         self.setResult("H2O_Out",H2O_file);
         self.setResult("Pools_Out",Pools_file);

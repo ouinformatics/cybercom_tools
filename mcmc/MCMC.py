@@ -1,5 +1,6 @@
 import core.modules.module_registry
 import os
+from subprocess import Popen
 from core.system import list2cmdline
 from core.modules.vistrails_module import Module, ModuleError
 version = "0.0.1"
@@ -14,14 +15,10 @@ class MCMCModel(Module):
 		run_type = self.getInputFromPort("RunType")
 		run_count = self.getInputFromPort("Count")
 		output_file = self.interpreter.filePool.create_file()
-		copyline=['cd','/Users/blc/my_git/cybercom/mcmc',';','/usr/bin/matlab','-nodisplay','-r','MCMC '+run_type+' '+run_count+' '+output_file.name]
-#		copyline=['cd','/Users/blc/my_git/cybercom/mcmc',';','/usr/bin/matlab','-nodisplay','-r','MCMC '+run_type+' '+run_count+' '+test_string]
-		cline=list2cmdline(copyline)
-		os.system(cline)
-#		print cline
-#		copyline=['/bin/cp',output_file.name,'/Users/blc/my_git/mcmc/test.inter']
-#		cline=list2cmdline(copyline)
-#		os.system(cline)
+		os.chdir('/Users/blc/my_git/cybercom/mcmc')
+		copyline=['/usr/bin/matlab','-nodisplay','-r','MCMC '+run_type+' '+run_count+' '+output_file.name]
+		os.system(list2cmdline(copyline))
+		print list2cmdline(copyline)
 		self.setResult("Output_File", output_file)
 
 class MCMCOut(Module):
@@ -29,10 +26,9 @@ class MCMCOut(Module):
 	def compute(self):
 		M_file=self.getInputFromPort("Model_Out")
 		Output_File=self.getInputFromPort("Output_File")
-		print(M_file.name)
 		copyline=['/bin/cp', M_file.name+'.mat', Output_File]
-		cline=list2cmdline(copyline)
-		os.system(cline)
+		Popen(copyline)
+		print copyline
 		self.setResult("Result_Out", Output_File)		
 
 def initialize(*args, **keywords):
