@@ -110,7 +110,7 @@
 ! open input and output files:
       open(10,file='TECO_param.txt',status='old') !parameters
 	open(13, file='TECO_amb_h.txt',status='old') !climate data
-	writer=3  !The years to run before recording simulation results
+	writer=1  !The years to run before recording simulation results
 	yr_data=1 !How many years' data of the climate dataset has
  
 !     open output files
