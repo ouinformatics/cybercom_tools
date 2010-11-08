@@ -67,7 +67,7 @@ class TecoModel(Module):
         C_file=self.interpreter.filePool.create_file()
         H2O_file=self.interpreter.filePool.create_file()
         Pools_file=self.interpreter.filePool.create_file()
-        cargs=['/Users/blc/my_git/cybercom/teco/teco_cli_param' ,years_of_data, years_before_write, data_file.name, C_file.name, H2O_file.name, Pools_file.name, slat, co2ca, ioput, a1, Ds0, Vcmx0, extkU, xfang, alpha, stom_n, wsmax, wsmin, rdepth, rfibre, SLA, LAIMAX, LAIMIN]
+        cargs=['/Users/blc/my_git/cybercom/teco/teco_cli_parm' ,years_of_data, years_before_write, data_file.name, C_file.name, H2O_file.name, Pools_file.name, slat, co2ca, ioput, a1, Ds0, Vcmx0, extkU, xfang, alpha, stom_n, wsmax, wsmin, rdepth, rfibre, SLA, LAIMAX, LAIMIN]
         cline=list2cmdline(cargs)
         print cline
         os.system(cline)
@@ -103,45 +103,45 @@ class TecoOutput(Module):
 def initialize(*args, **keywords):
     reg = core.modules.module_registry.registry
     reg.add_module(TecoParameters)
-    reg.add_input_port(TecoParameters, 'years_of_data', (core.modules.basic_modules.String, 'Number of years covered by the Amb data'))
-    reg.add_input_port(TecoParameters, 'years_before_write', (core.modules.basic_modules.String, 'Number of years ran before writing data'))
-    reg.add_input_port(TecoParameters, 'slat', (core.modules.basic_modules.String, 'slat'))
-    reg.add_input_port(TecoParameters, 'co2ca', (core.modules.basic_modules.String, 'co2ca'))
-    reg.add_input_port(TecoParameters, 'ioput', (core.modules.basic_modules.String, 'ioput'))
-    reg.add_input_port(TecoParameters, 'a1', (core.modules.basic_modules.String, 'a1'))
-    reg.add_input_port(TecoParameters, 'Ds0', (core.modules.basic_modules.String, 'Ds0'))
-    reg.add_input_port(TecoParameters, 'Vcmx0', (core.modules.basic_modules.String, 'Vcmx0'))
-    reg.add_input_port(TecoParameters, 'extkU', (core.modules.basic_modules.String, 'extkU'))
-    reg.add_input_port(TecoParameters, 'xfang', (core.modules.basic_modules.String, 'xfang'))
-    reg.add_input_port(TecoParameters, 'alpha', (core.modules.basic_modules.String, 'alpha'))
-    reg.add_input_port(TecoParameters, 'stom_n', (core.modules.basic_modules.String, 'stom_n'))
-    reg.add_input_port(TecoParameters, 'wsmax', (core.modules.basic_modules.String, 'wsmax'))
-    reg.add_input_port(TecoParameters, 'wsmin', (core.modules.basic_modules.String, 'wsmin'))
-    reg.add_input_port(TecoParameters, 'rdepth', (core.modules.basic_modules.String, 'rdepth'))
-    reg.add_input_port(TecoParameters, 'rfibre', (core.modules.basic_modules.String, 'rfibre'))
-    reg.add_input_port(TecoParameters, 'SLA', (core.modules.basic_modules.String, 'SLA'))
-    reg.add_input_port(TecoParameters, 'LAIMAX', (core.modules.basic_modules.String, 'LAIMAX'))
-    reg.add_input_port(TecoParameters, 'LAIMIN', (core.modules.basic_modules.String, 'LAIMIN'))
+    reg.add_input_port(TecoParameters, 'years_of_data', (core.modules.basic_modules.String, 'Number of years covered by the Amb data'),defaults=str(['1']))
+    reg.add_input_port(TecoParameters, 'years_before_write', (core.modules.basic_modules.String, 'Number of years ran before writing data'),defaults=str(['3']))
+    reg.add_input_port(TecoParameters, 'slat', (core.modules.basic_modules.String, 'slat'),defaults=str(['35.9']))
+    reg.add_input_port(TecoParameters, 'co2ca', (core.modules.basic_modules.String, 'co2ca'),defaults=str(['3.70E-04']))
+    reg.add_input_port(TecoParameters, 'ioput', (core.modules.basic_modules.String, 'ioput'),defaults=str(['2']))
+    reg.add_input_port(TecoParameters, 'a1', (core.modules.basic_modules.String, 'a1'),defaults=str(['7.0']))
+    reg.add_input_port(TecoParameters, 'Ds0', (core.modules.basic_modules.String, 'Ds0'),defaults=str(['2000']))
+    reg.add_input_port(TecoParameters, 'Vcmx0', (core.modules.basic_modules.String, 'Vcmx0'),defaults=str(['0.80E-04']))
+    reg.add_input_port(TecoParameters, 'extkU', (core.modules.basic_modules.String, 'extkU'),defaults=str(['0.5']))
+    reg.add_input_port(TecoParameters, 'xfang', (core.modules.basic_modules.String, 'xfang'),defaults=str(['0']))
+    reg.add_input_port(TecoParameters, 'alpha', (core.modules.basic_modules.String, 'alpha'),defaults=str(['0.385']))
+    reg.add_input_port(TecoParameters, 'stom_n', (core.modules.basic_modules.String, 'stom_n'),defaults=str(['2']))
+    reg.add_input_port(TecoParameters, 'wsmax', (core.modules.basic_modules.String, 'wsmax'),defaults=str(['35']))
+    reg.add_input_port(TecoParameters, 'wsmin', (core.modules.basic_modules.String, 'wsmin'),defaults=str(['6']))
+    reg.add_input_port(TecoParameters, 'rdepth', (core.modules.basic_modules.String, 'rdepth'),defaults=str(['70.0']))
+    reg.add_input_port(TecoParameters, 'rfibre', (core.modules.basic_modules.String, 'rfibre'),defaults=str(['0.7']))
+    reg.add_input_port(TecoParameters, 'SLA', (core.modules.basic_modules.String, 'SLA'),defaults=str(['1.2E-02']))
+    reg.add_input_port(TecoParameters, 'LAIMAX', (core.modules.basic_modules.String, 'LAIMAX'),defaults=str(['4.5']))
+    reg.add_input_port(TecoParameters, 'LAIMIN', (core.modules.basic_modules.String, 'LAIMIN'),defaults=str(['0.1']))
 
-    reg.add_output_port(TecoParameters, 'years_of_data', (core.modules.basic_modules.String, 'Number of years covered by the Amb data'))
-    reg.add_output_port(TecoParameters, 'years_before_write', (core.modules.basic_modules.String, 'Number of years ran before writing data'))
-    reg.add_output_port(TecoParameters, 'slat', (core.modules.basic_modules.String, 'slat'))
-    reg.add_output_port(TecoParameters, 'co2ca', (core.modules.basic_modules.String, 'co2ca'))
-    reg.add_output_port(TecoParameters, 'ioput', (core.modules.basic_modules.String, 'ioput'))
-    reg.add_output_port(TecoParameters, 'a1', (core.modules.basic_modules.String, 'a1'))
-    reg.add_output_port(TecoParameters, 'Ds0', (core.modules.basic_modules.String, 'Ds0'))
-    reg.add_output_port(TecoParameters, 'Vcmx0', (core.modules.basic_modules.String, 'Vcmx0'))
-    reg.add_output_port(TecoParameters, 'extkU', (core.modules.basic_modules.String, 'extkU'))
-    reg.add_output_port(TecoParameters, 'xfang', (core.modules.basic_modules.String, 'xfang'))
-    reg.add_output_port(TecoParameters, 'alpha', (core.modules.basic_modules.String, 'alpha'))
-    reg.add_output_port(TecoParameters, 'stom_n', (core.modules.basic_modules.String, 'stom_n'))
-    reg.add_output_port(TecoParameters, 'wsmax', (core.modules.basic_modules.String, 'wsmax'))
-    reg.add_output_port(TecoParameters, 'wsmin', (core.modules.basic_modules.String, 'wsmin'))
-    reg.add_output_port(TecoParameters, 'rdepth', (core.modules.basic_modules.String, 'rdepth'))
-    reg.add_output_port(TecoParameters, 'rfibre', (core.modules.basic_modules.String, 'rfibre'))
-    reg.add_output_port(TecoParameters, 'SLA', (core.modules.basic_modules.String, 'SLA'))
-    reg.add_output_port(TecoParameters, 'LAIMAX', (core.modules.basic_modules.String, 'LAIMAX'))
     reg.add_output_port(TecoParameters, 'LAIMIN', (core.modules.basic_modules.String, 'LAIMIN'))
+    reg.add_output_port(TecoParameters, 'LAIMAX', (core.modules.basic_modules.String, 'LAIMAX'))
+    reg.add_output_port(TecoParameters, 'SLA', (core.modules.basic_modules.String, 'SLA'))
+    reg.add_output_port(TecoParameters, 'rfibre', (core.modules.basic_modules.String, 'rfibre'))
+    reg.add_output_port(TecoParameters, 'rdepth', (core.modules.basic_modules.String, 'rdepth'))
+    reg.add_output_port(TecoParameters, 'wsmin', (core.modules.basic_modules.String, 'wsmin'))
+    reg.add_output_port(TecoParameters, 'wsmax', (core.modules.basic_modules.String, 'wsmax'))
+    reg.add_output_port(TecoParameters, 'stom_n', (core.modules.basic_modules.String, 'stom_n'))
+    reg.add_output_port(TecoParameters, 'alpha', (core.modules.basic_modules.String, 'alpha'))
+    reg.add_output_port(TecoParameters, 'xfang', (core.modules.basic_modules.String, 'xfang'))
+    reg.add_output_port(TecoParameters, 'extkU', (core.modules.basic_modules.String, 'extkU'))
+    reg.add_output_port(TecoParameters, 'Vcmx0', (core.modules.basic_modules.String, 'Vcmx0'))
+    reg.add_output_port(TecoParameters, 'Ds0', (core.modules.basic_modules.String, 'Ds0'))
+    reg.add_output_port(TecoParameters, 'a1', (core.modules.basic_modules.String, 'a1'))
+    reg.add_output_port(TecoParameters, 'ioput', (core.modules.basic_modules.String, 'ioput'))
+    reg.add_output_port(TecoParameters, 'co2ca', (core.modules.basic_modules.String, 'co2ca'))
+    reg.add_output_port(TecoParameters, 'slat', (core.modules.basic_modules.String, 'slat'))
+    reg.add_output_port(TecoParameters, 'years_before_write', (core.modules.basic_modules.String, 'Number of years ran before writing data'))
+    reg.add_output_port(TecoParameters, 'years_of_data', (core.modules.basic_modules.String, 'Number of years covered by the Amb data'))
 
     reg.add_module(TecoDataLoader)
     reg.add_input_port(TecoDataLoader, 'InputDataFilePath',
@@ -158,12 +158,12 @@ def initialize(*args, **keywords):
 #                      (core.modules.basic_modules.File, 'Path to Parameter File'))
     reg.add_input_port(TecoModel, 'InputDataFile',
                       (core.modules.basic_modules.File, 'Path to Data File'))
-    reg.add_input_port(TecoModel, 'C_File',
-                      (core.modules.basic_modules.File, 'Path to Data File'))
-    reg.add_input_port(TecoModel, 'H2O_File',
-                      (core.modules.basic_modules.File, 'Path to Data File'))
-    reg.add_input_port(TecoModel, 'Pools_File',
-                      (core.modules.basic_modules.File, 'Path to Data File'))
+#    reg.add_input_port(TecoModel, 'C_File',
+#                      (core.modules.basic_modules.File, 'Path to Data File'))
+#    reg.add_input_port(TecoModel, 'H2O_File',
+#                      (core.modules.basic_modules.File, 'Path to Data File'))
+#    reg.add_input_port(TecoModel, 'Pools_File',
+#                      (core.modules.basic_modules.File, 'Path to Data File'))
     reg.add_input_port(TecoModel, 'years_of_data', (core.modules.basic_modules.String, 'Number of years covered by the Amb data'))
     reg.add_input_port(TecoModel, 'years_before_write', (core.modules.basic_modules.String, 'Number of years ran before writing data'))
     reg.add_input_port(TecoModel, 'slat', (core.modules.basic_modules.String, 'slat'))
@@ -184,12 +184,12 @@ def initialize(*args, **keywords):
     reg.add_input_port(TecoModel, 'LAIMAX', (core.modules.basic_modules.String, 'LAIMAX'))
     reg.add_input_port(TecoModel, 'LAIMIN', (core.modules.basic_modules.String, 'LAIMIN'))
 
-    reg.add_output_port(TecoModel, 'C_File',
-                      (core.modules.basic_modules.File, 'Path to C Output File'))
-    reg.add_output_port(TecoModel, 'H2O_File',
-                      (core.modules.basic_modules.File, 'Path to H2O Output File'))
     reg.add_output_port(TecoModel, 'Pools_File',
                       (core.modules.basic_modules.File, 'Path to Pools Output File'))
+    reg.add_output_port(TecoModel, 'H2O_File',
+                      (core.modules.basic_modules.File, 'Path to H2O Output File'))
+    reg.add_output_port(TecoModel, 'C_File',
+                      (core.modules.basic_modules.File, 'Path to C Output File'))
 
     reg.add_module(TecoOutput)
 
@@ -206,9 +206,9 @@ def initialize(*args, **keywords):
     reg.add_input_port(TecoOutput, 'Pools_File',
                       (core.modules.basic_modules.String, 'Path to Pools File'))
 
-    reg.add_output_port(TecoOutput, 'C_Out',
-                      (core.modules.basic_modules.File, 'Path to Cs File'))
-    reg.add_output_port(TecoOutput, 'H2O_Out',
-                      (core.modules.basic_modules.File, 'Path to H2O File'))
     reg.add_output_port(TecoOutput, 'Pools_Out',
                       (core.modules.basic_modules.File, 'Path to Pools File'))
+    reg.add_output_port(TecoOutput, 'H2O_Out',
+                      (core.modules.basic_modules.File, 'Path to H2O File'))
+    reg.add_output_port(TecoOutput, 'C_Out',
+                      (core.modules.basic_modules.File, 'Path to Cs File'))
