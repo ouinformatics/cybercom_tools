@@ -1,4 +1,16 @@
 #!/usr/bin/env python
+"""
+Created: Nov 15, 2010
+Author: Jonah Duckles <jduckles@ou.edu>
+ 
+ Tool for databse table extraction based on "RUN_ID" 
+ 
+ Currently will export to following formats:
+  - python dictionary
+  - json 
+  - csv
+  - yaml
+"""
 
 import sys
 import csv
@@ -57,13 +69,14 @@ def as_yaml( res ):
 def get_rows( query_options, run_id, as_method='dict' ):
     """ Build query based on options dictionary 
             Example: 
-                query_options = dict( columns="to_char(time_index, 'YYYY/MM/DD HH:MM:SS') as time_index,pyear,dayyear,hours,tair,tsoil,vdef,rh,precp,rah_h", table="TECO_INP_RUN_ID",  where='run_id = :run_id' )
+                query_options = dict( columns="to_char(time_index, 'YYYY/MM/DD HH:MM:SS') as time_index,pyear,dayyear,hours,tair,tsoil,vdef,rh,precp,rah_h", table="TECO_INP_RUN_ID" )
                 get_rows(query_options, 500, 'json')
          
             NOTE: Where clause isn't very generalized and is fragile for the moment.
 
     """
-    query = 'select %s from %s where %s' % (options['columns'], options['table'], options['where'])
+    where = 'run_id = :run_id'
+    query = 'select %s from %s where %s' % (query_options['columns'], query_options['table'], where)
     res = cur.execute(query, dict(run_id=run_id))
     header = get_cols( res )
     if as_method == 'dict':
@@ -77,5 +90,16 @@ def get_rows( query_options, run_id, as_method='dict' ):
     else:
         return res.fetchall()
 
+def main(argv = None):
+    if argv is None:
+        argv = sys.argv
+    options = {}
+    options.update(columns=argv[1],table=argv[2],run_id=argv[3],as_method=argv[4])
+    return get_rows(options, options['run_id'], options['as_method'])
+
+if __name__ == "__main__":
+    sys.exit(main())
+    
+    
 
 
