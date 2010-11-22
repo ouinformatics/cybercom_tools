@@ -47,7 +47,7 @@ class TecoDBLoader(Module):
         ifp = self.getInputFromPort("RunID")
         Data_File=self.interpreter.filePool.create_file()
 #        cline=['/Users/blc/my_git/cybercom/teco/INP_2_TECO_file.py',ifp,'/Users/blc/my_git/cybercom/teco/hope_test']
-        cline=['/Users/blc/my_git/cybercom/teco/INP_2_TECO_file.py',ifp,Data_File.name]
+        cline=['/Users/blc/my_git/cybercom/teco/INP_2_TECO.py',ifp,'TECO1','eco/b00mer@129.15.138.12:1521/oubcf',Data_File.name]
         print(cline)
         Popen(cline,env={'DYLD_LIBRARY_PATH':'/usr/local/oracle/instantclient_10_2'}).wait()
         self.setResult("DataFilePath", Data_File)
@@ -170,6 +170,8 @@ def initialize(*args, **keywords):
                       (core.modules.basic_modules.String, 'RunID'),defaults=str(['500']))
     reg.add_output_port(TecoDBLoader, "DataFilePath",
                        (core.modules.basic_modules.File, 'Path and Filename for datafile to model'))
+    reg.add_output_port(TecoDBLoader, "RunID",
+                       (core.modules.basic_modules.String, 'RunID'))
 
     reg.add_module(TecoModel)
 #    reg.add_input_port(TecoModel, 'InputParameterFile',
