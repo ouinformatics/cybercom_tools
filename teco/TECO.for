@@ -118,10 +118,10 @@
       open(62,file='TECO_H2O_daily.csv')
       open(63,file='TECO_pools_C.csv')
       read(13,11) commts
-      write(61,*)'d,LAI,GP,NP,N_L,N_S,N_R,RaL,RaR,
-     &RhF,Rhs1,Rhs2,Rhs3,NE,bmR,bmL,bmS'
-      write(62,*)'d,P,Tr,E,R,ws,fw,topfw,omega, 
-     &wc1,wc2,wc3,wc4,wc5,wc6,wc7,wc8,wc9,wc10'
+      write(61,*)'d,LAI,GP,NP,N_L,N_S,N_R,RaL,RaR,',
+     &'RhF,Rhs1,Rhs2,Rhs3,NE,bmR,bmL,bmS'
+      write(62,*)'d,P,Tr,E,R,ws,fw,topfw,omega,',
+     &'wc1,wc2,wc3,wc4,wc5,wc6,wc7,wc8,wc9,wc10'
       write(63,*)'y,Q_l,Q_w,Q_r1,Q_r2,Q_r3,Q_cs,Q_f,Q_s1,Q_s2,Q_s3'
 
 !c===================================================
