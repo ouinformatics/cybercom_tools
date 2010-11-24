@@ -1,6 +1,8 @@
 import core.modules.module_registry
 import os
+import time
 from subprocess import Popen
+from subprocess import PIPE
 from core.system import list2cmdline
 from core.modules.vistrails_module import Module, ModuleError
 version = "0.0.1"
@@ -33,30 +35,32 @@ class TecoDataLoader(Module):
     """TecoDataLoader is a data importing module for the TECO carbon model"""
     def compute(self):
         ifp = self.getInputFromPort("InputDataFilePath")
-#        pfp = self.getInputFromPort("InputParamFilePath")
         Data_File=self.interpreter.filePool.create_file()
-#        Param_File=self.interpreter.filePool.create_file()
         os.system('cat '+ ifp + '>' +Data_File.name)
-#        os.system('cat '+ pfp + '>' +Param_File.name)
         self.setResult("DataFilePath", Data_File)
-#        self.setResult("ParameterFilePath", Param_File)
 
 class TecoDBLoader(Module):
     """TecoDBLoader is a data importing module for the TECO carbon model"""
     def compute(self):
         ifp = self.getInputFromPort("RunID")
         Data_File=self.interpreter.filePool.create_file()
-#        cline=['/Users/blc/my_git/cybercom/teco/INP_2_TECO_file.py',ifp,'/Users/blc/my_git/cybercom/teco/hope_test']
-        cline=['/Users/blc/my_git/cybercom/teco/INP_2_TECO.py',ifp,'TECO1','eco/b00mer@129.15.138.12:1521/oubcf',Data_File.name]
-        print(cline)
-        Popen(cline,env={'DYLD_LIBRARY_PATH':'/usr/local/oracle/instantclient_10_2'}).wait()
+        cline=['/Users/blc/my_git/cybercom/teco/INP_2_TECO.py',ifp,'TECO1',Data_File.name]
+        Popen(cline,env={'DYLD_LIBRARY_PATH':'/usr/local/oracle/instantclient_10_2','TNS_ADMIN':'/Users/blc/.oracle'}).wait()
         self.setResult("DataFilePath", Data_File)
+
+class TecoRunID(Module):
+    def compute(self):
+        cline=['/Users/blc/my_git/cybercom/teco/get_run_id.py']
+        cri = Popen(cline,env={'DYLD_LIBRARY_PATH':'/usr/local/oracle/instantclient_10_2','TNS_ADMIN':'/Users/blc/.oracle'},stdout=PIPE)
+        time.sleep(5)
+        run_id = cri.communicate()[0].strip()
+        print run_id
+        self.setResult("RUN_ID", run_id)
 
 class TecoModel(Module):
     """"TecoModel runs the TECO Carbon Model"""
     def compute(self):
         data_file=self.getInputFromPort("InputDataFile")
-#        param_file=self.getInputFromPort("InputParameterFile")
         years_of_data=self.getInputFromPort("years_of_data")
         years_before_write=self.getInputFromPort("years_before_write")
         slat=self.getInputFromPort("slat")
@@ -81,9 +85,7 @@ class TecoModel(Module):
         Pools_file=self.interpreter.filePool.create_file()
         cargs=['/Users/blc/my_git/cybercom/teco/teco_cli_parm' ,years_of_data, years_before_write, data_file.name, C_file.name, H2O_file.name, Pools_file.name, slat, co2ca, ioput, a1, Ds0, Vcmx0, extkU, xfang, alpha, stom_n, wsmax, wsmin, rdepth, rfibre, SLA, LAIMAX, LAIMIN]
         cline=list2cmdline(cargs)
-        print(cline)
         os.system(cline)
-#        Popen(cargs)
         self.setResult("C_File",C_file);
         self.setResult("H2O_File",H2O_file);
         self.setResult("Pools_File",Pools_file);
@@ -98,19 +100,26 @@ class TecoOutput(Module):
         Pools_Write=self.getInputFromPort("Pools_File")
         copyline=['/bin/cp', C_file.name, C_Write]
         cline=list2cmdline(copyline)
-#        Popen(copyline)
         os.system(cline)
         copyline=['/bin/cp', H2O_file.name, H2O_Write]
         cline=list2cmdline(copyline)
-#        Popen(copyline)
         os.system(cline)
         copyline=['/bin/cp', Pools_file.name, Pools_Write]
         cline=list2cmdline(copyline)
-#        Popen(copyline)
         os.system(cline)
         self.setResult("C_Out",C_file);
         self.setResult("H2O_Out",H2O_file);
         self.setResult("Pools_Out",Pools_file);
+
+class TecoDBOutput(Module):
+    def compute(self):
+        RUN_ID=self.getInputFromPort("RUN_ID")
+        C_Write=self.getInputFromPort("C_Out")
+        H2O_Write=self.getInputFromPort("H2O_Out")
+        Pools_Write=self.getInputFromPort("Pools_Out")
+        cline=['/Users/blc/my_git/cybercom/teco/test.py',RUN_ID,C_Write.name,H2O_Write.name,Pools_Write.name]
+        Popen(cline,env={'DYLD_LIBRARY_PATH':'/usr/local/oracle/instantclient_10_2','TNS_ADMIN':'/Users/blc/.oracle'}).wait()
+        
 ###############################################################################
 def initialize(*args, **keywords):
     reg = core.modules.module_registry.registry
@@ -158,12 +167,8 @@ def initialize(*args, **keywords):
     reg.add_module(TecoDataLoader)
     reg.add_input_port(TecoDataLoader, 'InputDataFilePath',
                       (core.modules.basic_modules.String, 'Path and Filename for datafile'))
-#    reg.add_input_port(TecoDataLoader, 'InputParamFilePath',
-#                      (core.modules.basic_modules.String, 'Path and Filename for paramaeter file'))
     reg.add_output_port(TecoDataLoader, "DataFilePath",
                        (core.modules.basic_modules.File, 'Path and Filename for datafile to model'))
-#    reg.add_output_port(TecoDataLoader, "ParameterFilePath",
-#                       (core.modules.basic_modules.File, 'Path and Filename for parameter to model'))
 
     reg.add_module(TecoDBLoader)
     reg.add_input_port(TecoDBLoader, 'RunID',
@@ -174,16 +179,8 @@ def initialize(*args, **keywords):
                        (core.modules.basic_modules.String, 'RunID'))
 
     reg.add_module(TecoModel)
-#    reg.add_input_port(TecoModel, 'InputParameterFile',
-#                      (core.modules.basic_modules.File, 'Path to Parameter File'))
     reg.add_input_port(TecoModel, 'InputDataFile',
                       (core.modules.basic_modules.File, 'Path to Data File'))
-#    reg.add_input_port(TecoModel, 'C_File',
-#                      (core.modules.basic_modules.File, 'Path to Data File'))
-#    reg.add_input_port(TecoModel, 'H2O_File',
-#                      (core.modules.basic_modules.File, 'Path to Data File'))
-#    reg.add_input_port(TecoModel, 'Pools_File',
-#                      (core.modules.basic_modules.File, 'Path to Data File'))
     reg.add_input_port(TecoModel, 'years_of_data', (core.modules.basic_modules.String, 'Number of years covered by the Amb data'))
     reg.add_input_port(TecoModel, 'years_before_write', (core.modules.basic_modules.String, 'Number of years ran before writing data'))
     reg.add_input_port(TecoModel, 'slat', (core.modules.basic_modules.String, 'slat'))
@@ -232,3 +229,19 @@ def initialize(*args, **keywords):
                       (core.modules.basic_modules.File, 'Path to H2O File'))
     reg.add_output_port(TecoOutput, 'C_Out',
                       (core.modules.basic_modules.File, 'Path to Cs File'))
+
+    reg.add_module(TecoDBOutput)
+    
+    reg.add_input_port(TecoDBOutput, 'RUN_ID',
+                      (core.modules.basic_modules.String, 'RUN_ID'))
+    reg.add_input_port(TecoDBOutput, 'C_Out',
+                      (core.modules.basic_modules.File, 'C File from model'))
+    reg.add_input_port(TecoDBOutput, 'H2O_Out',
+                      (core.modules.basic_modules.File, 'H2O File from model'))
+    reg.add_input_port(TecoDBOutput, 'Pools_Out',
+                      (core.modules.basic_modules.File, 'C File from model'))
+
+    reg.add_module(TecoRunID)
+
+    reg.add_output_port(TecoRunID, 'RUN_ID',
+                       (core.modules.basic_modules.String, 'RUN_ID'))
