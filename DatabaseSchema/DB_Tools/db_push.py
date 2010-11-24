@@ -3,19 +3,74 @@ Created on Nov 22, 2010
 
 @author: stac3294
 
-RUN_ID Database index of Model Run from DB Table DT_MODEL_RUN
-File_Type ('C_FILE','H2O_FILE','Pool_File')
-objFile File object
-'''
-import shlex, sys, datetime
-import cx_Oracle as db
 
+'''
+import shlex, sys, datetime,StringIO, tempfile
+import cx_Oracle as db
+ConnSTR= 'eco/b00mer@oubcf'
+
+def INP_2_DB(Filename):
+    '''
+    TECO input file is loaded into database.
+    '''
+    try: # DB Connection
+        conn = db.connect(ConnSTR)
+    except Exception as ConnErr:
+        print 'Unable to connect to Database '
+        print ConnErr
+        print type(ConnErr)
+        sys.exit() 
+        
+    c1 = conn.cursor()
+    input = open(Filename)
+    header = shlex.split(input.readline())
+    DRow =[]
+    RUN_ID = getRUN_ID()
+    i=0
+    for j in input:
+       DRow = shlex.split(j)
+       d = datetime.datetime(int(DRow[0]),1,1,0,0,0)
+       delta = datetime.timedelta(days=(float(DRow[1])-1)+(float(DRow[2])/24))
+       TS = d + delta
+       for k in range(len(header)):
+           runSQL= 'INSERT INTO ECO.MDRI_PARAMETER ( RUN_ID, PARAM_ID, VAR_NAME, PVALUE, PARAM_ORDER, TIME_INDEX, DATA_TYPE) VALUES ('
+           runSQL = runSQL + str(RUN_ID) + ", " + str(i) + ", '" + header[k] + "', '" + DRow[k] + "'," + str(k)+ ", TO_DATE('" + str(TS) + "','YYYY-MM-DD HH24:MI:SS'),'DATA_INPUT')"
+           #print runSQL
+           c1.execute(runSQL)
+           i +=1
+   
+    c1.close() 
+    conn.commit() # 
+    print str(i) + ' records inserted'
+
+def getRUN_ID():
+    '''
+    Returns the next Sequence value for RUN_ID
+    '''
+    try: # DB Connection
+        conn = db.connect(ConnSTR)
+    except Exception as ConnErr:
+        print 'Unable to connect to Database '
+        print ConnErr
+        print type(ConnErr)
+        sys.exit() 
+    c1 = conn.cursor()
+    c1.execute('SELECT SEQ_RUN_ID.NEXTVAL FROM DUAL')
+    row =c1.fetchone()
+    return int(row[0])
 def TECO2DB(RUN_ID,File_Type,objFile):
+    '''
+    TECO Output files are passed and inputed into the Database.
+    
+    RUN_ID Database index of Model Run from DB Table DT_MODEL_RUN
+    File_Type ('C_FILE','H2O_FILE','Pool_File')
+    ObjFile File object
+    '''
 #    f1 = open('C:\App\Database\TECO_Data\TECO_C_daily.csv','r')#objFile
     if not(File_Type.upper() == 'C_FILE' or File_Type.upper() == 'H2O_FILE' or File_Type.upper() == 'POOL_FILE'): sys.exit('File_Type must be H2O_FILE, POOL_FILE, or C_FILE')
     f1 = objFile
     f1.seek(0,0)# Set current position at the beginning of the file.
-    ConnSTR= 'eco/b00mer@129.15.138.12:1521/oubcf'
+    
 #    connSTR1= U'eco/b00mer@129.15.138.13:1521/oubcf'
     try: # DB Connection
         conn = db.connect(ConnSTR)
@@ -55,5 +110,48 @@ def TECO2DB(RUN_ID,File_Type,objFile):
     print str(P_ID) + " rows insert into Database."
     conn.commit()
     conn.close()
+def getModelINP(RUN_ID,Model_ID):
+    '''
+    Retrieves Input parameters from DB and returns file object.
+    RUN_ID and Model_ID needed to retrieve data from DB
+    '''
+    try:
+        conn = db.connect(ConnSTR)
+    except Exception as ConnErr:
+        print 'Unable to connect to Database '
+        print ConnErr
+        print type(ConnErr)
+        sys.exit()  
+    try:
+        f1 = tempfile.NamedTemporaryFile(delete=False)#open('somefile.txt','r+')
+        #f1 = StringIO.StringIO()
+        c1 = conn.cursor()
+        c2 = conn.cursor()
+        prm = conn.cursor()
+        prm.execute("Select PNAME,PVALUE From RT_PARAMETERS Where PARMA_TYPE=0 and MODEL_ID = 'TECO1'") #:1 ',(Model_ID,))
+        wd =[]
+        sql=''
+        for par in prm:
+            if par[0] == 'Header': head = par[1]
+            if par[0] == 'FWidth': temp = par[1]
+            if par[0] == 'SQL': sql = par[1]
+        wd = temp.split(',')
+        f1.write(head + '\n') #' year doy hour tair Tsoil VDEF RH precp rad_h'
+        c1.callproc(sql,(RUN_ID,c2)) #TECO_INP_MOD_ID',(RUN_ID,c2))
+        for p in c2:
+            z=0
+            row =''
+            for i in p:
+                row = row + i.rjust(int(wd[z]),' ')
+                z +=1
+            f1.write(row + '\n' ) 
+    except Exception as inst:
+        print type(inst)     # the exception instance
+        print inst
+        sys.exit()
+    c2.close()   
+    c1.close() 
+    conn.close()
+    return f1
 
         

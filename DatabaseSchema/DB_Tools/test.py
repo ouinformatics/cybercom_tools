@@ -5,8 +5,8 @@ Created on Nov 22, 2010
 '''
 import db_push as db1
 import cx_Oracle as db
-
-ConnSTR= 'eco/b00mer@129.15.138.12:1521/oubcf'
+'''
+ConnSTR= 'eco/b00mer@oubcf'
 try: # DB Connection
     conn = db.connect(ConnSTR)
 except Exception as ConnErr:
@@ -29,3 +29,12 @@ f1.close()
 f2.close()
 f3.close()
 conn.close()
+'''
+
+#db1.INP_2_DB('C:\App\TECO_amb_h.txt')
+f2=db1.getModelINP(500,'TECO1')
+f2.seek(0,0)
+for line in f2.readlines():
+    print line
+    
+#print f2.readlines()
