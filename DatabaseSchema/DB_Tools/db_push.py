@@ -66,12 +66,10 @@ def TECO2DB(RUN_ID,File_Type,objFile):
     File_Type ('C_FILE','H2O_FILE','Pool_File')
     ObjFile File object
     '''
-#    f1 = open('C:\App\Database\TECO_Data\TECO_C_daily.csv','r')#objFile
     if not(File_Type.upper() == 'C_FILE' or File_Type.upper() == 'H2O_FILE' or File_Type.upper() == 'POOL_FILE'): sys.exit('File_Type must be H2O_FILE, POOL_FILE, or C_FILE')
     f1 = objFile
     f1.seek(0,0)# Set current position at the beginning of the file.
     
-#    connSTR1= U'eco/b00mer@129.15.138.13:1521/oubcf'
     try: # DB Connection
         conn = db.connect(ConnSTR)
     except Exception as ConnErr:
@@ -84,7 +82,7 @@ def TECO2DB(RUN_ID,File_Type,objFile):
     temps = f1.readline()
     temps = temps.replace(' ','') 
     header = shlex.split(temps.replace(',',' '))     
-    sqlyear = "SELECT DISTINCT MDRI_PARAMETER.PVALUE FROM MDRI_PARAMETER WHERE RUN_ID=500 AND PARAM_ORDER=0"#" + str(RUN_ID) + " AND PARAM_ORDER=0"
+    sqlyear = "SELECT DISTINCT MDRI_PARAMETER.PVALUE FROM MDRI_PARAMETER WHERE RUN_ID=500 AND PARAM_ORDER=0 AND DATA_TYPE ='DATA_INPUT'"#" + str(RUN_ID) + " AND PARAM_ORDER=0"
     
     c2.execute(sqlyear)
     row =c2.fetchone() 
@@ -110,7 +108,7 @@ def TECO2DB(RUN_ID,File_Type,objFile):
     print str(P_ID) + " rows insert into Database."
     conn.commit()
     conn.close()
-def getModelINP(RUN_ID,Model_ID):
+def getModelINP(RUN_ID,Model_ID,OUTFILE):
     '''
     Retrieves Input parameters from DB and returns file object.
     RUN_ID and Model_ID needed to retrieve data from DB
@@ -123,8 +121,9 @@ def getModelINP(RUN_ID,Model_ID):
         print type(ConnErr)
         sys.exit()  
     try:
-        f1 = tempfile.NamedTemporaryFile(delete=False)#open('somefile.txt','r+')
+        #f1 = tempfile.NamedTemporaryFile(delete=False)#open('OUTFILE','r+')
         #f1 = StringIO.StringIO()
+        f1 = open(OUTFILE,'w')
         c1 = conn.cursor()
         c2 = conn.cursor()
         prm = conn.cursor()
@@ -148,7 +147,7 @@ def getModelINP(RUN_ID,Model_ID):
     except Exception as inst:
         print type(inst)     # the exception instance
         print inst
-        sys.exit()
+        #sys.exit()
     c2.close()   
     c1.close() 
     conn.close()
