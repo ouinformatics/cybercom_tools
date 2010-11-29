@@ -42,10 +42,9 @@ def INP_2_DB(Filename):
     c1.close() 
     conn.commit() # 
     print str(i) + ' records inserted'
-
-def getRUN_ID():
+def getRUN_ID(RUN_NAME, RUN_DESC, MODEL_ID):
     '''
-    Returns the next Sequence value for RUN_ID
+    Returns the next Sequence value for RUN_ID. Insert Record of RUN_NAME and DESC in DT_MODEL_RUN
     '''
     try: # DB Connection
         conn = db.connect(ConnSTR)
@@ -57,7 +56,33 @@ def getRUN_ID():
     c1 = conn.cursor()
     c1.execute('SELECT SEQ_RUN_ID.NEXTVAL FROM DUAL')
     row =c1.fetchone()
+    TimeS = str(datetime.datetime.now())
+    TS = TimeS.split('.')
+    print TS[0]
+    sql='INSERT INTO ECO.DT_MODEL_RUN ( RUN_ID, RUN_NAME, DESCRIPTION, START_TIMESTAMP, END_TIMESTAMP, TIME_ID, LOC_ID, MODEL_ID) VALUES ('
+    sql = sql + str(row[0]) + ", '" + RUN_NAME + "', '" + RUN_DESC + "', " + " TO_DATE('" + str(TS[0]) + "','YYYY-MM-DD HH24:MI:SS'),Null , NULL, NULL,'" + MODEL_ID + "')"
+    print sql
+    c1.execute(sql)
+    conn.commit()
+    conn.close()
     return int(row[0])
+'''
+def getRUN_ID():
+    
+    #Returns the next Sequence value for RUN_ID
+    
+    try: # DB Connection
+        conn = db.connect(ConnSTR)
+    except Exception as ConnErr:
+        print 'Unable to connect to Database '
+        print ConnErr
+        print type(ConnErr)
+        sys.exit() 
+    c1 = conn.cursor()
+    c1.execute('SELECT SEQ_RUN_ID.NEXTVAL FROM DUAL')
+    row =c1.fetchone()
+    return int(row[0])
+'''
 def TECO2DB(RUN_ID,File_Type,objFile):
     '''
     TECO Output files are passed and inputed into the Database.
@@ -84,7 +109,7 @@ def TECO2DB(RUN_ID,File_Type,objFile):
     temps = f1.readline()
     temps = temps.replace(' ','') 
     header = shlex.split(temps.replace(',',' '))     
-    sqlyear = "SELECT DISTINCT MDRI_PARAMETER.PVALUE FROM MDRI_PARAMETER WHERE RUN_ID=500 AND PARAM_ORDER=0"#" + str(RUN_ID) + " AND PARAM_ORDER=0"
+    sqlyear = "SELECT DISTINCT MDRI_PARAMETER.PVALUE FROM MDRI_PARAMETER WHERE RUN_ID=500 AND PARAM_ORDER=0 AND DATA_TYPE ='DATA_INPUT'"#" + str(RUN_ID) + " AND PARAM_ORDER=0"
     
     c2.execute(sqlyear)
     row =c2.fetchone() 
@@ -144,14 +169,59 @@ def getModelINP(RUN_ID,Model_ID):
             for i in p:
                 row = row + i.rjust(int(wd[z]),' ')
                 z +=1
-            f1.write(row + '\n' ) 
+            f1.write(row + '\n') 
     except Exception as inst:
         print type(inst)     # the exception instance
         print inst
-        sys.exit()
+        #sys.exit()
     c2.close()   
     c1.close() 
     conn.close()
     return f1
 
-        
+def setRunParameter(RUN_ID,Header,pvalue): #List of header and list of values 
+    
+    try:
+        conn = db.connect(ConnSTR)
+    except Exception as ConnErr:
+        print 'Unable to connect to Database '
+        print ConnErr
+        print type(ConnErr)
+        sys.exit() 
+    try:
+        c1 = conn.cursor()  
+      
+        for param in range(len(Header)):
+            sql = 'INSERT INTO ECO.MDRI_PARAMETER ( RUN_ID, PARAM_ID, DATA_TYPE, VAR_NAME, PVALUE, PARAM_ORDER, TIME_INDEX) VALUES ( '
+            sql = sql + str(RUN_ID) + ', ' + str(param) + ", 'RUN_PARAM', '" + Header[param] + "', '" + pvalue[param] + "', " + str(param) + ", NULL)"
+            c1.execute(sql)
+    except Exception as modErr:
+        print 'Error inserting parameters into Database '
+        print modErr
+        print type(modErr)
+        conn.close()
+        sys.exit()
+    conn.commit()    
+    conn.close() 
+def getRunParameter(RUN_ID): #Return Dictionary with List of Header and Values 
+    try:
+        conn = db.connect(ConnSTR)
+    except Exception as ConnErr:
+        print 'Unable to connect to Database '
+        print ConnErr
+        print type(ConnErr)
+        sys.exit()      
+    try:
+        c1 = conn.cursor()  
+        sql = "SELECT VAR_NAME,PVALUE FROM MDRI_PARAMETER WHERE RUN_ID=" + str(RUN_ID) + " AND DATA_TYPE='RUN_PARAM'"
+        d={}
+        c1.execute(sql)
+        #for key in c1:
+        #    d=key[0] = key[1]
+        return c1
+    except Exception as modErr:
+        print 'Error returning parameters into Database '
+        print modErr
+        print type(modErr)
+        conn.close()
+        sys.exit()       
