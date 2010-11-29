@@ -9,7 +9,7 @@ import shlex, sys, datetime,StringIO, tempfile
 import cx_Oracle as db
 ConnSTR= 'eco/b00mer@oubcf'
 
-def INP_2_DB(Filename):
+def INP_2_DB(RUNID, Filename):
     '''
     TECO input file is loaded into database.
     '''
@@ -25,7 +25,7 @@ def INP_2_DB(Filename):
     input = open(Filename)
     header = shlex.split(input.readline())
     DRow =[]
-    RUN_ID = getRUN_ID()
+    RUN_ID = RUNID #getRUN_ID()
     i=0
     for j in input:
        DRow = shlex.split(j)
@@ -58,10 +58,8 @@ def getRUN_ID(RUN_NAME, RUN_DESC, MODEL_ID):
     row =c1.fetchone()
     TimeS = str(datetime.datetime.now())
     TS = TimeS.split('.')
-    print TS[0]
     sql='INSERT INTO ECO.DT_MODEL_RUN ( RUN_ID, RUN_NAME, DESCRIPTION, START_TIMESTAMP, END_TIMESTAMP, TIME_ID, LOC_ID, MODEL_ID) VALUES ('
     sql = sql + str(row[0]) + ", '" + RUN_NAME + "', '" + RUN_DESC + "', " + " TO_DATE('" + str(TS[0]) + "','YYYY-MM-DD HH24:MI:SS'),Null , NULL, NULL,'" + MODEL_ID + "')"
-    print sql
     c1.execute(sql)
     conn.commit()
     conn.close()
@@ -180,7 +178,14 @@ def getModelINP(RUN_ID,Model_ID):
     return f1
 
 def setRunParameter(RUN_ID,Header,pvalue): #List of header and list of values 
-    
+    '''
+    example
+    Header ='Lat,Co2ca,output,a1,Ds0,Vcmx0,extku,xfang,alpha,stom_n,Wsmax,Wsmin,rdepth,rfibre,SLA,LAIMAX,LAIMIN,Rootmax,Stemmax,SenS,SenR'
+    pvalue = '35.9,3.70E-04,2,7.0,2000,0.80E-04,0.5,0,0.385,2,35,6,70.0,0.7,1.2E-2,4.5,0.1,1000.0,1000.0,0.0005,0.0005'
+    H = shlex.split(Header.replace(',',' '))
+    P = shlex.split(pvalue.replace(',',' '))
+    db1.setRunParameter(500, H, P)
+    '''
     try:
         conn = db.connect(ConnSTR)
     except Exception as ConnErr:
@@ -204,6 +209,12 @@ def setRunParameter(RUN_ID,Header,pvalue): #List of header and list of values
     conn.commit()    
     conn.close() 
 def getRunParameter(RUN_ID): #Return Dictionary with List of Header and Values 
+    '''
+    Example
+    f= db1.getRunParameter(500)
+    for item in f:
+    print 'Parameter Name: ' + item[0] + ' Value equals  '+ item[1]
+    '''
     try:
         conn = db.connect(ConnSTR)
     except Exception as ConnErr:
