@@ -25,6 +25,8 @@ def INP_2_DB(RUNID, Filename):
     input = open(Filename)
     header = shlex.split(input.readline())
     DRow =[]
+    temp = []
+    listDict =[]
     RUN_ID = RUNID #getRUN_ID()
     i=0
     for j in input:
@@ -33,15 +35,37 @@ def INP_2_DB(RUNID, Filename):
        delta = datetime.timedelta(days=(float(DRow[1])-1)+(float(DRow[2])/24))
        TS = d + delta
        for k in range(len(header)):
-           runSQL= 'INSERT INTO ECO.MDRI_PARAMETER ( RUN_ID, PARAM_ID, VAR_NAME, PVALUE, PARAM_ORDER, TIME_INDEX, DATA_TYPE) VALUES ('
-           runSQL = runSQL + str(RUN_ID) + ", " + str(i) + ", '" + header[k] + "', '" + DRow[k] + "'," + str(k)+ ", TO_DATE('" + str(TS) + "','YYYY-MM-DD HH24:MI:SS'),'DATA_INPUT')"
+           #runSQL= 'INSERT INTO ECO.MDRI_PARAMETER ( RUN_ID, PARAM_ID, VAR_NAME, PVALUE, PARAM_ORDER, TIME_INDEX, DATA_TYPE) VALUES ('
+           #runSQL = runSQL + str(RUN_ID) + ", " + str(i) + ", '" + header[k] + "', '" + DRow[k] + "'," + str(k)+ ", TO_DATE('" + str(TS) + "','YYYY-MM-DD HH24:MI:SS'),'DATA_INPUT')"
            #print runSQL
-           c1.execute(runSQL)
+           #c1.execute(runSQL)
+           sdate= "TO_DATE('" + str(TS) + "','YYYY-MM-DD HH24:MI:SS')"
+           list =  str(RUN_ID) + ";" + str(i).strip() + ";" + header[k].strip() + ";" + DRow[k].strip() + ";" + str(k).strip() + ";" + sdate +  ";DATA_INPUT"
+           
+           runSQL= 'INSERT INTO ECO.MDRI_PARAMETER ( RUN_ID, PARAM_ID, VAR_NAME, PVALUE, PARAM_ORDER, TIME_INDEX, DATA_TYPE) VALUES (:1,:2,:3,:4,:5,:6,:7)'
+           #print list
+           temp= list.split(';')
+           #print temp
+           listDict.append( convertSequenceToDict(temp))
            i +=1
-   
+    print listDict
     c1.close() 
     conn.commit() # 
     print str(i) + ' records inserted'
+def convertSequenceToDict(list):
+    """For each element in the sequence, creates a dictionary item equal&#92;n
+    to the element and keyed by the position of the item in the list.&#92;n&#92;n
+    Thanks to Dick Wall.&#92;n&#92;n
+    Example:&#92;n&#92;t
+    >>> convertListToDict(("Matt", 1))&#92;t&#92;n
+    {'1': 'Matt', '2': 1}&#92;n
+    """
+    dict = {}
+    argList = range(1,8)#len(list)+1)
+    #print argList
+    for k,v in zip(argList, list):
+        dict[str(k)] = v
+    return dict
 def getRUN_ID(RUN_NAME, RUN_DESC, MODEL_ID):
     '''
     Returns the next Sequence value for RUN_ID. Insert Record of RUN_NAME and DESC in DT_MODEL_RUN
