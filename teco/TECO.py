@@ -28,6 +28,7 @@ class TecoParameters(Module):
         self.setResult("SLA", self.getInputFromPort("SLA"))
         self.setResult("LAIMAX", self.getInputFromPort("LAIMAX"))
         self.setResult("LAIMIN", self.getInputFromPort("LAIMIN"))
+
 class TecoDataLoader(Module):
     """TecoDataLoader is a data importing module for the TECO carbon model"""
     def compute(self):
@@ -39,6 +40,17 @@ class TecoDataLoader(Module):
 #        os.system('cat '+ pfp + '>' +Param_File.name)
         self.setResult("DataFilePath", Data_File)
 #        self.setResult("ParameterFilePath", Param_File)
+
+class TecoDBLoader(Module):
+    """TecoDBLoader is a data importing module for the TECO carbon model"""
+    def compute(self):
+        ifp = self.getInputFromPort("RunID")
+        Data_File=self.interpreter.filePool.create_file()
+#        cline=['/Users/blc/my_git/cybercom/teco/INP_2_TECO_file.py',ifp,'/Users/blc/my_git/cybercom/teco/hope_test']
+        cline=['/Users/blc/my_git/cybercom/teco/INP_2_TECO.py',ifp,'TECO1','eco/b00mer@129.15.138.12:1521/oubcf',Data_File.name]
+        print(cline)
+        Popen(cline,env={'DYLD_LIBRARY_PATH':'/usr/local/oracle/instantclient_10_2'}).wait()
+        self.setResult("DataFilePath", Data_File)
 
 class TecoModel(Module):
     """"TecoModel runs the TECO Carbon Model"""
@@ -69,7 +81,7 @@ class TecoModel(Module):
         Pools_file=self.interpreter.filePool.create_file()
         cargs=['/Users/blc/my_git/cybercom/teco/teco_cli_parm' ,years_of_data, years_before_write, data_file.name, C_file.name, H2O_file.name, Pools_file.name, slat, co2ca, ioput, a1, Ds0, Vcmx0, extkU, xfang, alpha, stom_n, wsmax, wsmin, rdepth, rfibre, SLA, LAIMAX, LAIMIN]
         cline=list2cmdline(cargs)
-        print cline
+        print(cline)
         os.system(cline)
 #        Popen(cargs)
         self.setResult("C_File",C_file);
@@ -152,6 +164,14 @@ def initialize(*args, **keywords):
                        (core.modules.basic_modules.File, 'Path and Filename for datafile to model'))
 #    reg.add_output_port(TecoDataLoader, "ParameterFilePath",
 #                       (core.modules.basic_modules.File, 'Path and Filename for parameter to model'))
+
+    reg.add_module(TecoDBLoader)
+    reg.add_input_port(TecoDBLoader, 'RunID',
+                      (core.modules.basic_modules.String, 'RunID'),defaults=str(['500']))
+    reg.add_output_port(TecoDBLoader, "DataFilePath",
+                       (core.modules.basic_modules.File, 'Path and Filename for datafile to model'))
+    reg.add_output_port(TecoDBLoader, "RunID",
+                       (core.modules.basic_modules.String, 'RunID'))
 
     reg.add_module(TecoModel)
 #    reg.add_input_port(TecoModel, 'InputParameterFile',
