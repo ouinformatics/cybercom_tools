@@ -7,7 +7,7 @@ Created on Nov 22, 2010
 '''
 import shlex, sys, datetime,StringIO, tempfile
 import cx_Oracle as db
-ConnSTR= 'eco/b00mer@oubcf'
+ConnSTR= 'eco/b00mer@oubcf1' 
 
 def INP_2_DB(RUNID, Filename):
     '''
