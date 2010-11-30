@@ -50,7 +50,9 @@ class TecoDBLoader(Module):
 
 class TecoRunID(Module):
     def compute(self):
-        cline=['/Users/blc/my_git/cybercom/teco/get_run_id.py']
+        run_name=self.getInputFromPort("RunName")
+        run_desc=self.getInputFromPort("RunDesc")
+        cline=['/Users/blc/my_git/cybercom/teco/get_run_id.py',run_name,run_desc, 'TECO1']
         cri = Popen(cline,env={'DYLD_LIBRARY_PATH':'/usr/local/oracle/instantclient_10_2','TNS_ADMIN':'/Users/blc/.oracle'},stdout=PIPE)
         time.sleep(5)
         run_id = cri.communicate()[0].strip()
@@ -245,3 +247,7 @@ def initialize(*args, **keywords):
 
     reg.add_output_port(TecoRunID, 'RUN_ID',
                        (core.modules.basic_modules.String, 'RUN_ID'))
+    reg.add_input_port(TecoRunID, 'RunName',
+                       (core.modules.basic_modules.String, 'RunName'),defaults=str(['Teco_Default']))
+    reg.add_input_port(TecoRunID, 'RunDesc',
+                       (core.modules.basic_modules.String, 'RunDesc'),defaults=str(['Teco_Run']))
