@@ -27,7 +27,8 @@ def INP_2_DB(RUNID, Filename):
     DRow =[]
     temp = []
     listDict =[]
-    RUN_ID = RUNID #getRUN_ID()
+    
+    RUN_ID = int(RUNID) #getRUN_ID()
     i=0
     for j in input:
        DRow = shlex.split(j)
@@ -40,28 +41,41 @@ def INP_2_DB(RUNID, Filename):
            #print runSQL
            #c1.execute(runSQL)
            sdate= "TO_DATE('" + str(TS) + "','YYYY-MM-DD HH24:MI:SS')"
-           list =  str(RUN_ID) + ";" + str(i).strip() + ";" + header[k].strip() + ";" + DRow[k].strip() + ";" + str(k).strip() + ";" + sdate +  ";DATA_INPUT"
-           
-           runSQL= 'INSERT INTO ECO.MDRI_PARAMETER ( RUN_ID, PARAM_ID, VAR_NAME, PVALUE, PARAM_ORDER, TIME_INDEX, DATA_TYPE) VALUES (:1,:2,:3,:4,:5,:6,:7)'
+           list=[]
+           list.append(RUN_ID)
+           list.append(i)
+           list.append(header[k].strip())
+           list.append(DRow[k].strip())
+           list.append(k)
+           list.append(str(TS))
+           list.append('DATA_INPUT')
            #print list
-           temp= list.split(';')
+           
+           #list =  str(RUN_ID) + ";" + str(i).strip() + ";" + header[k].strip() + ";" + DRow[k].strip() + ";" + str(k).strip() + ";" + sdate +  ";DATA_INPUT"
+           
+           #print list
+           #temp= list.split(';')
            #print temp
-           listDict.append( convertSequenceToDict(temp))
+           
+           listDict.append(convertSequenceToDict(list))
+           #print listDict
+           #sys.exit()
            i +=1
-    print listDict
+    runSQL= "INSERT INTO ECO.MDRI_PARAMETER ( RUN_ID, PARAM_ID, VAR_NAME, PVALUE, PARAM_ORDER, TIME_INDEX, DATA_TYPE) VALUES (:1,:2,:3,:4,:5,TO_DATE(:6,'YYYY-MM-DD HH24:MI:SS'),:7)"
+    c1.executemany(runSQL, listDict)
     c1.close() 
     conn.commit() # 
     print str(i) + ' records inserted'
 def convertSequenceToDict(list):
-    """For each element in the sequence, creates a dictionary item equal&#92;n
-    to the element and keyed by the position of the item in the list.&#92;n&#92;n
-    Thanks to Dick Wall.&#92;n&#92;n
-    Example:&#92;n&#92;t
-    >>> convertListToDict(("Matt", 1))&#92;t&#92;n
-    {'1': 'Matt', '2': 1}&#92;n
+    """For each element in the sequence, creates a dictionary item equal
+    to the element and keyed by the position of the item in the list.
+    Thanks to Dick Wall.
+    Example:
+    >>> convertListToDict(("Matt", 1))
+    {'1': 'Matt', '2': 1}
     """
     dict = {}
-    argList = range(1,8)#len(list)+1)
+    argList = range(1,len(list)+1)
     #print argList
     for k,v in zip(argList, list):
         dict[str(k)] = v
@@ -137,6 +151,7 @@ def TECO2DB(RUN_ID,File_Type,objFile):
     row =c2.fetchone() 
     d = datetime.datetime(int(row[0]),1,1,0,0,0)
     P_ID = 0 
+    listDict =[]
     for line in f1.readlines():
         temp= shlex.split(line.replace(',',''))
        
@@ -149,11 +164,22 @@ def TECO2DB(RUN_ID,File_Type,objFile):
                 else:
                     delta = datetime.timedelta(days=(float(col)-1))
                     TS = d + delta
-            sql = 'INSERT INTO ECO.MDR_OUTPUT ( RUN_ID, PARAM_ID, DATA_TYPE, VAR_NAME, VALUE, PARAM_ORDER, TIME_INDEX) VALUES ('
-            sql= sql + str(RUN_ID) + ', ' + str(P_ID) + ", '" + File_Type + "', '" + header[idx] + "', '" + str(col)+ "', " + str(idx)+ ", TO_DATE('" + str(TS) + "','YYYY-MM-DD HH24:MI:SS'))" 
-            c1.execute(sql)
+            #sql = 'INSERT INTO ECO.MDR_OUTPUT ( RUN_ID, PARAM_ID, DATA_TYPE, VAR_NAME, VALUE, PARAM_ORDER, TIME_INDEX) VALUES ('
+            #sql= sql + str(RUN_ID) + ', ' + str(P_ID) + ", '" + File_Type + "', '" + header[idx] + "', '" + str(col)+ "', " + str(idx)+ ", TO_DATE('" + str(TS) + "','YYYY-MM-DD HH24:MI:SS'))" 
+            #c1.execute(sql)
+            row=[]
+            row.append(int(RUN_ID))
+            row.append(P_ID)
+            row.append(File_Type)
+            row.append(header[idx])
+            row.append(str(col))
+            row.append(idx)
+            row.append(str(TS))
+            listDict.append(convertSequenceToDict(row))
             idx +=1
             P_ID +=1
+    sql = "INSERT INTO ECO.MDR_OUTPUT ( RUN_ID, PARAM_ID, DATA_TYPE, VAR_NAME, VALUE, PARAM_ORDER, TIME_INDEX) VALUES (:1,:2,:3,:4,:5,:6,TO_DATE(:7,'YYYY-MM-DD HH24:MI:SS'))"
+    c1.executemany(sql, listDict)
     print str(P_ID) + " rows insert into Database."
     conn.commit()
     conn.close()
