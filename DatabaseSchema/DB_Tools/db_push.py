@@ -7,8 +7,7 @@ Created on Nov 22, 2010
 '''
 import shlex, sys, datetime,StringIO, tempfile
 import cx_Oracle as db
-
-ConnSTR= 'eco/b00mer@oubcf1'
+ConnSTR= 'eco/b00mer@oubcf1' 
 
 def INP_2_DB(RUNID, Filename):
     '''
@@ -184,7 +183,7 @@ def TECO2DB(RUN_ID,File_Type,objFile):
     print str(P_ID) + " rows insert into Database."
     conn.commit()
     conn.close()
-def getModelINP(RUN_ID,Model_ID):
+def getModelINP(RUN_ID,Model_ID,OUTFILE):
     '''
     Retrieves Input parameters from DB and returns file object.
     RUN_ID and Model_ID needed to retrieve data from DB
@@ -197,8 +196,9 @@ def getModelINP(RUN_ID,Model_ID):
         print type(ConnErr)
         sys.exit()  
     try:
-        f1 = tempfile.NamedTemporaryFile(delete=False)#open('somefile.txt','r+')
+        #f1 = tempfile.NamedTemporaryFile(delete=False)#open('OUTFILE','r+')
         #f1 = StringIO.StringIO()
+        f1 = open(OUTFILE,'w')
         c1 = conn.cursor()
         c2 = conn.cursor()
         prm = conn.cursor()
@@ -218,7 +218,7 @@ def getModelINP(RUN_ID,Model_ID):
             for i in p:
                 row = row + i.rjust(int(wd[z]),' ')
                 z +=1
-            f1.write(row + '\n') 
+            f1.write(row + '\n' ) 
     except Exception as inst:
         print type(inst)     # the exception instance
         print inst
