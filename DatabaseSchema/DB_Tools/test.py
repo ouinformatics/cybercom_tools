@@ -12,7 +12,7 @@ import shlex, sys
 #print str(rID)
 #ConnSTR= 'eco/b00mer@oubcf'
 #*************** Examples push TECo Output files to DB **********************************
-
+'''
 newSEQ =637# db1.getRUN_ID('TECO Run', 'Description of run','TECO1') 
 
 f1 = open('C:\App\Database\TECO_Data\TECO_C_daily.csv','r')#objFile
@@ -25,7 +25,7 @@ db1.TECO2DB(newSEQ,'POOL_FILE',f3)
 f1.close()
 f2.close()
 f3.close()
-
+'''
 #conn.close()
 
 #rID = db1.getRUN_ID('TECO Model ', 'TECO RUN','TECO1')

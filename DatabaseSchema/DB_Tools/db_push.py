@@ -40,7 +40,7 @@ def INP_2_DB(RUNID, Filename):
            #runSQL = runSQL + str(RUN_ID) + ", " + str(i) + ", '" + header[k] + "', '" + DRow[k] + "'," + str(k)+ ", TO_DATE('" + str(TS) + "','YYYY-MM-DD HH24:MI:SS'),'DATA_INPUT')"
            #print runSQL
            #c1.execute(runSQL)
-           sdate= "TO_DATE('" + str(TS) + "','YYYY-MM-DD HH24:MI:SS')"
+           #sdate= "TO_DATE('" + str(TS) + "','YYYY-MM-DD HH24:MI:SS')"
            list=[]
            list.append(RUN_ID)
            list.append(i)
@@ -49,17 +49,7 @@ def INP_2_DB(RUNID, Filename):
            list.append(k)
            list.append(str(TS))
            list.append('DATA_INPUT')
-           #print list
-           
-           #list =  str(RUN_ID) + ";" + str(i).strip() + ";" + header[k].strip() + ";" + DRow[k].strip() + ";" + str(k).strip() + ";" + sdate +  ";DATA_INPUT"
-           
-           #print list
-           #temp= list.split(';')
-           #print temp
-           
            listDict.append(convertSequenceToDict(list))
-           #print listDict
-           #sys.exit()
            i +=1
     runSQL= "INSERT INTO ECO.MDRI_PARAMETER ( RUN_ID, PARAM_ID, VAR_NAME, PVALUE, PARAM_ORDER, TIME_INDEX, DATA_TYPE) VALUES (:1,:2,:3,:4,:5,TO_DATE(:6,'YYYY-MM-DD HH24:MI:SS'),:7)"
     c1.executemany(runSQL, listDict)
