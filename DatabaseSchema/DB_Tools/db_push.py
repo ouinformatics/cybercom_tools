@@ -40,7 +40,7 @@ def INP_2_DB(RUNID, Filename):
            #runSQL = runSQL + str(RUN_ID) + ", " + str(i) + ", '" + header[k] + "', '" + DRow[k] + "'," + str(k)+ ", TO_DATE('" + str(TS) + "','YYYY-MM-DD HH24:MI:SS'),'DATA_INPUT')"
            #print runSQL
            #c1.execute(runSQL)
-           sdate= "TO_DATE('" + str(TS) + "','YYYY-MM-DD HH24:MI:SS')"
+           #sdate= "TO_DATE('" + str(TS) + "','YYYY-MM-DD HH24:MI:SS')"
            list=[]
            list.append(RUN_ID)
            list.append(i)
