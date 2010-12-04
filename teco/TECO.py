@@ -36,7 +36,9 @@ class TecoDataLoader(Module):
     def compute(self):
         ifp = self.getInputFromPort("InputDataFilePath")
         Data_File=self.interpreter.filePool.create_file()
-        os.system('cat '+ ifp + '>' +Data_File.name)
+        cline=['cp',ifp,Data_File.name]
+        Popen(cline)
+        #os.system('cat '+ ifp + '>' +Data_File.name)
         self.setResult("DataFilePath", Data_File)
 
 class TecoDBLoader(Module):
@@ -86,8 +88,9 @@ class TecoModel(Module):
         H2O_file=self.interpreter.filePool.create_file()
         Pools_file=self.interpreter.filePool.create_file()
         cargs=['/Users/blc/my_git/cybercom/teco/teco_cli_parm' ,years_of_data, years_before_write, data_file.name, C_file.name, H2O_file.name, Pools_file.name, slat, co2ca, ioput, a1, Ds0, Vcmx0, extkU, xfang, alpha, stom_n, wsmax, wsmin, rdepth, rfibre, SLA, LAIMAX, LAIMIN]
-        cline=list2cmdline(cargs)
-        os.system(cline)
+        #cline=list2cmdline(cargs)
+        #os.system(cline)
+        Popen(cargs)
         self.setResult("C_File",C_file);
         self.setResult("H2O_File",H2O_file);
         self.setResult("Pools_File",Pools_file);
@@ -101,14 +104,17 @@ class TecoOutput(Module):
         H2O_Write=self.getInputFromPort("H2O_File")
         Pools_Write=self.getInputFromPort("Pools_File")
         copyline=['/bin/cp', C_file.name, C_Write]
-        cline=list2cmdline(copyline)
-        os.system(cline)
+        #cline=list2cmdline(copyline)
+        #os.system(cline)
+        Popen(copyline)
         copyline=['/bin/cp', H2O_file.name, H2O_Write]
-        cline=list2cmdline(copyline)
-        os.system(cline)
+        #cline=list2cmdline(copyline)
+        #os.system(cline)
+        Popen(copyline)
         copyline=['/bin/cp', Pools_file.name, Pools_Write]
-        cline=list2cmdline(copyline)
-        os.system(cline)
+        #cline=list2cmdline(copyline)
+        #os.system(cline)
+        Popen(copyline)
         self.setResult("C_Out",C_file);
         self.setResult("H2O_Out",H2O_file);
         self.setResult("Pools_Out",Pools_file);
