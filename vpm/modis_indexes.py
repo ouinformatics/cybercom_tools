@@ -1,7 +1,6 @@
-
+#!/usr/bin/env python
 import urllib
 import csv
-
 
 def get_eomf_ts( modis_product, years, lat, lon ):
     """ Get MODIS data product from EOMF webservice"""
