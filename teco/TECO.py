@@ -61,6 +61,13 @@ class TecoRunID(Module):
         print run_id
         self.setResult("RUN_ID", run_id)
 
+class TecoINP2DB(Module):
+    def compute(self):
+        RUN_ID=self.getInputFromPort("RUN_ID")
+        file_name=self.getInputFromPort("file_name")
+        cline=['/Users/blc/my_git/cybercom/teco/file_to_db.py',RUN_ID,file_name.name]
+        cri = Popen(cline,env={'DYLD_LIBRARY_PATH':'/usr/local/oracle/instantclient_10_2','TNS_ADMIN':'/Users/blc/.oracle'},stdout=PIPE)
+
 class TecoModel(Module):
     """"TecoModel runs the TECO Carbon Model"""
     def compute(self):
@@ -257,3 +264,8 @@ def initialize(*args, **keywords):
                        (core.modules.basic_modules.String, 'RunName'),defaults=str(['Teco_Default']))
     reg.add_input_port(TecoRunID, 'RunDesc',
                        (core.modules.basic_modules.String, 'RunDesc'),defaults=str(['Teco_Run']))
+
+    reg.add_module(TecoINP2DB)
+
+    reg.add_input_port(TecoINP2DB, 'RUN_ID', (core.modules.basic_modules.String, 'RUN_ID'))
+    reg.add_input_port(TecoINP2DB, 'file_name', (core.modules.basic_modules.File, 'file_name'))
