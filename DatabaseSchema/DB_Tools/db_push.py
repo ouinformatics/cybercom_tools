@@ -1,26 +1,27 @@
 '''
 Created on Nov 22, 2010
+@author: Mark Stacy - markstacy@ou.edu
 
-@author: stac3294
-
+Current Module provides DB connection and procedures for model run setup and post run storage procedures 
 
 '''
-import shlex, sys, datetime,StringIO, tempfile
+import shlex, sys, datetime #,StringIO, tempfile
 import cx_Oracle as db
 ConnSTR= 'eco/b00mer@oubcf1' 
 
-def INP_2_DB(RUNID, Filename):
-    '''
-    TECO input file is loaded into database.
-    '''
+def getDBConnection():
     try: # DB Connection
-        conn = db.connect(ConnSTR)
+        return db.connect(ConnSTR)
     except Exception as ConnErr:
         print 'Unable to connect to Database '
         print ConnErr
         print type(ConnErr)
         sys.exit() 
-        
+def INP_2_DB(RUNID, Filename):
+    '''
+    TECO input file is loaded into database.
+    '''
+    conn =  getDBConnection()   
     c1 = conn.cursor()
     input = open(Filename)
     header = shlex.split(input.readline())
@@ -36,11 +37,6 @@ def INP_2_DB(RUNID, Filename):
        delta = datetime.timedelta(days=(float(DRow[1])-1)+(float(DRow[2])/24))
        TS = d + delta
        for k in range(len(header)):
-           #runSQL= 'INSERT INTO ECO.MDRI_PARAMETER ( RUN_ID, PARAM_ID, VAR_NAME, PVALUE, PARAM_ORDER, TIME_INDEX, DATA_TYPE) VALUES ('
-           #runSQL = runSQL + str(RUN_ID) + ", " + str(i) + ", '" + header[k] + "', '" + DRow[k] + "'," + str(k)+ ", TO_DATE('" + str(TS) + "','YYYY-MM-DD HH24:MI:SS'),'DATA_INPUT')"
-           #print runSQL
-           #c1.execute(runSQL)
-           #sdate= "TO_DATE('" + str(TS) + "','YYYY-MM-DD HH24:MI:SS')"
            list=[]
            list.append(RUN_ID)
            list.append(i)
@@ -59,7 +55,6 @@ def INP_2_DB(RUNID, Filename):
 def convertSequenceToDict(list):
     """For each element in the sequence, creates a dictionary item equal
     to the element and keyed by the position of the item in the list.
-    Thanks to Dick Wall.
     Example:
     >>> convertListToDict(("Matt", 1))
     {'1': 'Matt', '2': 1}
@@ -73,14 +68,9 @@ def convertSequenceToDict(list):
 def getRUN_ID(RUN_NAME, RUN_DESC, MODEL_ID):
     '''
     Returns the next Sequence value for RUN_ID. Insert Record of RUN_NAME and DESC in DT_MODEL_RUN
+    Currently Oracle specific SQL with the use of DUAL
     '''
-    try: # DB Connection
-        conn = db.connect(ConnSTR)
-    except Exception as ConnErr:
-        print 'Unable to connect to Database '
-        print ConnErr
-        print type(ConnErr)
-        sys.exit() 
+    conn = getDBConnection()
     c1 = conn.cursor()
     c1.execute('SELECT SEQ_RUN_ID.NEXTVAL FROM DUAL')
     row =c1.fetchone()
@@ -92,23 +82,7 @@ def getRUN_ID(RUN_NAME, RUN_DESC, MODEL_ID):
     conn.commit()
     conn.close()
     return int(row[0])
-'''
-def getRUN_ID():
-    
-    #Returns the next Sequence value for RUN_ID
-    
-    try: # DB Connection
-        conn = db.connect(ConnSTR)
-    except Exception as ConnErr:
-        print 'Unable to connect to Database '
-        print ConnErr
-        print type(ConnErr)
-        sys.exit() 
-    c1 = conn.cursor()
-    c1.execute('SELECT SEQ_RUN_ID.NEXTVAL FROM DUAL')
-    row =c1.fetchone()
-    return int(row[0])
-'''
+
 def TECO2DB(RUN_ID,File_Type,objFile):
     '''
     TECO Output files are passed and inputed into the Database.
@@ -121,15 +95,7 @@ def TECO2DB(RUN_ID,File_Type,objFile):
     if not(File_Type.upper() == 'C_FILE' or File_Type.upper() == 'H2O_FILE' or File_Type.upper() == 'POOL_FILE'): sys.exit('File_Type must be H2O_FILE, POOL_FILE, or C_FILE')
     f1 = objFile
     f1.seek(0,0)# Set current position at the beginning of the file.
-    
-#    connSTR1= U'eco/b00mer@129.15.138.13:1521/oubcf'
-    try: # DB Connection
-        conn = db.connect(ConnSTR)
-    except Exception as ConnErr:
-        print 'Unable to connect to Database '
-        print ConnErr
-        print type(ConnErr)
-        sys.exit()  
+    conn = getDBConnection()
     c1 = conn.cursor()
     c2 = conn.cursor() 
     temps = f1.readline()
@@ -154,9 +120,6 @@ def TECO2DB(RUN_ID,File_Type,objFile):
                 else:
                     delta = datetime.timedelta(days=(float(col)-1))
                     TS = d + delta
-            #sql = 'INSERT INTO ECO.MDR_OUTPUT ( RUN_ID, PARAM_ID, DATA_TYPE, VAR_NAME, VALUE, PARAM_ORDER, TIME_INDEX) VALUES ('
-            #sql= sql + str(RUN_ID) + ', ' + str(P_ID) + ", '" + File_Type + "', '" + header[idx] + "', '" + str(col)+ "', " + str(idx)+ ", TO_DATE('" + str(TS) + "','YYYY-MM-DD HH24:MI:SS'))" 
-            #c1.execute(sql)
             row=[]
             row.append(int(RUN_ID))
             row.append(P_ID)
@@ -178,16 +141,8 @@ def getModelINP(RUN_ID,Model_ID,OUTFILE):
     Retrieves Input parameters from DB and returns file object.
     RUN_ID and Model_ID needed to retrieve data from DB
     '''
+    conn = getDBConnection()
     try:
-        conn = db.connect(ConnSTR)
-    except Exception as ConnErr:
-        print 'Unable to connect to Database '
-        print ConnErr
-        print type(ConnErr)
-        sys.exit()  
-    try:
-        #f1 = tempfile.NamedTemporaryFile(delete=False)#open('OUTFILE','r+')
-        #f1 = StringIO.StringIO()
         f1 = open(OUTFILE,'w')
         c1 = conn.cursor()
         c2 = conn.cursor()
@@ -195,13 +150,13 @@ def getModelINP(RUN_ID,Model_ID,OUTFILE):
         prm.execute("Select PNAME,PVALUE From RT_PARAMETERS Where PARMA_TYPE=0 and MODEL_ID = 'TECO1'") #:1 ',(Model_ID,))
         wd =[]
         sql=''
-        for par in prm:
+        for par in prm: # Check DB for Paramater based on Model ID
             if par[0] == 'Header': head = par[1]
             if par[0] == 'FWidth': temp = par[1]
             if par[0] == 'SQL': sql = par[1]
         wd = temp.split(',')
-        f1.write(head + '\n') #' year doy hour tair Tsoil VDEF RH precp rad_h'
-        c1.callproc(sql,(RUN_ID,c2)) #TECO_INP_MOD_ID',(RUN_ID,c2))
+        f1.write(head + '\n') 
+        c1.callproc(sql,(RUN_ID,c2))
         for p in c2:
             z=0
             row =''
@@ -227,13 +182,7 @@ def setRunParameter(RUN_ID,Header,pvalue): #List of header and list of values
     P = shlex.split(pvalue.replace(',',' '))
     db1.setRunParameter(500, H, P)
     '''
-    try:
-        conn = db.connect(ConnSTR)
-    except Exception as ConnErr:
-        print 'Unable to connect to Database '
-        print ConnErr
-        print type(ConnErr)
-        sys.exit() 
+    conn = getDBConnection()
     try:
         c1 = conn.cursor()  
       
@@ -256,13 +205,8 @@ def getRunParameter(RUN_ID): #Return Dictionary with List of Header and Values
     for item in f:
     print 'Parameter Name: ' + item[0] + ' Value equals  '+ item[1]
     '''
-    try:
-        conn = db.connect(ConnSTR)
-    except Exception as ConnErr:
-        print 'Unable to connect to Database '
-        print ConnErr
-        print type(ConnErr)
-        sys.exit()      
+    conn = getDBConnection()
+         
     try:
         c1 = conn.cursor()  
         sql = "SELECT VAR_NAME,PVALUE FROM MDRI_PARAMETER WHERE RUN_ID=" + str(RUN_ID) + " AND DATA_TYPE='RUN_PARAM'"
