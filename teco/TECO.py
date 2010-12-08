@@ -11,7 +11,7 @@ identifier = "edu.ou.it.vistrails.TECO"
 class TecoParameters(Module):
     "This should load and make seen the TECO parameters"""
     def compute(self):
-        header=["years_of_data","years_before_write","slat","co2ca","ioput","a1","Ds0","Vcmx0","extkU","xfang","alpha","stom_n","wsmax","wsmin","rdepth","rfibre","SLA","LAIMAX","LAIMIN"]
+        headers=["years_of_data","years_before_write","slat","co2ca","ioput","a1","Ds0","Vcmx0","extkU","xfang","alpha","stom_n","wsmax","wsmin","rdepth","rfibre","SLA","LAIMAX","LAIMIN"]
 
         tp_years_of_data=self.getInputFromPort("years_of_data")
         tp_years_before_write=self.getInputFromPort("years_before_write")
@@ -33,7 +33,7 @@ class TecoParameters(Module):
         tp_LAIMAX=self.getInputFromPort("LAIMAX")
         tp_LAIMIN=self.getInputFromPort("LAIMIN")
 
-        p_vals=[tp_years_of_data,tp_years_before_write,tp_slat,tp_co2ca,tp_ioput,tp_a1,tp_Ds0,tp_Vcmx0,tp_extkU,tp_xfang,tp_alpha,tp_stom_n,tp_wsmax,tp_wsmin,tp_rdepth,tp_rfibre,tp_SLA,tp_LAIMAX,tp_LAIMIN]
+        param_vals=[tp_years_of_data,tp_years_before_write,tp_slat,tp_co2ca,tp_ioput,tp_a1,tp_Ds0,tp_Vcmx0,tp_extkU,tp_xfang,tp_alpha,tp_stom_n,tp_wsmax,tp_wsmin,tp_rdepth,tp_rfibre,tp_SLA,tp_LAIMAX,tp_LAIMIN]
 
         self.setResult("years_of_data", tp_years_of_data)
         self.setResult("years_before_write", tp_years_before_write)
@@ -54,6 +54,8 @@ class TecoParameters(Module):
         self.setResult("SLA", tp_SLA)
         self.setResult("LAIMAX", tp_LAIMAX)
         self.setResult("LAIMIN", tp_LAIMIN)
+        self.setResult("headers",headers)
+        self.setResult("param_vals",param_vals)
 
 class TecoDataLoader(Module):
     """TecoDataLoader is a data importing module for the TECO carbon model"""
@@ -183,6 +185,8 @@ def initialize(*args, **keywords):
     reg.add_input_port(TecoParameters, 'LAIMAX', (core.modules.basic_modules.String, 'LAIMAX'),defaults=str(['4.5']))
     reg.add_input_port(TecoParameters, 'LAIMIN', (core.modules.basic_modules.String, 'LAIMIN'),defaults=str(['0.1']))
 
+    reg.add_output_port(TecoParameters, 'param_vals', (core.modules.basic_modules.List, 'param_vals'))
+    reg.add_output_port(TecoParameters, 'headers', (core.modules.basic_modules.List, 'headers'))
     reg.add_output_port(TecoParameters, 'LAIMIN', (core.modules.basic_modules.String, 'LAIMIN'))
     reg.add_output_port(TecoParameters, 'LAIMAX', (core.modules.basic_modules.String, 'LAIMAX'))
     reg.add_output_port(TecoParameters, 'SLA', (core.modules.basic_modules.String, 'SLA'))
