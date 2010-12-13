@@ -145,7 +145,7 @@ def TECO2DB(RUN_ID,File_Type,objFile):
     temps = f1.readline()
     temps = temps.replace(' ','') 
     header = shlex.split(temps.replace(',',' '))     
-    sqlyear = "SELECT DISTINCT MDRI_PARAMETER.PVALUE FROM MDRI_PARAMETER WHERE RUN_ID=500 AND PARAM_ORDER=0 AND DATA_TYPE ='DATA_INPUT'"#" + str(RUN_ID) + " AND PARAM_ORDER=0"
+    sqlyear = "SELECT DISTINCT MDRI_PARAMETER.PVALUE FROM MDRI_PARAMETER WHERE RUN_ID=" +str(RUN_ID)+ " AND PARAM_ORDER=0 AND DATA_TYPE ='DATA_INPUT'"#" + str(RUN_ID) + " AND PARAM_ORDER=0"
     
     c2.execute(sqlyear)
     row =c2.fetchone() 
