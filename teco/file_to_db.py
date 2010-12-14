@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python26
 import sys
 import db_push as dbu
 id = sys.argv[1]
