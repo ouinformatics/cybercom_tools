@@ -227,11 +227,11 @@ def getModelINP(RUN_ID,Model_ID,OUTFILE):
     c1.close() 
     conn.close()
     return f1
-def getBIOSCAT(LOC_ID):
+def getBIOSCAT(LOC_ID,DateSTRING=0):
     conn = getDBConnection()
     c1 = conn.cursor()
     c2 = conn.cursor()
-    c1.callproc('BSCAT_LOC',(LOC_ID,c2))
+    c1.callproc('BSCAT_LOC',(LOC_ID,DateSTRING,c2))
     for row in c2:
         print row
         
