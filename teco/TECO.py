@@ -11,32 +11,60 @@ identifier = "edu.ou.it.vistrails.TECO"
 class TecoParameters(Module):
     "This should load and make seen the TECO parameters"""
     def compute(self):
-        self.setResult("years_of_data", self.getInputFromPort("years_of_data"))
-        self.setResult("years_before_write", self.getInputFromPort("years_before_write"))
-        self.setResult("slat", self.getInputFromPort("slat"))
-        self.setResult("co2ca", self.getInputFromPort("co2ca"))
-        self.setResult("ioput", self.getInputFromPort("ioput"))
-        self.setResult("a1", self.getInputFromPort("a1"))
-        self.setResult("Ds0", self.getInputFromPort("Ds0"))
-        self.setResult("Vcmx0", self.getInputFromPort("Vcmx0"))
-        self.setResult("extkU", self.getInputFromPort("extkU"))
-        self.setResult("xfang", self.getInputFromPort("xfang"))
-        self.setResult("alpha", self.getInputFromPort("alpha"))
-        self.setResult("stom_n", self.getInputFromPort("stom_n"))
-        self.setResult("wsmax", self.getInputFromPort("wsmax"))
-        self.setResult("wsmin", self.getInputFromPort("wsmin"))
-        self.setResult("rdepth", self.getInputFromPort("rdepth"))
-        self.setResult("rfibre", self.getInputFromPort("rfibre"))
-        self.setResult("SLA", self.getInputFromPort("SLA"))
-        self.setResult("LAIMAX", self.getInputFromPort("LAIMAX"))
-        self.setResult("LAIMIN", self.getInputFromPort("LAIMIN"))
+        headers=["years_of_data","years_before_write","slat","co2ca","ioput","a1","Ds0","Vcmx0","extkU","xfang","alpha","stom_n","wsmax","wsmin","rdepth","rfibre","SLA","LAIMAX","LAIMIN"]
+
+        tp_years_of_data=self.getInputFromPort("years_of_data")
+        tp_years_before_write=self.getInputFromPort("years_before_write")
+        tp_slat=self.getInputFromPort("slat")
+        tp_co2ca=self.getInputFromPort("co2ca")
+        tp_ioput=self.getInputFromPort("ioput")
+        tp_a1=self.getInputFromPort("a1")
+        tp_Ds0=self.getInputFromPort("Ds0")
+        tp_Vcmx0=self.getInputFromPort("Vcmx0")
+        tp_extkU=self.getInputFromPort("extkU")
+        tp_xfang=self.getInputFromPort("xfang")
+        tp_alpha=self.getInputFromPort("alpha")
+        tp_stom_n=self.getInputFromPort("stom_n")
+        tp_wsmax=self.getInputFromPort("wsmax")
+        tp_wsmin=self.getInputFromPort("wsmin")
+        tp_rdepth=self.getInputFromPort("rdepth")
+        tp_rfibre=self.getInputFromPort("rfibre")
+        tp_SLA=self.getInputFromPort("SLA")
+        tp_LAIMAX=self.getInputFromPort("LAIMAX")
+        tp_LAIMIN=self.getInputFromPort("LAIMIN")
+
+        param_vals=[tp_years_of_data,tp_years_before_write,tp_slat,tp_co2ca,tp_ioput,tp_a1,tp_Ds0,tp_Vcmx0,tp_extkU,tp_xfang,tp_alpha,tp_stom_n,tp_wsmax,tp_wsmin,tp_rdepth,tp_rfibre,tp_SLA,tp_LAIMAX,tp_LAIMIN]
+
+        self.setResult("years_of_data", tp_years_of_data)
+        self.setResult("years_before_write", tp_years_before_write)
+        self.setResult("slat", tp_slat)
+        self.setResult("co2ca", tp_co2ca)
+        self.setResult("ioput", tp_ioput)
+        self.setResult("a1", tp_a1)
+        self.setResult("Ds0", tp_Ds0)
+        self.setResult("Vcmx0", tp_Vcmx0)
+        self.setResult("extkU", tp_extkU)
+        self.setResult("xfang", tp_xfang)
+        self.setResult("alpha", tp_alpha)
+        self.setResult("stom_n", tp_stom_n)
+        self.setResult("wsmax", tp_wsmax)
+        self.setResult("wsmin", tp_wsmin)
+        self.setResult("rdepth", tp_rdepth)
+        self.setResult("rfibre", tp_rfibre)
+        self.setResult("SLA", tp_SLA)
+        self.setResult("LAIMAX", tp_LAIMAX)
+        self.setResult("LAIMIN", tp_LAIMIN)
+        self.setResult("headers",headers)
+        self.setResult("param_vals",param_vals)
 
 class TecoDataLoader(Module):
     """TecoDataLoader is a data importing module for the TECO carbon model"""
     def compute(self):
         ifp = self.getInputFromPort("InputDataFilePath")
         Data_File=self.interpreter.filePool.create_file()
-        os.system('cat '+ ifp + '>' +Data_File.name)
+        cline=['cp',ifp,Data_File.name]
+        Popen(cline)
+        #os.system('cat '+ ifp + '>' +Data_File.name)
         self.setResult("DataFilePath", Data_File)
 
 class TecoDBLoader(Module):
@@ -58,6 +86,13 @@ class TecoRunID(Module):
         run_id = cri.communicate()[0].strip()
         print run_id
         self.setResult("RUN_ID", run_id)
+
+class TecoINP2DB(Module):
+    def compute(self):
+        RUN_ID=self.getInputFromPort("RUN_ID")
+        file_name=self.getInputFromPort("file_name")
+        cline=['/Users/blc/my_git/cybercom/teco/file_to_db.py',RUN_ID,file_name.name]
+        cri = Popen(cline,env={'DYLD_LIBRARY_PATH':'/usr/local/oracle/instantclient_10_2','TNS_ADMIN':'/Users/blc/.oracle'},stdout=PIPE)
 
 class TecoModel(Module):
     """"TecoModel runs the TECO Carbon Model"""
@@ -86,8 +121,9 @@ class TecoModel(Module):
         H2O_file=self.interpreter.filePool.create_file()
         Pools_file=self.interpreter.filePool.create_file()
         cargs=['/Users/blc/my_git/cybercom/teco/teco_cli_parm' ,years_of_data, years_before_write, data_file.name, C_file.name, H2O_file.name, Pools_file.name, slat, co2ca, ioput, a1, Ds0, Vcmx0, extkU, xfang, alpha, stom_n, wsmax, wsmin, rdepth, rfibre, SLA, LAIMAX, LAIMIN]
-        cline=list2cmdline(cargs)
-        os.system(cline)
+        #cline=list2cmdline(cargs)
+        #os.system(cline)
+        Popen(cargs)
         self.setResult("C_File",C_file);
         self.setResult("H2O_File",H2O_file);
         self.setResult("Pools_File",Pools_file);
@@ -101,14 +137,17 @@ class TecoOutput(Module):
         H2O_Write=self.getInputFromPort("H2O_File")
         Pools_Write=self.getInputFromPort("Pools_File")
         copyline=['/bin/cp', C_file.name, C_Write]
-        cline=list2cmdline(copyline)
-        os.system(cline)
+        #cline=list2cmdline(copyline)
+        #os.system(cline)
+        Popen(copyline)
         copyline=['/bin/cp', H2O_file.name, H2O_Write]
-        cline=list2cmdline(copyline)
-        os.system(cline)
+        #cline=list2cmdline(copyline)
+        #os.system(cline)
+        Popen(copyline)
         copyline=['/bin/cp', Pools_file.name, Pools_Write]
-        cline=list2cmdline(copyline)
-        os.system(cline)
+        #cline=list2cmdline(copyline)
+        #os.system(cline)
+        Popen(copyline)
         self.setResult("C_Out",C_file);
         self.setResult("H2O_Out",H2O_file);
         self.setResult("Pools_Out",Pools_file);
@@ -146,6 +185,8 @@ def initialize(*args, **keywords):
     reg.add_input_port(TecoParameters, 'LAIMAX', (core.modules.basic_modules.String, 'LAIMAX'),defaults=str(['4.5']))
     reg.add_input_port(TecoParameters, 'LAIMIN', (core.modules.basic_modules.String, 'LAIMIN'),defaults=str(['0.1']))
 
+    reg.add_output_port(TecoParameters, 'param_vals', (core.modules.basic_modules.List, 'param_vals'))
+    reg.add_output_port(TecoParameters, 'headers', (core.modules.basic_modules.List, 'headers'))
     reg.add_output_port(TecoParameters, 'LAIMIN', (core.modules.basic_modules.String, 'LAIMIN'))
     reg.add_output_port(TecoParameters, 'LAIMAX', (core.modules.basic_modules.String, 'LAIMAX'))
     reg.add_output_port(TecoParameters, 'SLA', (core.modules.basic_modules.String, 'SLA'))
@@ -251,3 +292,8 @@ def initialize(*args, **keywords):
                        (core.modules.basic_modules.String, 'RunName'),defaults=str(['Teco_Default']))
     reg.add_input_port(TecoRunID, 'RunDesc',
                        (core.modules.basic_modules.String, 'RunDesc'),defaults=str(['Teco_Run']))
+
+    reg.add_module(TecoINP2DB)
+
+    reg.add_input_port(TecoINP2DB, 'RUN_ID', (core.modules.basic_modules.String, 'RUN_ID'))
+    reg.add_input_port(TecoINP2DB, 'file_name', (core.modules.basic_modules.File, 'file_name'))

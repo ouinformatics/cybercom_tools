@@ -14,24 +14,25 @@ Author: Jonah Duckles <jduckles@ou.edu>
 
 import sys
 import csv
+import StringIO
 import cx_Oracle as db
 
 try:
-    con = db.connect('eco/b00mer@oubcf')
+    con = db.connect('eco/b00mer@oubcf1')
 except:
     print >> sys.stderr, "Can't seem to connect to Database"
 
 cur = con.cursor()
 
 
-def get_cols( res ):
+def get_cols(res):
     """ Get the header of column names """ 
     cols = []
     for col in res.description:
         cols.append(col[0])
     return cols
 
-def zip_rows( res ):
+def zip_rows(res):
     """ Zip the header and rows into a python dictionary """
     output = []
     header = get_cols( res )
@@ -39,18 +40,19 @@ def zip_rows( res ):
         output.append(dict(zip(header, row)))
     return output
     
-def as_dict( res ):
+def as_dict(res):
     """ Return res as a python dictionary """
     return zip_rows( res ) 
 
-def as_csv( res ):
+def as_csv(res):
     """ Return res as a csv complete with headers """
-    cw = csv.writer(sys.stdout)
+    outfile = StringIO.StringIO()
+    cw = csv.writer(outfile)
     cw.writerow( get_cols( res ) )
     cw.writerows( res.fetchall() )
-    return cw
+    return outfile.getvalue()
 
-def as_json( res ):
+def as_json(res):
     """ Return res as json """
     try:
         import json
@@ -58,21 +60,20 @@ def as_json( res ):
         print >> sys.stderr, "Don't have json"
     return json.dumps( zip_rows( res ) ) 
 
-def as_yaml( res ):
+def as_yaml(res):
     """ return res as yaml """
     try:
         import yaml
     except:
         print >> sys.sderr, "You don't seem to have PyYAML installed"
-    return yaml.dump( zip_rows( res ) )
+    return yaml.dump( zip_rows( res ))
     
 def get_rows( query_options, run_id, as_method='dict' ):
     """ Build query based on options dictionary 
             Example: 
-                query_options = dict( columns="to_char(time_index, 'YYYY/MM/DD HH:MM:SS') as time_index,pyear,dayyear,hours,tair,tsoil,vdef,rh,precp,rah_h", table="TECO_INP_RUN_ID" )
+                query_options = dict( columns="to_char(time_index, 'YYYY/MM/DD HH:MM:SS') as time_index,pyear,dayyear,hours,tair,tsoil,vdef,rh,precp,rad_h", table="TECO_INP_RUN_ID" )
                 get_rows(query_options, 500, 'json')
          
-            NOTE: Where clause isn't very generalized and is fragile for the moment.
 
     """
     where = 'run_id = :run_id'
