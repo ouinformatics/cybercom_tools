@@ -52,6 +52,61 @@ def INP_2_DB(RUNID, Filename):
     c1.close() 
     conn.commit() # 
     print str(i) + ' records inserted'
+def BS_2_DB(RUNID, Filename, VarableName):
+    '''
+    Bioscatter input file is loaded into database TMP_BIOSCATTER.
+    '''
+    conn =  getDBConnection()   
+    c1 = conn.cursor()
+    input = open(Filename)
+    header = shlex.split(input.readline())
+    header1 = shlex.split(input.readline())
+    DRow =[]
+    temp = []
+    listDict =[]
+    
+    RUN_ID = int(RUNID) #getRUN_ID()
+    i=0
+    mem=0
+    runSQL= "INSERT INTO ECO.MDRI_PARAMETER ( RUN_ID, PARAM_ID, VAR_NAME, PVALUE, PARAM_ORDER, TIME_INDEX, DATA_TYPE, LAT, LON) VALUES (:1,:2,:3,:4,:5,TO_DATE(:6,'YYYYMMDD.HH24MISS'),:7,:8,:9)"   
+    for j in input:
+       DRow = shlex.split(j)
+       '''
+       Dtime = DRow[0]
+       yr = Dtime[0:3]
+       mm = Dtime[4:5]
+       dd= Dtime[6:7]
+       hh=Dtime[9:10]
+       mi = Dtime[11:12]
+       ss= Dtime[13:14]
+       d = datetime.datetime(int(yr),int(mm),int(dd),int(hh),int(mi),int(ss))
+       '''
+       if mem > 100000:
+           c1.executemany(runSQL, listDict)
+           print str(mem) + ' records inserted'
+           listDict=[]
+           mem=0
+           
+#      delta = datetime.timedelta(days=(float(DRow[1])-1)+(float(DRow[2])/24))
+#      TS = d + delta
+       for k in range(len(header)):
+           list=[]
+           list.append(RUN_ID)
+           list.append(i)
+           list.append(VarableName)#'Loc' +str(k+1))
+           list.append(DRow[k+1].strip())
+           list.append(k + 1)
+           list.append(DRow[0])#str(d))
+           list.append('DATA_INPUT')
+           list.append(float(header[k]))
+           list.append(float(header1[k]))
+           listDict.append(convertSequenceToDict(list))
+           i +=1
+           mem +=1
+    c1.executemany(runSQL, listDict)
+    c1.close() 
+    conn.commit() # 
+    print str(i) + ' records inserted'
 def convertSequenceToDict(list):
     """For each element in the sequence, creates a dictionary item equal
     to the element and keyed by the position of the item in the list.
@@ -172,7 +227,14 @@ def getModelINP(RUN_ID,Model_ID,OUTFILE):
     c1.close() 
     conn.close()
     return f1
-
+def getBIOSCAT(LOC_ID):
+    conn = getDBConnection()
+    c1 = conn.cursor()
+    c2 = conn.cursor()
+    c1.callproc('BSCAT_LOC',(LOC_ID,c2))
+    for row in c2:
+        print row
+        
 def setRunParameter(RUN_ID,Header,pvalue): #List of header and list of values 
     '''
     example

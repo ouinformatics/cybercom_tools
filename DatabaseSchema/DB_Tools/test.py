@@ -26,11 +26,18 @@ f1.close()
 f2.close()
 f3.close()
 '''
-#conn.close()
-
-#rID = db1.getRUN_ID('TECO Model ', 'TECO RUN','TECO1')
-#db1.INP_2_DB( int(rID), 'C:\App\TECO_amb_h.txt')
-#print rID
+'''
+rID = db1.getRUN_ID('Bioscatter Test ', 'Input Bioscatter','BSCAT1')
+db1.BS_2_DB(int(rID), 'C:\Users\stac3294\Documents\My Data Sources\BatRadar\\20100930-123D-output.365088132.txt', 'RAIN')
+print rID
+'''
+db1.getBIOSCAT(2)
+conn.close()
+'''
+rID = db1.getRUN_ID('TECO Model ', 'TECO RUN','TECO1')
+db1.INP_2_DB( int(rID), 'C:\App\TECO_amb_h.txt')
+print rID
+'''
 '''************** Examples Get Model Input File *********************************************
 f2=db1.getModelINP(500,'TECO1')
 f2.seek(0,0)
