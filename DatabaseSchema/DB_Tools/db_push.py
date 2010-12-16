@@ -227,6 +227,28 @@ def getModelINP(RUN_ID,Model_ID,OUTFILE):
     c1.close() 
     conn.close()
     return f1
+def getRSCATTER(LOC_ID,DateSTRING ):#STARTDATE='9999', ENDDATE='9999',DateSTRING=0):
+    conn = getDBConnection()
+    c1 = conn.cursor()
+    c2 = conn.cursor()
+    '''
+    if DateSTRING == 0:
+        sql = 'SELECT TIME_INDEX TIMEINDEX, '
+    else:
+        sql = "SELECT TO_CHAR(TIME_INDEX,'YYYY/MM/DD HH24:MI:SS') TIMEINDEX, "
+    sql=sql + "PARAM_ORDER LOC, LAT, LON, MAX( DECODE (VAR_NAME, 'RAIN', PVALUE, NULL)) RAIN, MAX( DECODE (VAR_NAME, 'REFL', PVALUE, NULL)) REFL "
+    sql= sql + 'FROM(SELECT VAR_NAME, TIME_INDEX, PVALUE, PARAM_ORDER, LAT, LON FROM MDRI_PARAMETER WHERE RUN_ID = 682 AND PARAM_ORDER = ' + str(LOC_ID)+ ') '
+    if STARTDATE != '9999':
+        sql = sql + "WHERE TIME_INDEX >= '" + STARTDATE + "' AND TIME_INDEX <= '" + ENDDATE + " '"
+    sql= sql + " GROUP BY TIME_INDEX, PARAM_ORDER, LAT, LON ORDER BY TIME_INDEX"
+    #c2 = conn.cursor()
+    print sql
+    '''
+    
+    #c1.execute(sql)
+    c1.callproc('BSCAT_LOC_SEDATE',(LOC_ID, DateSTRING, c2))#, STARTDATE, ENDDATE,c2))
+    for row in c2:
+        print row  
 def getBIOSCAT(LOC_ID,DateSTRING=0):
     conn = getDBConnection()
     c1 = conn.cursor()

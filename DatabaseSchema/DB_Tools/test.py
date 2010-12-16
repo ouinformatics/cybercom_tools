@@ -31,7 +31,8 @@ rID = db1.getRUN_ID('Bioscatter Test ', 'Input Bioscatter','BSCAT1')
 db1.BS_2_DB(int(rID), 'C:\Users\stac3294\Documents\My Data Sources\BatRadar\\20100930-123D-output.365088132.txt', 'RAIN')
 print rID
 '''
-db1.getBIOSCAT(2,1)
+#db1.getBIOSCAT(2,1)
+db1.getRSCATTER(300,1)#,1)#'01-SEP-10', '30-SEP-10',1)
 #conn.close()
 '''
 rID = db1.getRUN_ID('TECO Model ', 'TECO RUN','TECO1')
