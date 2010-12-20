@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python26
 '''
 Created on Nov 16, 2010
 

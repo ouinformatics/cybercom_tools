@@ -8,6 +8,8 @@ from core.modules.vistrails_module import Module, ModuleError
 version = "0.0.1"
 name = "TECO"
 identifier = "edu.ou.it.vistrails.TECO"
+mpwd = "/home/bcremeans/my_git/cybercom/teco"
+muhome = "/home/bcremeans/.oracle"
 class TecoParameters(Module):
     "This should load and make seen the TECO parameters"""
     def compute(self):
@@ -72,16 +74,16 @@ class TecoDBLoader(Module):
     def compute(self):
         ifp = self.getInputFromPort("RunID")
         Data_File=self.interpreter.filePool.create_file()
-        cline=['/Users/blc/my_git/cybercom/teco/INP_2_TECO.py',ifp,'TECO1',Data_File.name]
-        Popen(cline,env={'DYLD_LIBRARY_PATH':'/usr/local/oracle/instantclient_10_2','TNS_ADMIN':'/Users/blc/.oracle'}).wait()
+        cline=[mpwd+'/INP_2_TECO.py',ifp,'TECO1',Data_File.name]
+        Popen(cline,env={'LD_LIBRARY_PATH':'/usr/local/oracle/instantclient_10_2','TNS_ADMIN':muhome,'PYTHONPATH':'PYTHONPATH=/usr/lib/python2.6/site-packages'}).wait()
         self.setResult("DataFilePath", Data_File)
 
 class TecoRunID(Module):
     def compute(self):
         run_name=self.getInputFromPort("RunName")
         run_desc=self.getInputFromPort("RunDesc")
-        cline=['/Users/blc/my_git/cybercom/teco/get_run_id.py',run_name,run_desc, 'TECO1']
-        cri = Popen(cline,env={'DYLD_LIBRARY_PATH':'/usr/local/oracle/instantclient_10_2','TNS_ADMIN':'/Users/blc/.oracle'},stdout=PIPE)
+        cline=[mpwd+'/get_run_id.py',run_name,run_desc, 'TECO1']
+        cri = Popen(cline,env={'LD_LIBRARY_PATH':'/usr/local/oracle/instantclient_10_2','TNS_ADMIN':muhome,'PYTHONPATH':'PYTHONPATH=/usr/lib/python2.6/site-packages'},stdout=PIPE)
         time.sleep(5)
         run_id = cri.communicate()[0].strip()
         print run_id
@@ -91,8 +93,8 @@ class TecoINP2DB(Module):
     def compute(self):
         RUN_ID=self.getInputFromPort("RUN_ID")
         file_name=self.getInputFromPort("file_name")
-        cline=['/Users/blc/my_git/cybercom/teco/file_to_db.py',RUN_ID,file_name.name]
-        cri = Popen(cline,env={'DYLD_LIBRARY_PATH':'/usr/local/oracle/instantclient_10_2','TNS_ADMIN':'/Users/blc/.oracle'},stdout=PIPE)
+        cline=[mpwd+'/file_to_db.py',RUN_ID,file_name.name]
+        cri = Popen(cline,env={'LD_LIBRARY_PATH':'/usr/local/oracle/instantclient_10_2','TNS_ADMIN':muhome,'PYTHONPATH':'PYTHONPATH=/usr/lib/python2.6/site-packages'},stdout=PIPE)
 
 class TecoModel(Module):
     """"TecoModel runs the TECO Carbon Model"""
@@ -120,7 +122,7 @@ class TecoModel(Module):
         C_file=self.interpreter.filePool.create_file()
         H2O_file=self.interpreter.filePool.create_file()
         Pools_file=self.interpreter.filePool.create_file()
-        cargs=['/Users/blc/my_git/cybercom/teco/teco_cli_parm' ,years_of_data, years_before_write, data_file.name, C_file.name, H2O_file.name, Pools_file.name, slat, co2ca, ioput, a1, Ds0, Vcmx0, extkU, xfang, alpha, stom_n, wsmax, wsmin, rdepth, rfibre, SLA, LAIMAX, LAIMIN]
+        cargs=[mpwd+'/teco_cli_parm' ,years_of_data, years_before_write, data_file.name, C_file.name, H2O_file.name, Pools_file.name, slat, co2ca, ioput, a1, Ds0, Vcmx0, extkU, xfang, alpha, stom_n, wsmax, wsmin, rdepth, rfibre, SLA, LAIMAX, LAIMIN]
         #cline=list2cmdline(cargs)
         #os.system(cline)
         Popen(cargs)
@@ -158,8 +160,8 @@ class TecoDBOutput(Module):
         C_Write=self.getInputFromPort("C_Out")
         H2O_Write=self.getInputFromPort("H2O_Out")
         Pools_Write=self.getInputFromPort("Pools_Out")
-        cline=['/Users/blc/my_git/cybercom/teco/test.py',RUN_ID,C_Write.name,H2O_Write.name,Pools_Write.name]
-        Popen(cline,env={'DYLD_LIBRARY_PATH':'/usr/local/oracle/instantclient_10_2','TNS_ADMIN':'/Users/blc/.oracle'}).wait()
+        cline=[mpwd+'/test.py',RUN_ID,C_Write.name,H2O_Write.name,Pools_Write.name]
+        Popen(cline,env={'LD_LIBRARY_PATH':'/usr/local/oracle/instantclient_10_2','TNS_ADMIN':muhome,'PYTHONPATH':'PYTHONPATH=/usr/lib/python2.6/site-packages'}).wait()
         
 ###############################################################################
 def initialize(*args, **keywords):

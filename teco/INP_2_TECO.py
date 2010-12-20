@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python26
 from db_push import getModelINP
 import sys
 RUN_ID = sys.argv[1]
