@@ -1,0 +1,11 @@
+#!/bin/bash
+
+get_srtm3_v2_1() {
+    DATA_DIR='nasa/srtm3_v2_1'
+    mkdir -p ${DATA_BASE}/${DATA_DIR}
+    PRODUCT_URL='http://dds.cr.usgs.gov/srtm/version2_1/SRTM3/North_America/'
+    # Download all tiles from North_America
+    wget -np -nd -q -m "${PRODUCT_URL}"
+}
+
+
