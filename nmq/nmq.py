@@ -8,11 +8,15 @@ import osgeo.osr as osr
 EXEC_PATH='/home/bcremeans/nmq/NMQ_CartBinaryReader/read_nmq'
 #FILE_PATH='/scratch/data/nws/nexrad/tile6/unqc_cref/'
 #OUT_FILE='/home/bcremeans/nmq/NMQ_CartBinaryReader/out.gtiff'
+
+def usage():
+	print "usage: python read_nmq inputfile outputfile"
+
 try:
 	FILE_PATH=sys.argv[1]
 	OUT_FILE=sys.argv[2]
 except:
-	print "usage: python read_nmq inputfile outputfile"
+	usage()
 	sys.exit(2)
 
 format='GTiff'
