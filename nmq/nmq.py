@@ -1,12 +1,20 @@
 import numpy
+import sys
 import subprocess 
 from osgeo import gdal
 from osgeo.gdalconst import *
 import osgeo.osr as osr
 
 EXEC_PATH='/home/bcremeans/nmq/NMQ_CartBinaryReader/read_nmq'
-FILE_PATH='/scratch/data/nws/nexrad/tile6/unqc_cref/'
-OUT_FILE='/home/bcremeans/nmq/NMQ_CartBinaryReader/out.gtiff'
+#FILE_PATH='/scratch/data/nws/nexrad/tile6/unqc_cref/'
+#OUT_FILE='/home/bcremeans/nmq/NMQ_CartBinaryReader/out.gtiff'
+try:
+	FILE_PATH=sys.argv[1]
+	OUT_FILE=sys.argv[2]
+except:
+	print "usage: python read_nmq inputfile outputfile"
+	sys.exit(2)
+
 format='GTiff'
 
 cline=[EXEC_PATH,FILE_PATH+'UNQC_CREF.20090728.112000','0']
@@ -30,3 +38,5 @@ srs.SetWellKnownGeogCS("WGS84")
 dst_ds.SetProjection( srs.ExportToWkt() )
 dst_ds.GetRasterBand(1).WriteArray(npdata)
 dst_ds=None
+
+
