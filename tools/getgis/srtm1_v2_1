@@ -1,0 +1,37 @@
+#!/bin/bash
+
+OUT_RAST='srtm1_v2_1.img'
+DATA_DIR='nasa/srtm1_v2_1'
+
+
+download_srtm1_v2_1() {
+    mkdir -p ${DATA_BASE}/${DATA_DIR}
+    cd ${DATA_BASE}/${DATA_DIR}
+    PRODUCT_URL='http://dds.cr.usgs.gov/srtm/version2_1/SRTM1/'
+    # Download all tiles from Regions 1-6, skipping Region 7 (Aleutian Islands and Hawaii)
+    wget -np -nd -q -m -X "Region_07" "${PRODUCT_URL}"
+}
+
+warp_srtm1_v2_1() {
+    echo "Beginning warping of SRTM1"
+    cd ${DATA_BASE}/${DATA_DIR}
+    echo 'Unzipping:'
+    do_unzip;
+    echo 'Warping:' 
+    do_warp *.hgt;
+    echo 'Merging:'
+    do_merge *_tmp.tif;
+    rm *.hgt *.tif # Cleanup
+}
+
+get_srtm1_v2_1() {
+    if [ -d "${DATA_BASE}/${DATA_DIR}" ]; then
+        echo "Seems we already downloaded SRTM1"
+    else
+        download_srtm1_v2_1
+    fi
+    warp_srtm1_v2_1;
+    
+}
+
+
