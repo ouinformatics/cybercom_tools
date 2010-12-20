@@ -1,0 +1,30 @@
+#!/bin/bash
+
+do_unzip() {
+    if [ -n "${GNU_PARALLEL}" ]; then 
+        ls *.zip | parallel "unzip -oq {}"  
+    else
+        for i in *.zip; do 
+            echo -n '.'; unzip -q $i; 
+        done
+    fi
+}
+
+do_warp() {
+    if [ -n "${GNU_PARALLEL}" ]; then
+        PAT=$1
+        ls ${PAT} | parallel "gdalwarp -t_srs ${TARGET_PROJ} -srcnodata 0 -of GTiff {} {.}_tmp.tif"
+    else
+        for i in $(ls ${PAT}); do
+            gdalwarp -t_srs ${TARGET_PROJ} -srcnodata 0 -of GeoTiff ${i} ${i/.hgt}_tmp.tif
+        done
+    fi
+}
+
+
+do_merge() {
+    PAT=$1 # Pattern to select files to merge
+    gdal_merge.py -o ${OUT_RAST} -of HFA ${PAT} 
+}
+
+
