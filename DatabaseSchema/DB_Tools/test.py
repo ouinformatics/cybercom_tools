@@ -7,6 +7,7 @@ Created on Nov 22, 2010
 import db_push as db1
 import cx_Oracle as db
 import shlex, sys
+import datetime
 # getRUN_ID ( Description )
 #rID = db1.getRUN_ID('TECO Model ', 'TECO RUN','TECO1')
 #print str(rID)
@@ -32,7 +33,11 @@ db1.BS_2_DB(int(rID), 'C:\Users\stac3294\Documents\My Data Sources\BatRadar\\201
 print rID
 '''
 #db1.getBIOSCAT(2,1)
+start = datetime.datetime.now()
 db1.getRSCATTER(300,1)#,1)#'01-SEP-10', '30-SEP-10',1)
+end= datetime.datetime.now()
+print start, end , end-start
+
 #conn.close()
 '''
 rID = db1.getRUN_ID('TECO Model ', 'TECO RUN','TECO1')
