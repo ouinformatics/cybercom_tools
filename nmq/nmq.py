@@ -7,23 +7,23 @@ from osgeo.gdalconst import *
 import osgeo.osr as osr
 
 EXEC_PATH='/home/bcremeans/nmq/NMQ_CartBinaryReader/read_nmq'
-FILE_PATH='/scratch/data/nws/nexrad/tile6/unqc_cref/'
-OUT_FILE='/home/bcremeans/nmq/NMQ_CartBinaryReader/out.gtiff'
+#FILE_PATH='/scratch/data/nws/nexrad/tile6/unqc_cref/'
+#OUT_FILE='/home/bcremeans/nmq/NMQ_CartBinaryReader/out.gtiff'
 
 def usage():
 	print "usage: python read_nmq inputfile outputfile"
 
 try:
-#	FILE_PATH=sys.argv[1]
-#	OUT_FILE=sys.argv[2]
+	FILE_PATH=sys.argv[1]
+	OUT_FILE=sys.argv[2]
 except:
 	usage()
 	sys.exit(2)
 
 format='GTiff'
 
-cline=[EXEC_PATH,FILE_PATH+'UNQC_CREF.20090728.112000','0']
-#cline=[EXEC_PATH,FILE_PATH,'0']
+#cline=[EXEC_PATH,FILE_PATH+'UNQC_CREF.20090728.112000','0']
+cline=[EXEC_PATH,FILE_PATH,'0']
 cmd=subprocess.Popen(cline,stdout=subprocess.PIPE)
 oput=cmd.communicate()[0].strip().split('\n')
 headers=oput[:24]
