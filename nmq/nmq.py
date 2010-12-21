@@ -29,12 +29,12 @@ oput=cmd.communicate()[0].strip().split('\n')
 headers=oput[:24]
 data=oput[25:]
 headers=headers[9:]
-lat=float(re.findall('\d.+',headers[6])[0])
-lon=-1*float(re.findall('\d.+',headers[7])[0])
+lat=float(re.findall('-?\d.+',headers[6])[0])
+lon=float(re.findall('-?\d.+',headers[7])[0])
 col=int(re.findall('\d.+',headers[8])[0])
 row=int(re.findall('\d.+',headers[9])[0])
-lat_size=-1*float(re.findall('\d.+',headers[10])[0])
-lon_size=float(re.findall('\d.+',headers[11])[0])
+lat_size=float(re.findall('-?\d.+',headers[10])[0])
+lon_size=float(re.findall('-?\d.+',headers[11])[0])
 time=headers[14]
 data.reverse()
 for i in range(0,len(data)):
