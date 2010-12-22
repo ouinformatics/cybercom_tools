@@ -53,4 +53,3 @@ dst_ds.SetProjection( srs.ExportToWkt() )
 dst_ds.GetRasterBand(1).WriteArray(npdata)
 dst_ds=None
 
-
