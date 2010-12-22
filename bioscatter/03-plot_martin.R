@@ -1,14 +1,15 @@
 library(plyr)
-library(xyplot)
-#library(doMC)
+library(lattice)
+#library(doM)
 #registerDoMC(10)
 
 time_convert <- function(timein) { strptime(timein,  '%Y%m%d.%H%M%S') }
 
-filename <- '~/data/merged.csv'
+filename <- '~/data/merged.csv.gz'
 ingest_data <- function(filename) {
     df <- read.csv(filename,  col.names=c('timestamp','loc_id','lat','lon','rain','refl'), colClasses = c('character','integer','numeric','numeric','numeric','numeric'))
     df$ts <- strptime(df$timestamp, '%Y%m%d.%H%M%S')
+    df$loc_id <- df$loc_id + 1
     df$month <- cut(df$ts, "months")
     df$day <- cut(df$ts, "days")
     df$week <- cut(df$ts, "weeks")
@@ -16,12 +17,12 @@ ingest_data <- function(filename) {
 }
 
 
-a <- ingest_data(filename)
+a <- idata.frame(ingest_data(filename))
 
 plot_week <- function(df) {
     lat <- df$lat[1]
     lon <- df$lon[1]
-    loc_id <- df$loc_id[1]
+    loc_id <- df$loc_id[1] + 1
     xyplot( rain + refl ~ ts | factor(week), data=df, auto.key=T, main=paste('Location:',loc_id,'\n',lat,",",lon))
 }
 
