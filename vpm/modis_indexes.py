@@ -2,10 +2,18 @@
 import urllib
 import csv
 
-def get_eomf_ts( modis_product, years, lat, lon ):
+def get_eomf_ts( modis_product, years, lat, lon, scale=False ):
     """ Get MODIS data product from EOMF webservice"""
-    url_string = 'http://eomf.ou.edu/visualization/csv_%s_%s_%s_%s.csv' % (modis_product, years, lat, lon)
-    ts = csv.reader(urllib.urlopen(url_string))
+    modis_product = modis_product.lower()
+    url_string = 'http://eomf.ou.edu/visualization/ascii_%s_%s_%s_%s.txt' % (modis_product, years, lat, lon)
+    ts = csv.reader(urllib.urlopen(url_string), delimiter='\t')
+    latitude = ts.next()
+    longitude = ts.next()
+    product = ts.next()
+    tile = ts.next()
+    cell = ts.next()
+    comment = ts.next()
+    ts.next() # Dump blank row
     header = ts.next()
     output = []
     for line in ts:
