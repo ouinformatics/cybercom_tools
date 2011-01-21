@@ -1,0 +1,38 @@
+#!/usr/bin/python26
+'''
+Created by: Mark Stacy - markstacy@ou.edu 01/1/11
+
+Runs ftp inventory for Ameriflux Level 4 data. 
+Creates log for Site_By_Name and Site_ByID. ID used to get Location IDs
+
+ 
+'''
+from ftplib import FTP
+import syncWS as sync
+from datetime import datetime
+import ftpINV
+
+#*********Inventory FTP Site*************#
+today = datetime.now()
+strdate = today.strftime("%Y_%m_%d_%H%M")
+f = FTP('cdiac.ornl.gov')
+f.login()
+f1 = open('./ameriflux/amf_sitebyname_L4_' + strdate + '.dat','w')
+f2 = open('./ameriflux/amf_sitebyname_L3_' + strdate + '.dat','w')  
+#f.cwd('/pub/ameriflux/data/Level4/Sites_ByName/')
+#****Level 3 ****
+for bID in ftpINV.ftpwalk(f,'/pub/ameriflux/data/Level3/Sites_ByName/'):
+    f2.write(str(bID) + '\n')
+#****Level 4 ****
+for temp in ftpINV.ftpwalk(f,'/pub/ameriflux/data/Level4/Sites_ByName/'):
+    f1.write(str(temp) + '\n')
+	
+f.quit()
+f1.close()
+f2.close()
+
+#*********Sync to Database***************#
+
+sync.syncAMF('./ameriflux/amf_sitebyname_L4_' + strdate + '.dat','./ameriflux/location.dat','cdiac.ornl.gov')
+sync.syncAMF('./ameriflux/amf_sitebyname_L3_' + strdate + '.dat','./ameriflux/location.dat','cdiac.ornl.gov')
+
