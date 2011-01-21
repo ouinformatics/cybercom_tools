@@ -332,6 +332,7 @@ def stripVariables(var):
     if var=='*':
         return var
     else:
+        print vars
         return vars
         
 def setDATA_STATUS(CAT_ID,Status):
