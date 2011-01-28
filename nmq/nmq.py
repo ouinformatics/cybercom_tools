@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import numpy
 import sys
 import subprocess 
@@ -5,8 +6,10 @@ import re
 from osgeo import gdal
 from osgeo.gdalconst import *
 import osgeo.osr as osr
+import os.path as osp
+import os
 
-EXEC_PATH='/home/bcremeans/nmq/NMQ_CartBinaryReader/read_nmq'
+EXEC_PATH='/scratch/tools/read_nmq'
 #FILE_PATH='/scratch/data/nws/nexrad/tile6/unqc_cref/'
 #OUT_FILE='/home/bcremeans/nmq/NMQ_CartBinaryReader/out.gtiff'
 
@@ -22,7 +25,11 @@ except:
 
 format='GTiff'
 
-#cline=[EXEC_PATH,FILE_PATH+'UNQC_CREF.20090728.112000','0']
+DIR_NAME=osp.dirname(FILE_PATH)
+os.chdir(DIR_NAME)
+cline=['gzip','-d',FILE_PATH]
+subprocess.Popen(cline).wait()
+FILE_PATH=FILE_PATH.replace('.gz','')
 cline=[EXEC_PATH,FILE_PATH,'0']
 cmd=subprocess.Popen(cline,stdout=subprocess.PIPE)
 oput=cmd.communicate()[0].strip().split('\n')
@@ -52,4 +59,5 @@ srs.SetWellKnownGeogCS("WGS84")
 dst_ds.SetProjection( srs.ExportToWkt() )
 dst_ds.GetRasterBand(1).WriteArray(npdata)
 dst_ds=None
-
+cline=['gzip',FILE_PATH]
+subprocess.Popen(cline)
