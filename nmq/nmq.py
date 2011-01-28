@@ -52,7 +52,7 @@ npdata=numpy.cast['float'](npdata)
 npdata=numpy.rot90(npdata)
 
 driver = gdal.GetDriverByName( format )
-dst_ds = driver.Create( OUT_FILE, col, row, 1, gdal.GDT_Float32)
+dst_ds = driver.Create( OUT_FILE, col, row, 1, gdal.GDT_Float32, ['COMPRESS=LZW'] )
 dst_ds.SetGeoTransform( [ lon, lon_size, 0, lat, 0, lat_size ] )
 srs = osr.SpatialReference()
 srs.SetWellKnownGeogCS("WGS84")
