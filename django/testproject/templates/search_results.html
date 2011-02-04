@@ -1,0 +1,19 @@
+<html>
+<head>
+    <title>Search Results</title>
+</head>
+<body>
+    <p>You searched for: <strong>{{ query }}</strong></p>
+	
+	{% if cats %}
+	    <p>Found {{ cats|length }} Catalog Item{{ cats|pluralize }}.</p>
+		<ul>
+		    {% for cat in cats %}
+			<li>{{ cat.cat_name }} -- {{ cat.year }}</li>
+			{% endfor %}
+		</ul>
+	{% else %}
+	    <p>No Cataloged items matched your search criteria.</p>
+	{% endif %}
+</body>
+</html>
