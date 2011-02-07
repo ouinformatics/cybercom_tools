@@ -68,7 +68,7 @@ def as_yaml(res):
         print >> sys.sderr, "You don't seem to have PyYAML installed"
     return yaml.dump( zip_rows( res ))
     
-def get_rows( query_options, run_id, as_method='dict' ):
+def get_rows( table, where, as_method='dict' ):
     """ Build query based on options dictionary 
             Example: 
                 query_options = dict( columns="to_char(time_index, 'YYYY/MM/DD HH:MM:SS') as time_index,pyear,dayyear,hours,tair,tsoil,vdef,rh,precp,rad_h", table="TECO_INP_RUN_ID" )
@@ -76,8 +76,7 @@ def get_rows( query_options, run_id, as_method='dict' ):
          
 
     """
-    where = 'run_id = :run_id'
-    query = 'select %s from %s where %s' % (query_options['columns'], query_options['table'], where)
+    query = 'select * from %s where %s' % (query_options['table'], where)
     res = cur.execute(query, dict(run_id=run_id))
     header = get_cols( res )
     if as_method == 'dict':
@@ -95,8 +94,8 @@ def main(argv = None):
     if argv is None:
         argv = sys.argv
     options = {}
-    options.update(columns=argv[1],table=argv[2],run_id=argv[3],as_method=argv[4])
-    return get_rows(options, options['run_id'], options['as_method'])
+    options.update(table=argv[1],where=argv[2],as_method=argv[3])
+    return get_rows( options['table'], options['where'], options['as_method'])
 
 if __name__ == "__main__":
     sys.exit(main())
