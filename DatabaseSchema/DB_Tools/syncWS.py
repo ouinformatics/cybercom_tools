@@ -137,10 +137,12 @@ def getAMF_SiteID(SiteID,year,Type,strVarables='*'):
     conn =  getDBConnection()   
     c1 = conn.cursor()
     c1.execute("Select CAT_ID FROM DT_CATALOG WHERE LOC_ID = '" + str(SiteID).upper() + "' AND YEAR in ( " + str(year) +  ") AND CAT_TYPE = '" + str(Type).upper() + "' ORDER BY YEAR" )
+    '''
     row = c1.fetchone()  
     if c1.rowcount==0:
         print 'Error retrieving Data. Please double check SiteID, Year, And Type'
         sys.exit()
+    '''    
     idx=1
     for c in c1:
         idx+=1
@@ -404,21 +406,21 @@ def getType(fname):
     fnam=fname.lower()
     if fnam.find('.txt')>-1:
         if fnam.find('_w_'):
-            type= 'TDW_W'
+            type= 'TDF_W'
         elif fnam.find('_w.'):
-            type='TDW_W'
+            type='TDF_W'
         elif fnam.find('_m.'):
-            type='TDW_M'
+            type='TDF_M'
         elif fnam.find('_m_'):
-            type='TDW_M'
+            type='TDF_M'
         elif fnam.find('_d.'):
-            type='TDW_D'
+            type='TDF_D'
         elif fnam.find('_d_'):
-            type='TDW_D'
+            type='TDF_D'
         elif fnam.find('_h.'):
-            type='TDW_H'
+            type='TDF_H'
         elif fnam.find('_h_'):
-            type='TDW_H'
+            type='TDF_H'
     elif fnam.find('.pdf')>-1:
         type='PDF'
     elif fnam.find('.png')>-1:

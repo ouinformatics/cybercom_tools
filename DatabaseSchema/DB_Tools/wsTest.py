@@ -9,7 +9,7 @@ Test for Ameriflux Data
 SiteID,Year(s), Type {TDF_M, TDF_W,TDF_D, TDF_H}, Variables to Return - Optional 
 '''
 #
-#sync.getAMF_SiteID('uS-ha1','1992,1993,1994,1995,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005,2006','TDF_M','PRECIP')
+sync.getAMF_SiteID('uS-ha1','1992,1993,1994,1995,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005,2006','TDF_M','PRECIP')
 
 '''
 Dumps data held in cache. Keeps Cataloged Index
@@ -19,7 +19,7 @@ Requires CAT_ID
 '''
 Test for EOMF Data. LAT,LON,Product,Year (Must be pass as sting), Variables to Return - Optional 
 '''
-sync.getEOMFdata(35.034,-99.8437,'mod09a1','2009,2001','REAL_DATE')
+#sync.getEOMFdata(35.034,-99.8437,'mod09a1','2009,2001','REAL_DATE')
 
 
 '''
