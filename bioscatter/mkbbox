@@ -1,0 +1,21 @@
+#!/bin/bash
+DBHOST=fire
+DBNAM=cybercom
+
+LAT=$1 # LAT,LON no spaces, comma separated
+LON=$2
+RADIUS=$3 # Size in degrees
+
+
+bbox=$(psql -h ${DBHOST} -A -t ${DBNAME} -c "select st_Ymax(a) as n, st_Xmax(a) as e, st_ymin(a) as s, st_xmin(a) as w from (select st_transform(st_buffer(st_setSRID(st_makepoint(${LON},${LAT}),4326), ${RADIUS}),900914) as a) as b")
+
+n=$(echo $bbox | cut -d"|" -f1)
+e=$(echo $bbox | cut -d"|" -f2)
+s=$(echo $bbox | cut -d"|" -f3)
+w=$(echo $bbox | cut -d"|" -f4)
+
+echo "n=${n};s=${s};e=${e};w=${w};"
+
+
+
+
