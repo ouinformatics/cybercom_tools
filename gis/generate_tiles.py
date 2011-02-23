@@ -3,7 +3,7 @@ from math import pi,cos,sin,log,exp,atan
 from subprocess import call
 import sys, os
 from Queue import Queue
-import mapnik
+import mapnik2 as mapnik
 import threading
 
 DEG_TO_RAD = pi/180
@@ -143,7 +143,7 @@ def render_tiles(bbox, mapfile, tile_dir, minZoom=1,maxZoom=18, name="unknown", 
     for z in range(minZoom,maxZoom + 1):
         px0 = gprj.fromLLtoPixel(ll0,z)
         px1 = gprj.fromLLtoPixel(ll1,z)
-
+        print px0, ' ', px1
         # check if we have directories in place
         zoom = "%s" % z
         if not os.path.isdir(tile_dir + zoom):
@@ -181,7 +181,7 @@ if __name__ == "__main__":
     try:
         mapfile = os.environ['MAPNIK_MAP_FILE']
     except KeyError:
-        mapfile = home + "/svn.openstreetmap.org/applications/rendering/mapnik/osm-local.xml"
+        mapfile = home + "test.xml"
     try:
         tile_dir = os.environ['MAPNIK_TILE_DIR']
     except KeyError:
@@ -196,48 +196,9 @@ if __name__ == "__main__":
     #
     # Start with an overview
     # World
-    bbox = (-180.0,-90.0, 180.0,90.0)
+    bbox = (-130.0,-61.9, 52.0,20.0)
+    minZoom = 5
+    maxZoom = 9
+    render_tiles(bbox, mapfile, tile_dir, 5, 9, "CONUS")
 
-    render_tiles(bbox, mapfile, tile_dir, 0, 5, "World")
-
-    minZoom = 10
-    maxZoom = 16
-    bbox = (-2, 50.0,1.0,52.0)
-    render_tiles(bbox, mapfile, tile_dir, minZoom, maxZoom)
-
-    # Muenchen
-    bbox = (11.4,48.07, 11.7,48.22)
-    render_tiles(bbox, mapfile, tile_dir, 1, 12 , "Muenchen")
-
-    # Muenchen+
-    bbox = (11.3,48.01, 12.15,48.44)
-    render_tiles(bbox, mapfile, tile_dir, 7, 12 , "Muenchen+")
-
-    # Muenchen++
-    bbox = (10.92,47.7, 12.24,48.61)
-    render_tiles(bbox, mapfile, tile_dir, 7, 12 , "Muenchen++")
-
-    # Nuernberg
-    bbox=(10.903198,49.560441,49.633534,11.038085)
-    render_tiles(bbox, mapfile, tile_dir, 10, 16, "Nuernberg")
-
-    # Karlsruhe
-    bbox=(8.179113,48.933617,8.489252,49.081707)
-    render_tiles(bbox, mapfile, tile_dir, 10, 16, "Karlsruhe")
-
-    # Karlsruhe+
-    bbox = (8.3,48.95,8.5,49.05)
-    render_tiles(bbox, mapfile, tile_dir, 1, 16, "Karlsruhe+")
-
-    # Augsburg
-    bbox = (8.3,48.95,8.5,49.05)
-    render_tiles(bbox, mapfile, tile_dir, 1, 16, "Augsburg")
-
-    # Augsburg+
-    bbox=(10.773251,48.369594,10.883834,48.438577)
-    render_tiles(bbox, mapfile, tile_dir, 10, 14, "Augsburg+")
-
-    # Europe+
-    bbox = (1.0,10.0, 20.6,50.0)
-    render_tiles(bbox, mapfile, tile_dir, 1, 11 , "Europe+")
-
+    

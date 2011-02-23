@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Map srs="+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs" background-color="rgba(0,0,0,0)">
+    <Style name="My Style">
+        <Rule>
+            <RasterSymbolizer>
+                <RasterColorizer>
+                    <ColorBand value="-30" midpoints="0" color="rgb(204,255,255)"/>
+                    <ColorBand value="-25" midpoints="0" color="rgb(206,154,206)"/>
+                    <ColorBand value="-20" midpoints="0" color="rgb(153,102,153)"/>
+                    <ColorBand value="-15" midpoints="0" color="rgb(102,51,102)"/>
+                    <ColorBand value="-10" midpoints="0" color="rgb(206,206,154)"/>
+                    <ColorBand value="-5" midpoints="0" color="rgb(154,154,103)"/>
+                    <ColorBand value="5" midpoints="0" color="rgb(4,233,231)"/>
+                    <ColorBand value="10" midpoints="0" color="rgb(1,161,246)"/>
+                    <ColorBand value="15" midpoints="0" color="rgb(3,0,244)"/>
+                    <ColorBand value="20" midpoints="0" color="rgb(2,252,2)"/>
+                    <ColorBand value="25" midpoints="0" color="rgb(1,199,1)"/>
+                    <ColorBand value="30" midpoints="0" color="rgb(0,142,0)"/>
+                    <ColorBand value="35" midpoints="0" color="rgb(253,248,2)"/>
+                    <ColorBand value="40" midpoints="0" color="rgb(229,188,0)"/>
+                    <ColorBand value="45" midpoints="0" color="rgb(253,149,0)"/>
+                    <ColorBand value="50" midpoints="0" color="rgb(253,0,0)"/>
+                    <ColorBand value="55" midpoints="0" color="rgb(214,0,0)"/>
+                    <ColorBand value="60" midpoints="0" color="rgb(188,0,0)"/>
+                    <ColorBand value="65" midpoints="0" color="rgb(248,0,253)"/>
+                    <ColorBand value="70" midpoints="0" color="rgb(153,85,200)"/>
+                    <ColorBand value="75" midpoints="0" color="rgb(253,253,253)"/>
+                </RasterColorizer>
+            </RasterSymbolizer>
+        </Rule>
+    </Style>
+    <Layer name="world" srs="+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs">
+        <StyleName>My Style</StyleName>
+        <Datasource>
+            <Parameter name="band">1</Parameter>
+            <Parameter name="file">/Users/jduckles/tmp/unqc_cref/out_wmc.tif</Parameter>
+            <Parameter name="type">gdal</Parameter>
+        </Datasource>
+    </Layer>
+</Map>
