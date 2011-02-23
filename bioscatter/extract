@@ -1,0 +1,22 @@
+#!/bin/bash
+
+PRODUCT=$1
+export LAT=$2
+export LON=$3
+RAD=$4
+START=$5
+FINISH=$6
+
+DATADIR=/scratch/data/nws/ldm/tiles/mosaic/${PRODUCT}
+export PROJWIN=$(~/cybercom/bioscatter/mkwin ${LAT} ${LON} ${RAD})
+
+top_line=$(find ${DATADIR} -name *.vrt | grep -v 'aea' | sort -n | grep -n ${START} | cut -d ":" -f 1)
+end_line=$(find ${DATADIR} -name *.vrt | grep -v 'aea' | sort -n | grep -n ${FINISH} | cut -d ":" -f 1)
+num_lines=$(( ${end_line} - ${top_line} ))
+
+find ${DATADIR} -name *.vrt |grep -v 'aea' | sort -n | head -${end_line} | tail -${num_lines}  | parallel "gdal_translate -projwin ${PROJWIN} -co COMPRESS=LZW {} {/.}_${LAT}_${LON}.tif"
+
+zip ${START}_${FINISH}_${LAT}_${LON}.zip *_${LAT}_${LON}.tif 
+rm *_${LAT}_${LON}.tif
+
+
