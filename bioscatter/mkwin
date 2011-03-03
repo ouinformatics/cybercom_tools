@@ -1,0 +1,14 @@
+#!/usr/bin/python
+
+import sys
+
+lat = float(sys.argv[1]) # Origin y
+lon = float(sys.argv[2]) # Origin x
+rad = float(sys.argv[3]) # Radius in map units 
+
+ulx = lon - rad
+uly = lat + rad
+llx = lon + rad
+lly = lat - rad
+
+print "%s %s %s %s" % (ulx, uly, llx, lly)
