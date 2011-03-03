@@ -1,16 +1,19 @@
-import syncWS as sync
+#import syncWS as sync
 import cx_Oracle as db
 import shlex, sys
 import datetime
-
+import com_db_sync as sync
 
 '''
 Test for Ameriflux Data
 SiteID,Year(s), Type {TDF_M, TDF_W,TDF_D, TDF_H}, Variables to Return - Optional 
 '''
 #
-sync.getAMF_SiteID('uS-ha1','1992,1993,1994,1995,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005,2006','TDF_M','PRECIP')
+#sync.getAMF_SiteID('uS-ha1','1992,1993,1994,1995,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005,2006','TDF_M','PRECIP')
+#sync.syncAMF()
 
+#sync.getModisYearDATE('MOD09A1.A2003017.h14v09.005.2008295183640.hdf')
+sync.syncEOMFfiles()
 '''
 Dumps data held in cache. Keeps Cataloged Index
 Requires CAT_ID
