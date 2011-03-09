@@ -1,15 +1,17 @@
 #!/bin/bash
 
 PRODUCT=$1
-export LAT=$2
-export LON=$3
+LAT=$2
+LON=$3
 RAD=$4
 START=$5
 FINISH=$6
 
-
+TMPDIR=$(mktemp -d)
 DATADIR=/scratch/data/nws/ldm/tiles/mosaic/${PRODUCT}
-export PROJWIN=$(~/cybercom/bioscatter/mkwin ${LAT} ${LON} ${RAD})
+PROJWIN=$(/home/jduckles/cybercom/bioscatter/mkwin ${LAT} ${LON} ${RAD})
+
+find ${DATADIR} -name *.vrt | grep -v _aea | sort -n > ${DATADIR}/manifest
 
 #refresh_manifest() {
 #    hrago=$(( $(date +%s) - 3600 )) 
@@ -24,16 +26,17 @@ if [ -f ${DATADIR}/manifest ]; then
     top_line=$(cat ${DATADIR}/manifest | grep -n ${START} | cut -d ":" -f 1)
     end_line=$(cat ${DATADIR}/manifest | grep -n ${FINISH} | cut -d ":" -f 1)
     num_lines=$(( ${end_line} - ${top_line} ))
-    cat ${DATADIR}/manifest | head -${end_line} | tail -${num_lines}  | parallel "gdal_translate -projwin ${PROJWIN} -co COMPRESS=LZW {} {/.}_${LAT}_${LON}.tif"
+    cat ${DATADIR}/manifest | head -${end_line} | tail -${num_lines}  | parallel "gdal_translate -q -projwin ${PROJWIN} -co COMPRESS=LZW {} ${TMPDIR}/{/.}_${LAT}_${LON}.tif"
 else
     top_line=$(find ${DATADIR} -name *.vrt | grep -v 'aea' | sort -n | grep -n ${START} | cut -d ":" -f 1)
     end_line=$(find ${DATADIR} -name *.vrt | grep -v 'aea' | sort -n | grep -n ${FINISH} | cut -d ":" -f 1)
     num_lines=$(( ${end_line} - ${top_line} ))
-    find ${DATADIR} -name *.vrt |grep -v 'aea' | sort -n | head -${end_line} | tail -${num_lines}  | parallel "gdal_translate -projwin ${PROJWIN} -co COMPRESS=LZW {} {/.}_${LAT}_${LON}.tif"
+    find ${DATADIR} -name *.vrt |grep -v 'aea' | sort -n | head -${end_line} | tail -${num_lines}  | parallel "gdal_translate -q -projwin ${PROJWIN} -co COMPRESS=LZW {} ${TMPDIR}/{/.}_${LAT}_${LON}.tif"
 fi
 
 
-zip ${START}_${FINISH}_${LAT}_${LON}.zip *_${LAT}_${LON}.tif 
-rm *_${LAT}_${LON}.tif
+zip -q -j ${START}_${FINISH}_${LAT}_${LON}.zip ${TMPDIR}/*_${LAT}_${LON}.tif
+#echo $(pwd)/${START}_${FINISH}_${LAT}_${LON}.zip 
+#rm -rf ${TMPDIR}
 
 
