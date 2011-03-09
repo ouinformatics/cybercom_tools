@@ -1,0 +1,10 @@
+#!/bin/sh
+
+cd /scratch/data/nws/ldm/tiles
+for tile in tile{1..8}; do 
+    find ${tile} -cmin -20 -name UNQC_CREF*.gtiff | \
+    sed "s/^/\/scratch\/data\/nws\/ldm\/tiles\//g" | \
+    sed "s/^/insert into unqc_cref (file_location) values ('/g;s/$/');/g" | \
+    psql cybercom; 
+done
+psql cybercom -f /home/jduckles/cybercom/bioscatter/update_inventory.sql
