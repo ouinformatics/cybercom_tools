@@ -35,7 +35,10 @@ class Extract(xmlrpc.XMLRPC):
             d += delta
                
     def xmlrpc_extractTimestep(self, product, lat, lon, radius, time):
-        ''' Extract a single timestep tiffs from a single location with a given radius '''
+        ''' Extract a single timestep tiffs from a single location with a given radius 
+                Example:
+                >>> extractTimestep( 'unqc_cref', 33.00, -96.60, 1, '20100705.105000')
+        '''
         makezip=True
         if makezip:
             # Return as zipfile containing timsteps
@@ -43,9 +46,13 @@ class Extract(xmlrpc.XMLRPC):
         else:
             # Return as file locations
             return self.singleExtract(product, lat, lon, radius, time) 
-
+    xmlrpc_extractTimestep.signature = [ ['base64', 'string', 'double', 'double', 'double', 'string'] ]
+ 
     def xmlrpc_extractTimeseries(self, product, lat, lon, radius, start, stop):
-        ''' Extract as timeseries of tifs from single location with a given radius ''' 
+        ''' Extract as timeseries of tifs from single location with a given radius 
+                Example:
+                >>> extractTimeseries( 'unqc_cref', 33.00, -96.60, 1, '20100705.105000', '20100705.123000')                
+        ''' 
         outlist = []
         datetime.strptime( start, '%Y%m%d.%H%M%S')
         timefmt = '%Y%m%d.%H%M%S'
@@ -56,6 +63,7 @@ class Extract(xmlrpc.XMLRPC):
             return xmlrpc.Binary(self.zip_files(outlist).read())
         else:
             return outlist
+    xmlrpc_extractTimeseries.signature = [ ['base64','string', 'double', 'double', 'double', 'string', 'string'], ]
         
 
 if __name__ == '__main__':
