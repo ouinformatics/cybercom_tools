@@ -7,17 +7,22 @@
 <script type="text/javascript" src="code.js"></script>
 
 <style>
-#loader{ width:500px; height:500px; margin: 5px; border 1px solid #ccc;}
+#loader{ 
+    width:500px; 
+    height:500px; 
+    margin: 5px; 
+    border: 5px;
+    solid: #ccc;}
 #daySlider{ width: 500px }
 #minSlider{ width: 500px }
-
+input.date { width: 167px }
 </style>
 
 
 <div id="loader"></div>
 
 <form>
-<input type="text" name="begin" id="day" value=""/><input type="text" name="date" id="minute" value=""/><input type="text" name="scene" id="scene" value=""/>
+<input type="text" class="date" name="begin" id="day" value=""/><input type="text" class="date" name="date" id="minute" value=""/><input type="text" class="date" name="scene" id="scene" value=""/>
 <div id="daySlider"></div>
 <div id="minSlider"></div>
 
