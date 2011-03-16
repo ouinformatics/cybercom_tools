@@ -16,7 +16,8 @@ DATADIR=/scratch/data/nws/ldm/tiles/mosaic/${PRODUCT}
 PROJWIN=$(/home/jduckles/cybercom/bioscatter/mkwin ${LAT} ${LON} ${RAD})
 if [ -f ${DATADIR}/${PRODUCT_U}.${TIME}.vrt ]; then
     gdal_translate -q -projwin ${PROJWIN} -co COMPRESS=LZW ${DATADIR}/${PRODUCT_U}.${TIME}.vrt ${PRODUCT_U}.${TIME}_${LAT}_${LON}.tif
-    echo "http://fire.rccc.ou.edu/bioscatter/download/${PRODUCT_U}.${TIME}_${LAT}_${LON}.tif"
+    #echo "http://fire.rccc.ou.edu/bioscatter/download/${PRODUCT_U}.${TIME}_${LAT}_${LON}.tif"
+    echo "${DATADIR}//${PRODUCT_U}.${TIME}_${LAT}_${LON}.tif"
 else
     echo "Can't find ${DATADIR}/${PRODUCT_U}.${TIME}.vrt"
 fi

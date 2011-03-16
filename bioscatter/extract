@@ -13,14 +13,6 @@ PROJWIN=$(/home/jduckles/cybercom/bioscatter/mkwin ${LAT} ${LON} ${RAD})
 
 find ${DATADIR} -name *.vrt | grep -v _aea | sort -n > ${DATADIR}/manifest
 
-#refresh_manifest() {
-#    hrago=$(( $(date +%s) - 3600 )) 
-#    man=$(stat -c %Z ${DATADIR}/manifest)
-#    if [ $man -gt $hrago ]; then
-#        find ${DATADIR} -name *.vrt | grep -v _aea | sort -n > ${DATADIR}/manifest
-#    fi
-#}
-
 if [ -f ${DATADIR}/manifest ]; then
     #refresh_manifest
     top_line=$(cat ${DATADIR}/manifest | grep -n ${START} | cut -d ":" -f 1)
