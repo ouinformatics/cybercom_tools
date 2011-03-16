@@ -4,7 +4,7 @@
 <script type="text/javascript" src="date.js"></script>
 <script type="text/javascript" src="js/jquery-1.4.4.min.js"></script>
 <script type="text/javascript" src="js/jquery-ui-1.8.10.custom.min.js"></script>
-<script type="text/javascript" src="code.js"></script>
+<script type="text/javascript" src="radar_browse.js"></script>
 
 <style>
 #loader{ 
@@ -12,7 +12,29 @@
     height:500px; 
     margin: 5px; 
     border: 5px;
-    solid: #ccc;}
+    solid: #ccc;
+    background-color:#ffffff;
+    border-width:2px;
+    border-color:#121733;
+    border-radius:22px;
+    -moz-border-radius:22px;
+    -webkit-border-radius:22px;
+    /*IE DOES NOT SUPPORT BORDER RADIUS*/
+    box-shadow:0px 0px 9px #000000;
+    -moz-box-shadow:0px 0px 9px #000000;
+    -webkit-box-shadow:0px 0px 9px #000000;
+    /*IE DOES NOT SUPPORT BLUR PROPERTY OF SHADOWS*/
+    opacity:0.61;
+    -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=61);
+    /*-ms-filter must come before filter*/
+    filter: alpha(opacity=61);
+    /*INNER ELEMENTS MUST NOT BREAK THIS ELEMENTS BOUNDARIES*/
+    /*All filters must be placed together*/
+
+
+}
+
+
 #daySlider{ width: 500px }
 #minSlider{ width: 500px }
 input.date { width: 167px }
