@@ -3,8 +3,10 @@
 upper() {
     echo $1 | tr [:lower:] [:upper:]
 }
+OUTDIR=/scratch/www/html/bioscatter/download
 
-cd /scratch/www/html/bioscatter/download
+cd ${OUTDIR} 
+
 PRODUCT=$1
 PRODUCT_U=$(upper $1)
 LAT=$2
