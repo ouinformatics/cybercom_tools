@@ -4,8 +4,7 @@ from sqlalchemy.orm import sessionmaker, relationship
 from datetime import datetime
 #from sqlalchemy.schema import *
 
-#engine = create_engine('postgresql://mstacy@localhost:5432/mstacy', echo=True)
-engine = create_engine('sqlite:///cybercommons.db', echo=True)
+engine = create_engine('postgresql://mstacy@localhost:5432/cybercom')#, echo=True)
 Session = sessionmaker(bind=engine)
 session = Session()
 
