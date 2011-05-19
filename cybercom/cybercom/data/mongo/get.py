@@ -3,7 +3,7 @@ from datetime import datetime
 from json_handler import handler
 import ast
 import iso8601
-
+import json
 def select( db=None, col=None, query=None, callback=None, showids=None, date=None):
     con = Connection()
     # if db is set create db object, else show db names
