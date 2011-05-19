@@ -1,5 +1,8 @@
-from distutils.core import setup
+import ez_setup
+ez_setup.use_setuptools()
+from setuptools import setup, find_packages
 setup(name='cybercom',
       version='0.0',
-      packages=['cybercom', 'cybercom.api', 'cybercom.api.mongo', 'cybercom.api.catalog'],
-      )
+      packages= find_packages(),
+      install_requires = ['pymongo', 'psycopg2']      
+)
