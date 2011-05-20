@@ -4,7 +4,18 @@ from json_handler import handler
 import ast
 import iso8601
 import json
-def select( db=None, col=None, query=None, callback=None, showids=None, date=None):
+def find( db=None, col=None, query=None, callback=None, showids=False, date=None):
+    """Find data from a specific mongoDB db and collection
+        :param db: Optional, mongodb database, if not specified a list of dbs is returned
+        :param col: Optional, mongodb collection
+        :param query: Optional, query provided as a python dictionary (see pymongo and mongodb docs for query syntax)
+        :param callback: Optional, used for returning output as JSONP
+        :param showids: Optional, return mongodb _id's
+        :param date: Optional, helper for simpler syntax in date range queries (broken)
+    
+        At the moment this method assumes you want output as JSON, should probably refactor to default to dict and
+        allow options for JSON/JSONP
+    """
     con = Connection()
     # if db is set create db object, else show db names
     if db:
