@@ -1,6 +1,6 @@
 import cherrypy
 import json 
-from cybercom.data.mongo import get 
+from cybercom.data.mongo.get import find
 
 def mimetype(type):
     def decorate(func):
@@ -17,4 +17,4 @@ class Root(object):
         """ 
         Wrapper for underlying pymongo access
         """
-        get.find(db, col, query, callback, showids, date)
+        return find(db, col, query, callback, showids, date)
