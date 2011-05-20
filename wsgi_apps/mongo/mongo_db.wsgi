@@ -5,7 +5,7 @@ import site
 site.addsitedir('/scratch/www/wsgi_sites/mongo')
 import cherrypy
 from cherrypy import wsgiserver
-from mongoapi import Root
+from cybercom.api.mongo.mongoapi import Root
 
     
 application = cherrypy.Application(Root(), script_name=None, config = None )# , config={ '/': {'tools.xmlrpc.on': True }} )
