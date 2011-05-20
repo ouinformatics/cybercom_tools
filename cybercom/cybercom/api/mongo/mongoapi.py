@@ -17,4 +17,4 @@ class Root(object):
         """ 
         Wrapper for underlying pymongo access
         """
-        get.select(db, col, query, callback, showids, date)
+        get.find(db, col, query, callback, showids, date)
