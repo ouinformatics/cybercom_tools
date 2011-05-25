@@ -4,6 +4,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import numpy
+from StringIO import StringIO
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
 
@@ -16,11 +17,11 @@ def afplot( location, variable, aggregation='monthly'):
     r.sort()
     fname = '%s_%s' % (location, aggregation)
     title = '%s of %s' % (aggregation, variable)
-    date_plot(r, variable, fname, title)
+    fileout = date_plot(r, variable, fname, title)
+    return fileout
 
 def date_plot(darray, variable, fout, title=None): 
-    fig = Figure()
-    canvas = FigureCanvas(fig)
+    fig = plt.figure()
     ax = fig.add_subplot(111)
     ax.plot(darray.date, darray[variable])
 
@@ -43,7 +44,9 @@ def date_plot(darray, variable, fout, title=None):
     ax.set_ylabel('units')
 
     fig.autofmt_xdate()
+    fileout = StringIO()
+    fig.savefig(fileout, format='png') 
+    fileout.seek(0)
+    return fileout
 
-    canvas.print_figure(fout) 
 
-afplot( 'US-FPE', 'NEE_or_fANN', 'monthly')
