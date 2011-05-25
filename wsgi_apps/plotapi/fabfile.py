@@ -2,7 +2,7 @@ from fabric.api import *
 from fabric.contrib.files import exists
 from fabric.colors import red
 
-env.sitename = 'mongo'
+env.sitename = 'plotapi'
 env.mongo_host = 'fire.rccc.ou.edu'
 env.psql_host = 'fire.rccc.ou.edu'
 env.path = '/scratch/www/wsgi_sites/%(sitename)s' % env
