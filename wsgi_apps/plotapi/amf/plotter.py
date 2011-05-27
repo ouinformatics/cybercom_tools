@@ -1,27 +1,37 @@
 from cybercom.data.dataset.ameriflux import ameriflux
 import datetime
+import getpass 
+import os
+if getpass.getuser == 'apache':
+    os.os.environ['HOME'] = '/var/www/tmp'
 import matplotlib
-import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import numpy
 from StringIO import StringIO
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
+from iso8601 import parse_date
 
-years = mdates.YearLocator()
-months = mdates.MonthLocator()
-yearsFmt = mdates.DateFormatter('%Y')
+def afplot( location, variable, aggregation='monthly', sdate=None, edate=None):
+    if sdate and edate:
+        sdate,edate = [ parse_date(item) for item in [ sdate, edate ] ]
+        r = ameriflux.getvar( location, variable, aggregation, as_method='numpy',
+                          date_from=sdate, date_to=edate)
+    else:
+        r = ameriflux.getvar( location, variable, aggregation, as_method='numpy')
 
-def afplot( location, variable, aggregation='monthly'):
-    r = ameriflux.getvar( location, variable, aggregation, as_method='numpy')
     r.sort()
     fname = '%s_%s' % (location, aggregation)
     title = '%s of %s' % (aggregation, variable)
-    fileout = date_plot(r, variable, fname, title)
-    return fileout
+    return date_plot(r, variable, fname, title)
 
 def date_plot(darray, variable, fout, title=None): 
-    fig = plt.figure()
+    years = mdates.YearLocator()
+    months = mdates.MonthLocator()
+    yearsFmt = mdates.DateFormatter('%Y')
+
+    fig = Figure()
+    canvas = FigureCanvas(fig)
     ax = fig.add_subplot(111)
     ax.plot(darray.date, darray[variable])
 
@@ -45,7 +55,8 @@ def date_plot(darray, variable, fout, title=None):
 
     fig.autofmt_xdate()
     fileout = StringIO()
-    fig.savefig(fileout, format='png') 
+    canvas.print_figure(fileout, format='png')
+    #fig.savefig(fileout, format='png') 
     fileout.seek(0)
     return fileout
 

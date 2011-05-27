@@ -38,6 +38,7 @@ def setup():
 
 def deploy():
     copy_working_dir()
+    #sudo('/etc/init.d/httpd restart')
 
 def setup_directories():
     run('mkdir -p %(path)s' % env)
@@ -54,9 +55,9 @@ def copy_working_dir():
     local('rm /tmp/deploy_%(sitename)s.tgz' % env)
 
 def install_requirements():
-    check = exists('%(path)s/requirements.txt' % env)
-    if check:
-        run('source %(virtpy)s/bin/activate; pip install -E %(virtpy)s -r %(path)s/requirements.txt' % env)
+    checkreq = exists('%(path)s/requirements.txt' % env)
+    if checkreq:
+        run('source %(virtpy)s/bin/activate; pip install numpy; pip install -E %(virtpy)s -r %(path)s/requirements.txt' % env)
     else:
         print red("Can't find requirements.txt!")
 

@@ -1,2 +1,10 @@
-cherrypy
-paste
+CherryPy==3.2.0
+Paste==1.7.5.1
+SQLAlchemy==0.7.0
+https://github.com/ouinformatics/cybercom/tarball/0.0.0
+iso8601==0.1.4
+numpy==1.6.0
+psycopg2==2.4.1
+pymongo==1.11
+simplejson==2.1.6
+http://downloads.sourceforge.net/project/matplotlib/matplotlib/matplotlib-1.0.1/matplotlib-1.0.1.tar.gz
