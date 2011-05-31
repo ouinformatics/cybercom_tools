@@ -61,7 +61,6 @@ def place_templates():
     if checktemp:
         sudo('mkdir -p %(templates)s' % env)
         sudo('cp %(path)s/templates/* %(templates)s' %env)
-        run('rm -rf %(templates)s' % env)
 
 def setup_virtualenv():
     """ Create a virtual environment """
@@ -70,18 +69,15 @@ def setup_virtualenv():
 def copy_working_dir():
     """ tgz the working directory and send it to remote host """
     local('tar --exclude virtpy -czf /tmp/deploy_%(sitename)s.tgz .' % env)
-    put('/tmp/deploy_%(sitename)s.tgz' % env, 
-            '%(path)s/deploy_%(sitename)s.tgz' % env)
-    run('cd %(path)s; tar -xf deploy_%(sitename)s.tgz; 
-            rm deploy_%(sitename)s.tgz' % env)
+    put('/tmp/deploy_%(sitename)s.tgz' % env, '%(path)s/deploy_%(sitename)s.tgz' % env)
+    run('cd %(path)s; tar -xf deploy_%(sitename)s.tgz; rm deploy_%(sitename)s.tgz' % env)
     local('rm /tmp/deploy_%(sitename)s.tgz' % env)
 
 def install_requirements():
     """ Install virtualpython requirements """
     checkreq = exists('%(path)s/requirements.txt' % env)
     if checkreq:
-        run('source %(virtpy)s/bin/activate; pip install numpy; 
-                pip install -E %(virtpy)s -r %(path)s/requirements.txt' % env)
+        run('source %(virtpy)s/bin/activate; pip install numpy; pip install -E %(virtpy)s -r %(path)s/requirements.txt' % env)
     else:
         print red("Can't find requirements.txt!")
 
