@@ -15,6 +15,10 @@ def index(request):#,label=11):
     sel= db.endnote.find({"DataKeys":{"$exists" :True}},{'ShortTitle':1,'Label':1}).sort('Label',ASCENDING)
     data = {'select':sel}
     return render_to_response('index.html',data, context_instance = RequestContext( request ) )
+def index_flora(request,label=11):
+    #sel= db.endnote.find({"DataKeys":{"$exists" :True}},{'ShortTitle':1,'Label':1}).sort('Label',ASCENDING)
+    data = {'label':label}
+    return render_to_response('index_flora.html',data, context_instance = RequestContext( request ) )
 
 def data(request,label=11):
     end = db.endnote.find({"Label":label})

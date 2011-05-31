@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block extra_js %}
+<script type="text/javascript">
+$( document ).ready( function() {
+          $('#tabs').tabs();
+          $( '#results' ).html( '&nbsp;' ).load( '{% url demo_bib_search %}?q={{ label }}');
+          
+});
+
+</script>
+ 
+{% endblock %}
+{% block main %}
+         <div class="maintitle">
+           <strong> Flora Exploration </strong>
+         </div>
+         <div id="results"></div>
+
+{% endblock %}
+                   
