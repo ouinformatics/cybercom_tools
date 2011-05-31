@@ -9,7 +9,7 @@ $( document ).ready( function() {
 // Dialog
            $('#dialog').dialog({ autoOpen: false, width:800, resizable:false,
 	          buttons: {"Ok": function() {
-                               var ss = $("#Selct").val();
+                               var ss = $("select#Selct").val();
                                $('#results' ).html( '&nbsp;' ).load( '{% url demo_bib_search %}?q=' + ss );
                                $(this).dialog("close");
                                             },
@@ -23,7 +23,12 @@ $( document ).ready( function() {
 	    });
 
           $('#Selct').dblclick( function() {
-	      var ss = $("#Selct").val();
+	      var ss = $("select#Selct").val();
+             $('#results' ).html( '&nbsp;' ).load( '{% url demo_bib_search %}?q=' + ss );
+             $('#dialog').dialog("close");
+           });
+          $('#Selct').dblclick( function() {
+	      var ss = $("select#Selct").val();
              $('#results' ).html( '&nbsp;' ).load( '{% url demo_bib_search %}?q=' + ss );
              $('#dialog').dialog("close");
            });

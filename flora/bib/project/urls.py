@@ -10,6 +10,7 @@ from django.conf.urls.defaults import *
 urlpatterns = patterns('',
     # Examples:
     (r'^$', 'flora.views.index'),
+    (r'^(\d{1,6})/$', 'flora.views.index_flora'),
     (r'^data$','flora.views.data'),
     url( r'^flora/$', 'flora.views.ajax_bib_search', name = 'demo_bib_search' ),
     (r'^static/(?P<path>.*)$', 'django.views.static.serve',{'document_root': settings.STATIC_DOC_ROOT}),
