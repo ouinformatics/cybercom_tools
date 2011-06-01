@@ -1,6 +1,7 @@
 import cherrypy
 import plotter
 from cybercom.data.dataset.ameriflux import ameriflux
+from cybercom.data.catalog import datalayer
 from Cheetah.Template import Template
 
 class Plotter():
@@ -58,6 +59,7 @@ class Plotter():
 
         cherrypy.response.headers['Content-Type']= 'image/png'
         return plotter.afplot( loc, var, agg, sdate, edate) 
+    
     @cherrypy.expose
     def index(self):
         return "Working!"
