@@ -2,13 +2,19 @@
 
 import sys
 
-lat = float(sys.argv[1]) # Origin y
-lon = float(sys.argv[2]) # Origin x
-rad = float(sys.argv[3]) # Radius in map units 
+def mkwin(lat, lon, rad):
+    ulx = lon - rad
+    uly = lat + rad
+    llx = lon + rad
+    lly = lat - rad
+    return (ulx, uly, llx, lly)
 
-ulx = lon - rad
-uly = lat + rad
-llx = lon + rad
-lly = lat - rad
 
-print "%s %s %s %s" % (ulx, uly, llx, lly)
+if __name__ == '__main__':
+    lat = float(sys.argv[1]) # Origin y
+    lon = float(sys.argv[2]) # Origin x
+    rad = float(sys.argv[3]) # Radius in map units 
+    print "%s %s %s %s" % mkwin(lat,lon,rad)
+
+
+
