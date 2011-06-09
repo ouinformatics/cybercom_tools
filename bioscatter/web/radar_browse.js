@@ -1,10 +1,15 @@
 $(document).ready(function() {
 
-var minDate = new Date('November 1, 2008 00:00:00 GMT');
-var maxDate = new Date('March 31, 2011 00:00:00 GMT');
+var minDate = new Date('2008-11-01T00:00:00Z');
+var maxDate = new Date('2011-05-01T00:00:00Z');
+
+//var startDate = new Date().today('-1d')
 
 var loc = '35.75,-88.25,37.75,-86.25'
+var loc = '34.2,-98.4,36.2,-96.4'
 
+
+// Nice URL building from JSON arrays
 serialize = function(obj) {
   var str = [];
   for(var p in obj)
@@ -33,17 +38,22 @@ function makeUrl(params) {
 };
 
 function updateUI(datetime) {
-     $('#scene').val(datetime);
-     $('#minute').val( new Date(datetime).toString('HH:mm') ); 
-     $('#day').val( new Date(datetime).toString('M/d/yyyy') );
-     //$('#text').text(datetime.toISOString());
-     $(img).attr('src', makeUrl({datetime: datetime, loc: loc}) );
+     dt = new Date(Date.parse(datetime))
+     
+     $('#datestring').text(dt.toJSON());
+     $('#daySlider').slider({value: dt});
+     utc_day = new Date(dt.getUTCFullYear(), dt.getUTCDay(), dt.getUTCMonth(), 0, 0, 0, 0);
+     utc_dt = new Date(dt.getUTCFullYear(), dt.getUTCDay(), dt.getUTCMonth(), dt.getUTCHours(), dt.getUTCMinutes(), 0, 0)
+     t = utc_dt.getTime() - utc_day.getTime(); 
+     $('#text').text(t) 
+    $('#minSlider').slider({value: t});
+     $(img).attr('src', makeUrl({datetime: dt.toJSON(), loc: loc}) );
 }
 
 function updatePlot(startDate, nDays) {
     endDate = new Date(startDate)
     startDate = new Date("2011-02-01T00:00:00")
-    endDate = new Date("2011-02-03T11:00:00")
+    endDate = new Date("2011-02-01T22:00:00")
     $.getJSON('http://fire.rccc.ou.edu/mongo/db_find?callback=?', { db: "bioscatter", col: "unqc_cref", date: 'timestamp,'+startDate.toISOString()+','+endDate.toISOString() },
         function(data) { 
             var plot_data = Array(); 
@@ -53,9 +63,9 @@ function updatePlot(startDate, nDays) {
                     //loc = val.projwin[0]+','+val.proj_win[1]+','+val.proj_win[2]','+val.proj_win[3]; 
                 }
             );  
-            $.plot($('#plot1'), [ plot_data ], {xaxis: {mode: "time"}, grid: { clickable: Boolean("True")} } );
+            $.plot($('#plot1'), [ plot_data ], {xaxis: {mode: "time"}, grid: { clickable: Boolean("True")}, points: {show:true}, lines: {show:true} } );
                 });
-};
+}
 
 updatePlot();
 
@@ -66,7 +76,9 @@ $("#plot1").bind("plotclick", function (event, pos, item) {
 
         if (item) {
           //highlight(item.series, item.datapoint);
-          updateUI(new Date(pos.x));        }
+          updateUI(new Date(item.datapoint[0]).toJSON() );
+          //$('#text').text(JSON.stringify(item.datapoint)); 
+      }
     });
 
 
@@ -75,7 +87,7 @@ $('#daySlider').slider( { value: maxDate,
     min: minDate.getTime(), 
     step: 86400000,
     stop: function(event, ui) {
-        datetime =  new Date(ui.value + $('#minSlider').slider('value')).toISOString();
+        datetime =  new Date(ui.value + $('#minSlider').slider('value')).toJSON();
         updateUI(datetime);
     } 
 }); 
@@ -85,7 +97,7 @@ $('#minSlider').slider( { value: 0,
     max: 86400000, 
     step: 300000, 
     stop: function(event, ui) { 
-        datetime = new Date(ui.value + $('#daySlider').slider('value')).toISOString();
+        datetime = new Date(ui.value + $('#daySlider').slider('value')).toJSON();
         updateUI(datetime);
     }
 }); 
