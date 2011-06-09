@@ -1,4 +1,5 @@
 *.pyc
+virtpy
 *.log
 *.swp
 *.dat
