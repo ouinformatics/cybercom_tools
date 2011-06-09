@@ -53,10 +53,10 @@ def getindex(url):
     try:
         req = urllib2.Request(url)
         f = urllib2.urlopen(req)
+        return [ line.strip().split(':') for line in f.readlines() ]  
     except:
         print "Does the URL exist?"
-    return [ line.strip().split(':') for line in f.readlines() ]
-
+    
 def computerange(lyrindex):
     """
     Find ranges from inventory file.
@@ -134,11 +134,13 @@ if __name__ == '__main__':
             start = datetime.strptime(start, '%Y%m%d.%H%M%S')
             stop = datetime.strptime(stop, '%Y%m%d.%H%M%S')
             for modelrun in date_range(start,stop):
-                url = dateurl( modelrun, 'http://nomads.ncdc.noaa.gov/', 'data/ruc13/%Y%m/%Y%m%d/ruc2_130_%Y%m%d_%H%M_000.inv')
-                print url
-                layers = selectlayers(computerange(getindex(url)), toget)
-                url = url.replace('.inv','.grb2')
-                getlayers(url,layers)
+                try:
+                    url = dateurl( modelrun, 'http://nomads.ncdc.noaa.gov/', 'data/ruc13/%Y%m/%Y%m%d/ruc2_130_%Y%m%d_%H%M_000.inv')
+                    layers = selectlayers(computerange(getindex(url)), toget)
+                    url = url.replace('.inv','.grb2')
+                    getlayers(url,layers)
+                except:
+                    print "That date time has problems, does %s exist?" % url 
         else:
             date = datetime.strptime(date, '%Y%m%d.%H%M%S')
             url = dateurl( date, 'http://nomads.ncdc.noaa.gov/', 'data/ruc13/%Y%m/%Y%m%d/ruc2_130_%Y%m%d_%H%M_000.inv')
