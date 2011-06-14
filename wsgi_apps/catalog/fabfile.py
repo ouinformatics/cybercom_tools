@@ -2,7 +2,7 @@ from fabric.api import *
 from fabric.contrib.files import exists
 from fabric.colors import red
 
-env.sitename = 'mongo'
+env.sitename = 'catalog'
 env.mongo_host = 'fire.rccc.ou.edu'
 env.psql_host = 'fire.rccc.ou.edu'
 env.path = '/scratch/www/wsgi_sites/%(sitename)s' % env
@@ -33,7 +33,7 @@ def setup():
     """
     setup_directories()
     copy_working_dir()
-    place_templates()
+    #place_templates()
     setup_virtualenv()
     install_requirements()
     bounce_apache()
@@ -41,7 +41,7 @@ def setup():
 def deploy():
     """ Deploy code changes """
     copy_working_dir()
-    place_templates()
+    #place_templates()
     bounce_apache()
 
 def setup_directories():
@@ -49,7 +49,7 @@ def setup_directories():
     run('mkdir -p %(path)s' % env)
     run('mkdir -p %(log_path)s' % env)
     run('mkdir -p %(virtpy)s' % env)
-    run('mkdir -p %(templates)s' % env)
+    sudo('mkdir -p %(templates)s' % env)
 
 def bounce_apache():
     """ Restart the apache web server """
