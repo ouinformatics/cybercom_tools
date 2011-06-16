@@ -4,7 +4,6 @@ import portal
 from cybercom.data.catalog import datalayer
 from Cheetah.Template import Template
 
-#This is neat
 
 class DataBrowse():
     def show_commons(self):
@@ -32,7 +31,7 @@ class DataBrowse():
             #end if
             <table cellpadding="4">
             #for $loc in $locs
-            <tr><td>  State: $loc['loc_state'] ( $loc['lat'], $loc['lon'] ) </td><td><a href='./$loc['loc_id']'/>$loc['loc_name']</a></td><td></tr>
+            <tr><td>  State: $loc['loc_state'] ( $loc['lat'], $loc['lon'] ) </td><td><a href='$loc['loc_id']'/>$loc['loc_name']</a></td><td></tr>
             #end for
             </table>
         </body></html>
