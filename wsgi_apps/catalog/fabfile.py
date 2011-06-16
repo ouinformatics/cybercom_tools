@@ -44,6 +44,12 @@ def deploy():
     #place_templates()
     bounce_apache()
 
+
+def update_cybercom():
+    run('source %(path)s/virtpy/bin/activate; pip install -U https://github.com/ouinformatics/cybercom/tarball/master' % env)
+    bounce_apache()
+
+
 def setup_directories():
     """ Make directories """
     run('mkdir -p %(path)s' % env)
