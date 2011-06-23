@@ -47,7 +47,7 @@ def raster_file(timestamp):
     if os.path.exists( path + fstring ):
         return path + fstring
 
-def readRasterMax(window, timestart, timestop, store=False):
+def readRasterMax(window, timestart, timestop, store=False, loc_id=None):
     ''' Compute maximum value within window '''
     ids = []
     for time in date_range(timestart,timestop):
@@ -58,7 +58,7 @@ def readRasterMax(window, timestart, timestop, store=False):
             projwin = mkwin(float(window['x']), float(window['y']), float(window['radius']))
             srcwin = projwin2src(projwin, geotrans)
             maxval = float(rast.ReadAsArray(srcwin[0], srcwin[1], srcwin[2], srcwin[3] ).max())
-            output =  {"product": product, "projwin": list(projwin), "timestamp": time, "maxval": maxval, "location": window}
+            output =  {"product": product, "projwin": list(projwin), "timestamp": time, "maxval": maxval, "location": window, "loc_id": loc_id}
             if store:
                 con = pymongo.Connection()
                 db = con.bioscatter
@@ -79,6 +79,7 @@ if __name__ == '__main__':
     store = False
     if len(argv) > 4:
         store = argv[4]
-    print readRasterMax(window, timestart, timestop, store)
+        loc_id = argv[5]
+    print readRasterMax(window, timestart, timestop, store, loc_id)
 
 
