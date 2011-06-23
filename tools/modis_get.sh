@@ -1,0 +1,11 @@
+#!/bin/bash
+# Get MODIS
+
+URLBASE=http://e4ftl01.cr.usgs.gov
+SENSOR=MOLT
+PRODUCT=MOD09Q1.005
+DATE=2011.04.15
+
+URL=${URLBASE}/${SENSOR}/${PRODUCT}/${DATE}
+
+curl -l $URL

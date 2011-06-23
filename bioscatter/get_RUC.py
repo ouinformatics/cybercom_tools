@@ -9,8 +9,6 @@ from owslib.wcs import WebCoverageService
 from datetime import datetime, timedelta
 import os, sys
 
-fcast='000' # We only want the zero hour forecasts
-outpath = '/scratch/data/nws/ruc/' # destination for output files
 model = 'RUC' # Model to use a prefix for filenames
 
 products = ['Pressure_surface', 
@@ -37,11 +35,7 @@ def date_range( start_datetime, end_datetime, minutes=60):
         yield d
         d += delta
 
-def reproject(s_srs, t_srs):
-    ''' Reproject a raster using gdalwarp ''' 
-    pass
-
-def get_products(products, dt, bbox=None):
+def get_products(products, dt, bbox=None, fcast='000', outpath='.'):
     ''' Get a list of products for a given date and time 
         Example:
         >> get_products(['Temperature'], datetime(2010,10,10,12,0))
@@ -62,7 +56,7 @@ def get_products(products, dt, bbox=None):
             bbox = (-139, -57.995, 16, 55) # CONUS
         date_time = dt.isoformat() + 'Z'
         for product in products:
-            filename = outpath + model + '_' + date_time.replace(':','') + '_' + product + '.tif'
+            filename = os.path.join(outpath, model + '_' + date_time.replace(':','') + '_' + product + '.tif')
             if os.path.exists(filename): # Check if file exists so we don't download duplicates
                pass
             else: 
@@ -81,6 +75,8 @@ def get_products(products, dt, bbox=None):
 if __name__ == '__main__':
     start = datetime.strptime(sys.argv[1], '%Y%m%d.%H%M%S')
     stop = datetime.strptime(sys.argv[2], '%Y%m%d.%H%M%S')
+    if len(sys.argv) > 3:
+        path = sys.argv[3]
     for time in date_range(start, stop):
         files_out = {}
         files_out[time.isoformat()] = get_products(products, time)
