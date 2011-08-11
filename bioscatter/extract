@@ -9,7 +9,7 @@ FINISH=$6
 
 TMPDIR=$(mktemp -d)
 DATADIR=/scratch/data/nws/ldm/tiles/mosaic/${PRODUCT}
-PROJWIN=$(/home/jduckles/cybercom/bioscatter/mkwin ${LAT} ${LON} ${RAD})
+PROJWIN=$(/home/jduckles/cybercommons/bioscatter/mkwin ${LAT} ${LON} ${RAD})
 
 find ${DATADIR} -name *.vrt | grep -v _aea | sort -n > ${DATADIR}/manifest
 

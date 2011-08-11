@@ -11,10 +11,13 @@ import os
 class Extract(xmlrpc.XMLRPC):
     ''' Extract radar products '''
     def singleExtract(self, product, lat, lon, radius, time):
-        call_string = ['/home/jduckles/cybercom/bioscatter/simp_extract', product, lat, lon, radius, time]
-        p = Popen( call_string , stdout=PIPE, stderr=PIPE)
-        out = p.communicate()[0].strip()
-        return out
+        if product = 'unqc_cref':
+            call_string = ['/home/jduckles/cybercom/bioscatter/simp_extract', product, lat, lon, radius, time]
+            p = Popen( call_string , stdout=PIPE, stderr=PIPE)
+            out = p.communicate()[0].strip()
+            return out
+        elif product = 'RUC':
+            pass # call RUC grabs
 
     def zip_files(self, files):
         ''' Takes a list of file locations and returns a zipfile with directories stripped ''' 
