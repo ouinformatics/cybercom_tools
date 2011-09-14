@@ -1,8 +1,9 @@
 from fabric.api import *
 from fabric.contrib.files import exists
 from fabric.colors import red
+import os 
 
-env.sitename = 'mongo'
+env.sitename = os.path.basename(os.getcwd())
 env.mongo_host = 'fire.rccc.ou.edu'
 env.psql_host = 'fire.rccc.ou.edu'
 env.apache_config_path = '/etc/httpd/conf.d/%(sitename)s' % env
