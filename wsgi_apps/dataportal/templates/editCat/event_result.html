@@ -1,0 +1,66 @@
+            <script>onloadfunction();$('#resultTable').tabs();
+                    $('.tbar').hover(function(){$(this).addClass("ui-state-hover");},function(){$(this).removeClass("ui-state-hover");});
+                    $('#btnAdd').click(function(){
+                            $('#tabs-1' ).html( '&nbsp;' ).load( '/getevent/?event_id=addnew&commons_id='.concat(commons_id.concat("&catid=".concat(catid))) );
+                            //$('#tabs-1' ).html( '&nbsp;' ).load(  '/getcatalog/?catid=addnew&commons_id='.concat(commons_id));
+                    });
+                    $('#btnDel').click(function(){
+                            $('#output2' ).html( '&nbsp;' ).load(  '/delevent/?event_id={{eventid}}&cat_id={{catid}}&common_id='.concat(commons_id),function(){ 
+                                var idx = $("select#Select").attr("selectedIndex");
+                                var selectobject=document.getElementById("Select");
+                                if (idx == 0){eventid = selectobject.options[1].value;}
+                                else{s = idx-1; eventid = selectobject.options[s].value; } radio33();} );
+                    });
+                    
+            </script>
+            <div class="left" style="float:left;text-align:right;width:20%">Event ID:</div>
+            <div class="right" style="float:left;margin-left:15px;width:75%"> {{ eventid }} </div>
+            <form id="test" action="{{action}}" method="post">{% csrf_token %}
+                {% for field in form.visible_fields %}
+                    {% if forloop.first %}
+                        {% for hidden in form.hidden_fields %}
+                            {{ hidden }}
+                        {% endfor %}
+                    {% endif %}
+                <div class="fieldWrapper">
+                    <div class="left" style="float:left;text-align:right;width:20%"> {{ field.label_tag }}:</div>
+                    <div class="right" style="float:left;margin-left:15px;width:75%"> {{ field }} </div>
+                    <div class="top"> {{ field.errors }}</div>
+                 </div>
+                 {% endfor %}
+                <div class="left" style="float:left;text-align:right;"></div>
+                <div class="right" style="float:left;margin-left:15px;text-align:right">
+                 <p><input id="btnAdd" class="tbar ui-button ui-widget ui-state-default ui-button-text-only ui-corner-right" type="button" value="Add New Record" />
+                    <input id="btnDel" class="tbar ui-button ui-widget ui-state-default ui-button-text-only ui-corner-right" type="button" value="Delete Record" />
+                    <input id="formsub" class="tbar ui-button ui-widget ui-state-default ui-button-text-only ui-corner-right" type="submit" value="Save Record" /></p>
+                </div>
+          </form> 
+          <div style="clear:both">
+            <div id="output2" ></div>
+            <p><h2>Event Results</h2></p>
+            <table id="resultTable" border="1" cellpadding="5">
+            <tr>
+                <th>Variable</th>
+                <th>Result</th>
+                <th><a class="tbar ui-button ui-widget ui-state-default ui-button-text-only ui-corner-right" href="javascript: 
+                                    $('#dlog').html( '&nbsp;' ).load( '/getresult/?event_id={{ eventid }}&var_id=addnew&commons_id='.concat(commons_id), function(){
+                                    $( '#dialog' ).dialog({width:'800px',modal: true,title:'Result Table'});});">Add Result</a> </th>
+            </tr>
+            {% for field in data %}
+            <tr>
+                <td> {{ field.var_id }}</td>
+                {% if field.var_id == "URL" %}
+                  <td><a href="{{ field.result_text }}" target="_blank">{{ field.result_text }}</a></td>
+                {% else %}
+                  <td>{{ field.result_text }}</td>
+                {% endif %}
+                <td>
+                    <a class="tbar ui-button ui-widget ui-state-default ui-button-text-only ui-corner-right" href="javascript:
+                                    $('#dlog').html( '&nbsp;' ).load( '/getresult/?event_id={{ eventid }}&var_id={{ field.var_id }}',function(){
+                                    $( '#dialog' ).dialog({width:'800px',modal: true,title:'Result Table'});});">|  Edit  |</a>
+                    <a padding="2px 2px 2px 2px" class="tbar ui-button ui-widget ui-state-default ui-button-text-only ui-corner-right" href="javascript: alert('Delete');">|  Delete  |</a>
+                </td>
+            </tr>
+            {% endfor %}
+            </table> 
+            </div>
