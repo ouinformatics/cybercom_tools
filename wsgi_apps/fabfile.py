@@ -43,10 +43,16 @@ def setup():
     bounce_apache()
 
 def deploy():
+    """
+    Deploy changes which don't impact virtual environment
+    """ 
     copy_working_dir()
     bounce_apache()
 
 def setup_directories():
+    """ 
+    Setup directories on the remote system
+    """
     if not exists('%(path)s' % env):
         run('mkdir -p %(path)s' % env)
         run('mkdir -p %(log_path)s' % env)
@@ -54,10 +60,16 @@ def setup_directories():
 
 
 def virtualenv(command):
+    """ 
+    Wrapper to activate and run virtual environment
+    """"
     with cd(env.virtpy):
         run('source %(virtpy)s/bin/activate' % env + '&&' + command)
 
 def setup_virtualenv():
+    """
+    Install the virtual environment
+    """
     run('virtualenv -p %(python)s --no-site-packages %(virtpy)s' % env)
 
 def bounce_apache():
@@ -65,6 +77,10 @@ def bounce_apache():
     sudo('/etc/init.d/httpd restart')
 
 def apache_config():
+    """
+    Set the apache config file to point to wsgi.  Assumes app will be accessible at /sitename/ and 
+      .wsgi named sitename.wsgi
+    """
     # check if apache config lines exist in old wsgi_sites.conf and comment if found
     comment('/etc/httpd/conf.d/wsgi_sites.conf', r'^WSGIScriptAlias /%(sitename)s .*$' % env, use_sudo=True)
     if os.path.isfile('/%(sitename)s %(path)s/%(sitename)s.wsgi' % env):
@@ -74,12 +90,18 @@ def apache_config():
         red("Can't find %(sitename)s.wsgi file" % env)
 
 def copy_working_dir():
+    """
+    Shuttle application code from local to remote
+    """
     local('tar --exclude virtpy -czf /tmp/deploy_%(sitename)s.tgz .' % env)
     put('/tmp/deploy_%(sitename)s.tgz' % env, '%(path)s/deploy_%(sitename)s.tgz' % env)
     run('cd %(path)s; tar -xf deploy_%(sitename)s.tgz; rm deploy_%(sitename)s.tgz' % env)
     local('rm /tmp/deploy_%(sitename)s.tgz' % env)
 
 def install_requirements():
+    """ 
+    Install the contents of requirements.txt to the virtual environment 
+    """
     check = exists('%(path)s/requirements.txt' % env)
     if check:
         virtualenv('pip install -E %(virtpy)s -r %(path)s/requirements.txt' % env)
