@@ -1,13 +1,13 @@
 from fabric.api import *
-from fabric.contrib.files import exists
+from fabric.contrib.files import exists, append, comment
 from fabric.colors import red
 import os 
 
 env.sitename = os.path.basename(os.getcwd())
 env.mongo_host = 'fire.rccc.ou.edu'
 env.psql_host = 'fire.rccc.ou.edu'
-env.apache_config_path = '/etc/httpd/conf.d/%(sitename)s' % env
-env.python = 'python2.6'
+env.apache_config = '/etc/httpd/conf.d/%(sitename)s.conf' % env
+env.python = '/usr/bin/python2.6'
 
  
 def testing():
@@ -39,7 +39,7 @@ def setup():
     copy_working_dir()
     setup_virtualenv()
     install_requirements()
-    install_cybercom()
+    apache_config()
     bounce_apache()
 
 def deploy():
@@ -47,9 +47,15 @@ def deploy():
     bounce_apache()
 
 def setup_directories():
-    run('mkdir -p %(path)s' % env)
-    run('mkdir -p %(log_path)s' % env)
-    run('mkdir -p %(virtpy)s' % env)
+    if not exists('%(path)s' % env):
+        run('mkdir -p %(path)s' % env)
+        run('mkdir -p %(log_path)s' % env)
+        run('mkdir -p %(virtpy)s' % env)
+
+
+def virtualenv(command):
+    with cd(env.virtpy):
+        run('source %(virtpy)s/bin/activate' % env + '&&' + command)
 
 def setup_virtualenv():
     run('virtualenv -p %(python)s --no-site-packages %(virtpy)s' % env)
@@ -57,6 +63,15 @@ def setup_virtualenv():
 def bounce_apache():
     """ Restart the apache web server """
     sudo('/etc/init.d/httpd restart')
+
+def apache_config():
+    # check if apache config lines exist in old wsgi_sites.conf and comment if found
+    comment('/etc/httpd/conf.d/wsgi_sites.conf', r'^WSGIScriptAlias /%(sitename)s .*$' % env, use_sudo=True)
+    if os.path.isfile('/%(sitename)s %(path)s/%(sitename)s.wsgi' % env):
+        confline = 'WSGIScriptAlias /%(sitename)s %(path)s/%(sitename)s.wsgi' %env
+        append('%(apache_config)s' % env, confline, use_sudo=True)
+    else:
+        red("Can't find %(sitename)s.wsgi file" % env)
 
 def copy_working_dir():
     local('tar --exclude virtpy -czf /tmp/deploy_%(sitename)s.tgz .' % env)
@@ -67,9 +82,8 @@ def copy_working_dir():
 def install_requirements():
     check = exists('%(path)s/requirements.txt' % env)
     if check:
-        run('source %(virtpy)s/bin/activate; pip install -E %(virtpy)s -r %(path)s/requirements.txt' % env)
+        virtualenv('pip install -E %(virtpy)s -r %(path)s/requirements.txt' % env)
     else:
         print red("Can't find requirements.txt!")
 
-def install_cybercom():
-    run('source %(virtpy)s/bin/activate; pip install http://github.com/ouinformatics/cybercom/tarball/master' % env)
+
