@@ -62,7 +62,7 @@ def setup_directories():
 def virtualenv(command):
     """ 
     Wrapper to activate and run virtual environment
-    """"
+    """
     with cd(env.virtpy):
         run('source %(virtpy)s/bin/activate' % env + '&&' + command)
 
