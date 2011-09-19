@@ -1,0 +1,5 @@
+<select id="Select"  style="width:100%;" size="57" >
+         {% for val in data %}
+         <option value={{ val.commons_id }}>{{ val.commons_id }} : {{ val.commons_code }}</option>
+         {% endfor %}
+</select>

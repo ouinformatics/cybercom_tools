@@ -1,0 +1,5 @@
+<select id="Select"  style="width:100%;" size="57" >
+         {% for val in data %}
+         <option value={{ val.cat_id }}>{{ val.cat_id }} : {{ val.cat_name }}</option>
+         {% endfor %}
+</select>
