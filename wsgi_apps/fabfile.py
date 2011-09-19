@@ -83,11 +83,8 @@ def apache_config():
     """
     # check if apache config lines exist in old wsgi_sites.conf and comment if found
     comment('/etc/httpd/conf.d/wsgi_sites.conf', r'^WSGIScriptAlias /%(sitename)s .*$' % env, use_sudo=True)
-    if os.path.isfile('/%(sitename)s %(path)s/%(sitename)s.wsgi' % env):
-        confline = 'WSGIScriptAlias /%(sitename)s %(path)s/%(sitename)s.wsgi' %env
-        append('%(apache_config)s' % env, confline, use_sudo=True)
-    else:
-        red("Can't find %(sitename)s.wsgi file" % env)
+    confline = 'WSGIScriptAlias /%(sitename)s %(path)s/%(sitename)s.wsgi' %env
+    append('%(apache_config)s' % env, confline, use_sudo=True)
 
 def copy_working_dir():
     """
