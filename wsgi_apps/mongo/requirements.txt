@@ -5,3 +5,4 @@ simplejson
 geojson
 sqlalchemy
 cherrypy
+https://github.com/ouinformatics/cybercom/tarball/master
