@@ -1,5 +1,8 @@
              <script type="text/javascript" src="http://static.cybercommons.org/js/catalog/catalog.js"></script>
             <script>onloadfunction();$('#ftool').buttonset();
+                    var options = { target: '#output3',success:showResponse};
+                    //$('#test3').ajaxForm(options);
+                    $('#test3').submit(function() {$(this).ajaxSubmit(options); return false;});
                     $('.tbar').hover(function(){$(this).addClass("ui-state-hover");},function(){$(this).removeClass("ui-state-hover");});
                     $('#btnAdd').click(function(){
                          //   $('#tabs-1' ).html( '&nbsp;' ).load(  '/getcatalog/?catid=addnew&commons_id='.concat(commons_id));
@@ -12,7 +15,7 @@
                        //         else{s = idx-1; catid = selectobject.options[s].value; } radio22();} );
                     });
             </script>
-            <form id="test" action="{{action}}" method="post">{% csrf_token %}
+            <form id="test3" action="{{action}}" method="post">{% csrf_token %}
                 {% for field in form.visible_fields %}
                     {% if forloop.first %}
                         {% for hidden in form.hidden_fields %}
@@ -21,22 +24,15 @@
                     {% endif %}
                 <div class="fieldWrapper">
                     <div class="left" style="float:left;text-align:right;width:20%">{{ field.label_tag }}:</div>
-                    <div class="right" style="float:left;margin-left:15px;width:75%">{{ field }} 
-                    {% if field.name == 'loc_id' %} 
-                    <input id="btnAddLoc" class="tbar ui-button ui-widget ui-state-default ui-button-text-only ui-corner-right" type="button" value="Add Location" />
-                    {% else %}
-                    {% endif %}
-                    </div>
+                    <div class="right" style="float:left;margin-left:15px;width:75%">{{ field }}</div>
                     <div class="top"> {{ field.errors }}</div>
                 </div>
                  {% endfor %}
                 <div class="left" style="float:left;text-align:right;"></div>
-                <div class="right" style="float:left;margin-left:15px;text-align:right">
-                 <p><input id="btnAdd" class="tbar ui-button ui-widget ui-state-default ui-button-text-only ui-corner-right" type="button" value="Add New Record" />
-                    <input id="btnDel" class="tbar ui-button ui-widget ui-state-default ui-button-text-only ui-corner-right" type="button" value="Delete Record" />
-                    <input id="formsub" class="tbar ui-button ui-widget ui-state-default ui-button-text-only ui-corner-right" type="submit" value="Save Record" /></p>
+                <div class="right" style="float:left;margin-left:45%;text-align:right">
+                    <p><input id="formsub" class="tbar ui-button ui-widget ui-state-default ui-button-text-only ui-corner-right" type="submit" value="Save Record" /></p>
                 </div>
             </form>
-            <div style="clear:both">
-                <div id="output2"></div>
+            <div style="clear:both;margin-left:45%;">
+                <div id="output3"></div>
             </div>

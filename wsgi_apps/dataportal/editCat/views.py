@@ -10,12 +10,25 @@ from cybercom.data.catalog import datalayer
 from django.forms.formsets import formset_factory
 from django.forms.models import modelformset_factory
 import datetime
+from django.contrib.auth.models import User
 try:
     import json
 except ImportError:
     import simplejson
+def new_user(request):
+    if request.method == 'POST':
+        try:
+            user = User.objects.create_user(request.POST['name'], request.POST['email'] , request.POST['password'])
+            md= datalayer.Metadata()
+            #md.Inserts('dt_contributors',[{"commons_id" : c_id ,"people_id" : str(request.user)}])
+            md.Inserts('dt_people',[{"people_id":request.POST['name'],"person_name":request.POST['name'],"email":request.POST['email']}])   
+            return HttpResponse("New User " + request.POST['name'] + " created successfully.")
+        except Exception as inst:
+            return HttpResponse(str(inst))
+    else:
+        return HttpResponse("[]")
 #************** Formset Commons ******************************
-@login_required(login_url='/accounts/login/')
+@login_required(login_url='accounts/login/')
 def main_catalog(request):
     '''Table form style call'''
     userid=str(request.user)
@@ -30,12 +43,12 @@ def main_catalog(request):
         formset = DatacommonsFormSet()
     return render_to_response('editCat/dtcommons.html', {'formset': formset})
 # ************* Empty load ******************************************************************
-@login_required(login_url='/accounts/login/')
+@login_required(login_url='accounts/login/')
 def empty_Load(request):
     '''Load text '''
     return HttpResponse("<h1>Please select record or add new record!<h1>") 
 #*******************************************************************************************
-@login_required(login_url='/accounts/login/')
+@login_required(login_url='accounts/login/')
 def ajax_result_del(request):
     commonid = request.GET.get( 'common_id' )
     eventid = request.GET.get( 'event_id' )
@@ -54,7 +67,7 @@ def ajax_result_del(request):
     except Exception as inst:
         return HttpResponse(str(inst))
 
-@login_required(login_url='/accounts/login/')
+@login_required(login_url='accounts/login/')
 def ajax_result(request):
     try:
         if request.method == 'POST':
@@ -111,7 +124,7 @@ def ajax_result(request):
 
 
 #*************** Event **********************************************************************
-@login_required(login_url='/accounts/login/')
+@login_required(login_url='accounts/login/')
 def load_event(request):
     try:
 
@@ -128,7 +141,7 @@ def load_event(request):
         return render_to_response('editCat/select_event.html',c)
     except Exception as inst:
         return HttpResponse(str(inst))
-@login_required(login_url='/accounts/login/')
+@login_required(login_url='accounts/login/')
 def ajax_event_del(request):
     commonid = request.GET.get( 'common_id' )
     eventid = request.GET.get( 'event_id' )
@@ -147,7 +160,7 @@ def ajax_event_del(request):
     except Exception as inst:
         return HttpResponse(str(inst))
 
-@login_required(login_url='/accounts/login/')
+@login_required(login_url='accounts/login/')
 def ajax_event(request):
     try:
         if request.method == 'POST':
@@ -196,7 +209,7 @@ def ajax_event(request):
         return HttpResponse(str(inst))
 
 #**************  Commons  **********************************************************************
-@login_required(login_url='/accounts/login/')
+@login_required(login_url='accounts/login/')
 def main_commons(request):
     userid=str(request.user)
     md= datalayer.Metadata()
@@ -206,7 +219,7 @@ def main_commons(request):
     c={'data':data,'commons':commons}
     return render_to_response('editCat/commons.html',c)
 
-@login_required(login_url='/accounts/login/')
+@login_required(login_url='accounts/login/')
 def load_common(request):
     userid=str(request.user)
     md= datalayer.Metadata()
@@ -216,7 +229,7 @@ def load_common(request):
     c={'data':data,'commons':commons}
     return render_to_response('editCat/select_commons.html',c)
 
-@login_required(login_url='/accounts/login/')
+@login_required(login_url='accounts/login/')
 def ajax_com_del(request):
     commonid = request.GET.get( 'common_id' )
     try:
@@ -231,7 +244,7 @@ def ajax_com_del(request):
         return HttpResponse("true")
     except Exception as inst:
         return HttpResponse(str(inst))
-@login_required(login_url='/accounts/login/')
+@login_required(login_url='accounts/login/')
 def ajax_com(request):
     commonid=''
     if request.method == 'POST':
@@ -286,7 +299,7 @@ def ajax_com(request):
 #************************** Catalog ***************************************************************
 
 
-@login_required(login_url='/accounts/login/')
+@login_required(login_url='accounts/login/')
 def catalog(request,commons=None):
     '''Setup for catalog ajax_cat function'''
     userid=str(request.user)
@@ -300,7 +313,7 @@ def catalog(request,commons=None):
     c={'data':data,'commons':commons}
     return render_to_response('editCat/select_catalog.html',c)#dtcatalog.html',c)# {
 
-@login_required(login_url='/accounts/login/')
+@login_required(login_url='accounts/login/')
 def ajax_cat_del(request):
     #commonid = request.GET.get( 'common_id' )
     #catid = request.GET.get( 'cat_id' )
@@ -323,7 +336,7 @@ def ajax_cat_del(request):
     except Exception as inst:
         return HttpResponse(str(inst))
 
-@login_required(login_url='/accounts/login/')
+@login_required(login_url='accounts/login/')
 def ajax_cat(request):
     if request.method == 'POST':
         catid = request.META['QUERY_STRING'].split('=')[1]#[tid
@@ -366,7 +379,7 @@ def ajax_cat(request):
         except Exception as inst:
             return HttpResponse(str(inst))
 #*************************Location **********************************************************************
-@login_required(login_url='/accounts/login/')
+@login_required(login_url='accounts/login/')
 def ajax_loc(request):
     try:
         if request.method == 'POST':
@@ -408,16 +421,16 @@ def ajax_loc(request):
     except Exception as inst:
         return HttpResponse(str(inst))
 #************************* Method **********************************************************************
-@login_required(login_url='/accounts/login/')
+@login_required(login_url='accounts/login/')
 def ajax_meth(request):
     try:
         if request.method == 'POST':
-            locid = request.META['QUERY_STRING'].split('=')[1]#[tid
-            if locid != 'addnew':
-                loc = models.DtLocation.objects.get(loc_id=locid,commons_id=request.POST['commons_id'])
-                form = models.DtLocationForm(request.POST,request.FILES,instance=loc)
+            methid = request.META['QUERY_STRING'].split('=')[1]#[tid
+            if methid != 'addnew':
+                meth = models.RtMethod.objects.get(method_code=methid)
+                form = models.RtMethodForm(request.POST,request.FILES,instance=meth)
             else:
-                form = models.DtLocationForm(request.POST,request.FILES)
+                form = models.RtMethodForm(request.POST,request.FILES)
             response = {'Success':'true'}
             try:
                 if form.is_valid():
@@ -450,18 +463,24 @@ def ajax_meth(request):
     except Exception as inst:
         return HttpResponse(str(inst))
 #************************* Type  **********************************************************************
-@login_required(login_url='/accounts/login/')
+@login_required(login_url='accounts/login/')
 def ajax_type(request):
     try:
         if request.method == 'POST':
-            locid = request.META['QUERY_STRING'].split('=')[1]#[tid
-            if locid != 'addnew':
-                loc = models.DtLocation.objects.get(loc_id=locid,commons_id=request.POST['commons_id'])
-                form = models.DtLocationForm(request.POST,request.FILES,instance=loc)
+            if str(request.user) != request.POST['userid']:
+                return HttpResponse( str(request.user) + " is not authorized to update record.\n" +
+                            " Record must be updated by record creator.")
+            typeid = request.META['QUERY_STRING'].split('=')[1]#[tid
+            if typeid != 'addnew':
+                print typeid
+                typ = models.DtType.objects.get(type_id=typeid)
+                form = models.DtTypeForm(request.POST,request.FILES,instance=typ)
             else:
-                form = models.DtLocationForm(request.POST,request.FILES)
+                print "new"
+                form = models.DtTypeForm(request.POST,request.FILES)
             response = {'Success':'true'}
             try:
+                print request.POST
                 if form.is_valid():
                     form.cleaned_data
                     form.save()
@@ -484,7 +503,7 @@ def ajax_type(request):
                 form = models.DtTypeForm(instance=tpe)
             else:
                 commm = request.GET.get( 'commons_id' )
-                form = models.DtTypeForm(initial = {"commons_id": commm})
+                form = models.DtTypeForm(initial = {"commons_id": commm,"userid":str(request.user)})
         action='/gettype/?type_id=' + str(typeid)
         c={'form':form,'action':action}
         c.update(csrf(request))

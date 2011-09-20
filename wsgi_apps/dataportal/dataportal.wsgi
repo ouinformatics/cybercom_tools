@@ -7,6 +7,13 @@ elif os.uname()[1] == 'fire.rccc.ou.edu':
 activate_this = basedir + 'dataportal/virtpy/bin/activate_this.py'
 execfile(activate_this, dict(__file__=activate_this))
 
+
+import sys
+# put the Django project on sys.path
+path = '/scratch/www/wsgi_sites'
+if path not in sys.path:
+    sys.path.append(path)
+
 import site
 site.addsitedir(basedir + 'dataportal')
 

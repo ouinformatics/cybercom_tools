@@ -1,10 +1,10 @@
             <script>onloadfunction();//$('#ftool').buttonset();
                     $('.tbar').hover(function(){$(this).addClass("ui-state-hover");},function(){$(this).removeClass("ui-state-hover");});
                     $('#btnAdd').click(function(){
-                            $('#tabs-1' ).html( '&nbsp;' ).load(  '/getcommon/?common_id=addnew');
+                            $('#tabs-1' ).html( '&nbsp;' ).load(  'getcommon/?common_id=addnew');
                     });
                     $('#btnDel').click(function(){
-                            $('#output2' ).html( '&nbsp;' ).load(  '/delcommon/?common_id=' + {{ commonid }});
+                            $('#output2' ).html( '&nbsp;' ).load(  'delcommon/?common_id=' + {{ commonid }});
                             radio11();
                     });
             </script>

@@ -31,6 +31,7 @@ urlpatterns = patterns('',
     url(r'^gettype/','dataportal.editCat.views.ajax_type', name='ajax_type'),
 # login
     url(r'^accounts/login/$', 'django.contrib.auth.views.login', {'template_name': 'registration/login.html'}),
+    url(r'^accounts/login/createnewuser/$', 'dataportal.editCat.views.new_user',name='new_user'),
 # Uncomment the next line to enable the admin:
     # (r'^admin/(.*)', admin.site.root),
     #('^$', 'rpc4django.views.serve_rpc_request'),

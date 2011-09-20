@@ -1,11 +1,11 @@
             <script>onloadfunction();$('#resultTable').tabs();
                     $('.tbar').hover(function(){$(this).addClass("ui-state-hover");},function(){$(this).removeClass("ui-state-hover");});
                     $('#btnAdd').click(function(){
-                            $('#tabs-1' ).html( '&nbsp;' ).load( '/getevent/?event_id=addnew&commons_id='.concat(commons_id.concat("&catid=".concat(catid))) );
+                            $('#tabs-1' ).html( '&nbsp;' ).load( 'getevent/?event_id=addnew&commons_id='.concat(commons_id.concat("&catid=".concat(catid))) );
                             //$('#tabs-1' ).html( '&nbsp;' ).load(  '/getcatalog/?catid=addnew&commons_id='.concat(commons_id));
                     });
                     $('#btnDel').click(function(){
-                            $('#output2' ).html( '&nbsp;' ).load(  '/delevent/?event_id={{eventid}}&cat_id={{catid}}&common_id='.concat(commons_id),function(){ 
+                            $('#output2' ).html( '&nbsp;' ).load(  'delevent/?event_id={{eventid}}&cat_id={{catid}}&common_id='.concat(commons_id),function(){ 
                                 var idx = $("select#Select").attr("selectedIndex");
                                 var selectobject=document.getElementById("Select");
                                 if (idx == 0){eventid = selectobject.options[1].value;}

@@ -75,13 +75,24 @@ class RtVariables(models.Model):
 class DtType(models.Model):
     type_id = models.CharField(max_length=40, primary_key=True)
     type_name = models.CharField(max_length=255)
-    product = models.CharField(max_length=255)
-    description = models.CharField(max_length=255)
-    resolution = models.CharField(max_length=255)
-    res_unit = models.CharField(max_length=50)
-    object_type = models.CharField(max_length=100)
-    object_data_type1 = models.CharField(max_length=255)
-    object_data_opt1_unit = models.CharField(max_length=100)
+    product = models.CharField(max_length=255,blank=True, null=True)
+    description = models.CharField(max_length=255,blank=True, null=True)
+    resolution = models.CharField(max_length=255,blank=True, null=True)
+    res_unit = models.CharField(max_length=50,blank=True, null=True)
+    object_type = models.CharField(max_length=100,blank=True, null=True)
+    object_data_type1 = models.CharField(max_length=255,blank=True, null=True)
+    object_data_opt1_unit = models.CharField(max_length=100,blank=True, null=True)
+    userid = models.CharField(max_length=20)
+    def save(self):
+        if self.product=='': self.product=None
+        if self.description=='': self.description=None
+        if self.resolution=='': self.resolution=None
+        if self.res_unit=='': self.res_unit=None
+        if self.object_type=='': self.object_type=None
+        if self.object_data_type1=='': self.object_data_type1=None
+        if self.object_data_opt1_unit=='': self.object_data_opt1_unit=None
+
+        super(DtType,self).save()
     def __unicode__(self):
         return u'%s %s' % (self.type_id, self.type_name)
     class Meta:
@@ -351,6 +362,13 @@ class RtVariablesForm(ModelForm):
 class DtTypeForm(ModelForm):
     class Meta:
         model = DtType
+        widgets = {'description': forms.Textarea(attrs={'cols': 80, 'rows': 5}),
+                    #'commons_id':forms.HiddenInput(),
+                    #'status_flag':forms.HiddenInput(),
+                    'userid':forms.HiddenInput(),
+                    #'timestamp_created':forms.HiddenInput(),
+                     }
+
 class RtOrganizationForm(ModelForm):
     class Meta:
         model = RtOrganization
