@@ -5,12 +5,16 @@ from django.template.context import RequestContext
 from django.http import HttpResponseRedirect
 from django.core.context_processors import csrf
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import logout
 import models
 from cybercom.data.catalog import datalayer
 from django.forms.formsets import formset_factory
 from django.forms.models import modelformset_factory
 import datetime
 from django.contrib.auth.models import User
+#from xmlrpclib import ServerProxy
+#from rpc4django.utils import CookieTransport
+#rpcURL = 'http://127.0.0.1:8000/RPC2/'
 try:
     import json
 except ImportError:
@@ -20,13 +24,32 @@ def new_user(request):
         try:
             user = User.objects.create_user(request.POST['name'], request.POST['email'] , request.POST['password'])
             md= datalayer.Metadata()
-            #md.Inserts('dt_contributors',[{"commons_id" : c_id ,"people_id" : str(request.user)}])
-            md.Inserts('dt_people',[{"people_id":request.POST['name'],"person_name":request.POST['name'],"email":request.POST['email']}])   
+            md.Inserts('dt_people',[{"people_id":request.POST['name'],"person_name":request.POST['name'],"email":request.POST['email']}])
+            #load example to everyones commons
+            try:
+                md.Inserts('dt_contributors',[{"commons_id" :803 ,"people_id" :request.POST['name']}])
+            except:
+                pass
             return HttpResponse("New User " + request.POST['name'] + " created successfully.")
         except Exception as inst:
             return HttpResponse(str(inst))
     else:
         return HttpResponse("[]")
+def logout_view(request):
+    logout(request)
+    return HttpResponseRedirect('/dataportal/accounts/login/?next=/dataportal/')
+def webservice_view(request):
+    try:
+        methid = request.GET.get( 'method' )
+        head = methid 
+        if methid == 'catalog.dtCatalog':
+            return render_to_response('editCat/ws2_results.html',{'header':head,'method':methid})
+        if methid == 'catalog.dataCommons':
+            return render_to_response('editCat/ws_results.html',{'header':head,'method':methid})
+        if methid == 'catalog.EventResult':
+            return render_to_response('editCat/ws3_results.html',{'header':head,'method':methid})
+    except Exception as inst:
+        return HttpResponse(str(inst))
 #************** Formset Commons ******************************
 @login_required(login_url='accounts/login/')
 def main_catalog(request):
@@ -114,7 +137,7 @@ def ajax_result(request):
                 print eventid
                 form = models.DtResultForm(initial={"commons_id":commm,"event_id":eventid,"status_flag":"A","userid":str(request.user),"timestamp_created":datetime.datetime.now() })
                 #data=[]
-        action='/getresult/?var_id=' + varid
+        action='getresult/?var_id=' + varid
         c={'form':form,'action':action,'eventid':eventid,'varid':varid}
         c.update(csrf(request))
         return render_to_response('editCat/result.html',c)#dtcatalog.html',c)# {
@@ -201,7 +224,7 @@ def ajax_event(request):
                 commm = request.GET.get( 'commons_id' )
                 form = models.DtEventForm(initial={"commons_id":commm,"cat_id":catid,"status_flag":"A","userid":str(request.user),"timestamp_created":datetime.datetime.now() })
                 data=[]
-        action='/getevent/?event_id=' + str(eventid)
+        action='getevent/?event_id=' + str(eventid)
         c={'form':form,'action':action,'data':data,'eventid':eventid,'catid':catid}
         c.update(csrf(request))
         return render_to_response('editCat/event_result.html',c)#dtcatalog.html',c)# {
@@ -226,7 +249,7 @@ def load_common(request):
     commons=''
     sqlWhere = "commons_id in (select commons_id from dt_contributors where people_id ='" + userid + "')" + " ORDER BY commons_id"
     data= md.Search('dt_data_commons',where=sqlWhere,column=['commons_id','commons_code'])
-    c={'data':data,'commons':commons}
+    c={'data':data,'commons':commons,'user':str(request.user)}
     return render_to_response('editCat/select_commons.html',c)
 
 @login_required(login_url='accounts/login/')
@@ -291,9 +314,9 @@ def ajax_com(request):
             com = models.DtDataCommons.objects.get(commons_id=commonid)
             form = models.DtDataCommonsForm(instance=com)
         else:
-            form = models.DtDataCommonsForm()
-    action="/getcommon/?common_id=" + str(commonid) 
-    c={'form':form,'action':action,'commonid':commonid}
+            form = models.DtDataCommonsForm(initial={"status_flag":"A","start_date":datetime.datetime.now() })
+    action="getcommon/?common_id=" + str(commonid) 
+    c={'form':form,'action':action,'commonid':commonid,'user':str(request.user)}
     c.update(csrf(request))
     return render_to_response('editCat/com_result.html',c)#dtcatalog.html',c)# {
 #************************** Catalog ***************************************************************
@@ -310,7 +333,7 @@ def catalog(request,commons=None):
     #****************************hookup later************************
     data= md.Search('dt_catalog',where=commons,column=['cat_id','cat_name'],isPage=True,page=1,result_per_page=1000)
     #print data
-    c={'data':data,'commons':commons}
+    c={'data':data,'commons':commons,'user':str(request.user)}
     return render_to_response('editCat/select_catalog.html',c)#dtcatalog.html',c)# {
 
 @login_required(login_url='accounts/login/')
@@ -372,8 +395,8 @@ def ajax_cat(request):
                 commm = request.GET.get( 'commons_id' )
                 form = models.DtCatalogForm_data(initial = {"commons_id": commm,"status_flag":"A","userid":str(request.user),"timestamp_created":datetime.datetime.now() })
             form.fields['loc_id'].queryset = models.DtLocation.objects.filter(commons_id= commm)
-            action='/getcatalog/?catid=' + str(catid)
-            c={'form':form,'action':action,'catid':catid}
+            action='getcatalog/?catid=' + str(catid)
+            c={'form':form,'action':action,'catid':catid,'user':str(request.user),'commonsid':commm}
             c.update(csrf(request))
             return render_to_response('editCat/cat_result.html',c)#dtcatalog.html',c)# {
         except Exception as inst:
@@ -414,8 +437,8 @@ def ajax_loc(request):
             else:
                 commm = request.GET.get( 'commons_id' )
                 form = models.DtLocationForm(initial = {"commons_id": commm})
-        action='/getlocation/?locid=' + str(locid)
-        c={'form':form,'action':action}
+        action='getlocation/?locid=' + str(locid)
+        c={'form':form,'action':action,'header':'Location'}
         c.update(csrf(request))
         return render_to_response('editCat/loc_result.html',c)
     except Exception as inst:
@@ -453,11 +476,63 @@ def ajax_meth(request):
             if methid != 'addnew':
                 meth = models.RtMethod.objects.get(method_code=methid)
                 form = models.RtMethodForm(instance=meth)
+                md= datalayer.Metadata()
+                sqlWhere = "method_code = '" + methid + "'"
+                data= md.Search('rt_method_parameters',where=sqlWhere,column=['param_name','param_desc','param_value','method_id'])
             else:
                 commm = request.GET.get( 'commons_id' )
-                form = models.RtMethodForm(initial = {"commons_id": commm})
-        action='/getmethod/?method_id=' + str(methid)
-        c={'form':form,'action':action}
+                form = models.RtMethodForm(initial = {"commons_id": commm,'status_flag':'A',"userid":str(request.user)})
+                data=[]
+        action='getmethod/?method_id=' + str(methid)
+        c={'form':form,'action':action,'data':data,'header':'Method'}
+        c.update(csrf(request))
+        return render_to_response('editCat/meth_result.html',c)
+    except Exception as inst:
+        return HttpResponse(str(inst))
+#************************* Meth Par  **********************************************************************
+@login_required(login_url='accounts/login/')
+def ajax_methPar(request):
+    try:
+        if request.method == 'POST':
+            if str(request.user) != request.POST['userid']:
+                return HttpResponse( str(request.user) + " is not authorized to update record.\n" +
+                            " Record must be updated by record creator.")
+            typeid = request.META['QUERY_STRING'].split('=')[1]#[tid
+            if typeid != 'addnew':
+                print typeid
+                typ = models.DtType.objects.get(type_id=typeid)
+                form = models.DtTypeForm(request.POST,request.FILES,instance=typ)
+            else:
+                print "new"
+                form = models.DtTypeForm(request.POST,request.FILES)
+            response = {'Success':'true'}
+            try:
+                print request.POST
+                if form.is_valid():
+                    form.cleaned_data
+                    form.save()
+                    return HttpResponse( str(response))#"{'result':'Success'}")
+                else:
+                    response.update({'Success':'false'})
+                    err={}
+                    for e in form.errors.iteritems():
+                        err.update({e[0]:unicode(e[1])})
+                    response.update({'errors':err})
+                    return HttpResponse(str(response))
+            except Exception as inst:
+                return HttpResponse(str(inst))
+        else:
+            #comid = request.GET.get( 'commons_id' )
+            methid = request.GET.get( 'method_code' )
+
+            if methid != 'addnew':
+                tpe = models.RtMethodParameters.objects.get(method_id=methid)
+                form = models.RtMethodParametersForm(instance=tpe)
+            else:
+                #commm = request.GET.get( 'commons_id' )
+                form = models.RtMethodParametersForm()#initial = {"commons_id": commm,"userid":str(request.user)})
+        action='getmethPar/?method_code=' + str(methid)
+        c={'form':form,'action':action,'header':'Method Parameter','methcode':str(methid)}
         c.update(csrf(request))
         return render_to_response('editCat/loc_result.html',c)
     except Exception as inst:
@@ -504,8 +579,51 @@ def ajax_type(request):
             else:
                 commm = request.GET.get( 'commons_id' )
                 form = models.DtTypeForm(initial = {"commons_id": commm,"userid":str(request.user)})
-        action='/gettype/?type_id=' + str(typeid)
-        c={'form':form,'action':action}
+        action='gettype/?type_id=' + str(typeid)
+        c={'form':form,'action':action,'header':'Data Type'}
+        c.update(csrf(request))
+        return render_to_response('editCat/loc_result.html',c)
+    except Exception as inst:
+        return HttpResponse(str(inst))
+#************************* Variables  **********************************************************************
+@login_required(login_url='accounts/login/')
+def ajax_var(request):
+    try:
+        if request.method == 'POST':
+            if str(request.user) != request.POST['userid']:
+                return HttpResponse( str(request.user) + " is not authorized to update record.\n" +
+                            " Record must be updated by record creator.")
+            varid = request.META['QUERY_STRING'].split('=')[1]#[tid
+            if varid != 'addnew':
+                typ = models.RtVariables.objects.get(var_id=varid)
+                form = models.RtVariablesForm(request.POST,request.FILES,instance=typ)
+            else:
+                form = models.RtVariablesForm(request.POST,request.FILES)
+            response = {'Success':'true'}
+            try:
+                if form.is_valid():
+                    form.cleaned_data
+                    form.save()
+                    return HttpResponse( str(response))#"{'result':'Success'}")
+                else:
+                    response.update({'Success':'false'})
+                    err={}
+                    for e in form.errors.iteritems():
+                        err.update({e[0]:unicode(e[1])})
+                    response.update({'errors':err})
+                    return HttpResponse(str(response))
+            except Exception as inst:
+                return HttpResponse(str(inst))
+        else:
+            varid = request.GET.get( 'var_id' )
+#RtVariablesForm
+            if varid != 'addnew':
+                tpe = models.RtVariables.objects.get(var_id=varid)
+                form = models.RtVariablesForm(instance=tpe)
+            else:
+                form = models.RtVariablesForm(initial = {"userid":str(request.user),'status_flag':'A'})
+        action='getvar/?var_id=' + str(varid)
+        c={'form':form,'action':action,'header':'Variables'}
         c.update(csrf(request))
         return render_to_response('editCat/loc_result.html',c)
     except Exception as inst:

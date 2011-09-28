@@ -11,10 +11,34 @@
                                 if (idx == 0){eventid = selectobject.options[1].value;}
                                 else{s = idx-1; eventid = selectobject.options[s].value; } radio33();} );
                     });
-                    
+                   $('#btnAddtype').click(function(){
+                            var ss = $("select#id_event_type").val();
+                            if (ss == ""){
+                            $('#dlog').html( '&nbsp;' ).load( 'gettype/?type_id=addnew&commons_id='.concat(commons_id),function(){
+                                    $( '#dialog' ).dialog({width:'800px',modal: true,title:'Type Table'});});
+                            }
+                            else{
+                            $('#dlog').html( '&nbsp;' ).load( 'gettype/?type_id=' + ss + '&commons_id='.concat(commons_id),function(){
+                                    $( '#dialog' ).dialog({width:'800px',modal: true,title:'Type Table'});});
+                            }
+                    });
+                    $('#btnAddmeth').click(function(){
+                            var ss = $("select#id_event_method").val();
+                            if (ss == ""){
+                            $('#dlog').html( '&nbsp;' ).load( 'getmethod/?method_id=addnew&commons_id='.concat(commons_id),function(){
+                                    $( '#dialog' ).dialog({width:'800px',modal: true,title:'Method Table'});});
+                            }
+                            else{
+                            $('#dlog').html( '&nbsp;' ).load( 'getmethod/?method_id=' + ss + '&commons_id='.concat(commons_id),function(){
+                                    $( '#dialog' ).dialog({width:'800px',modal: true,title:'Method Table'});});
+                            }
+                    });
             </script>
-            <div class="left" style="float:left;text-align:right;width:20%">Event ID:</div>
-            <div class="right" style="float:left;margin-left:15px;width:75%"> {{ eventid }} </div>
+            <h2> Catalog Event</h2>
+            <div class="left" style="padding:1px;float:left;text-align:right;width:20%"><strong>Catalog ID</strong>:</div>
+            <div class="right" style="padding:1px;float:left;margin-left:15px;width:75%"> {{ catid }} </div>
+            <div class="left" style="padding:1px;float:left;text-align:right;width:20%"><strong>Event ID</strong>:</div>
+            <div class="right" style="padding:1px;float:left;margin-left:15px;width:75%"> {{ eventid }} </div>
             <form id="test" action="{{action}}" method="post">{% csrf_token %}
                 {% for field in form.visible_fields %}
                     {% if forloop.first %}
@@ -23,8 +47,20 @@
                         {% endfor %}
                     {% endif %}
                 <div class="fieldWrapper">
-                    <div class="left" style="float:left;text-align:right;width:20%"> {{ field.label_tag }}:</div>
-                    <div class="right" style="float:left;margin-left:15px;width:75%"> {{ field }} </div>
+                    {% if field.name == 'event_id' or field.name == 'event_name' or field.name == 'event_method' %}
+                    <div class="left" style="padding:1px;float:left;text-align:right;width:20%"><strong>{{ field.label_tag }}</strong>:</div>
+                    {% else %}
+                    <div class="left" style="padding:1px;float:left;text-align:right;width:20%">{{ field.label_tag }}:</div>
+                    {% endif %}
+                    <!--<div class="left" style="float:left;text-align:right;width:20%"> {{ field.label_tag }}:</div>-->
+                    <div class="right" style="float:left;margin-left:15px;width:75%"> {{ field }} 
+                    {% if field.name == 'event_type' %}
+                    <input id="btnAddtype" class="tbar ui-button ui-widget ui-state-default ui-button-text-only ui-corner-right" type="button" value="Type     Record" />
+                    {% endif %}
+                    {% if field.name == 'event_method' %}
+                    <input id="btnAddmeth" class="tbar ui-button ui-widget ui-state-default ui-button-text-only ui-corner-right" type="button" value="Method  Record" />
+                    {% endif %}
+                    </div>
                     <div class="top"> {{ field.errors }}</div>
                  </div>
                  {% endfor %}
@@ -54,11 +90,11 @@
                 {% else %}
                   <td>{{ field.result_text }}</td>
                 {% endif %}
-                <td>
-                    <a class="tbar ui-button ui-widget ui-state-default ui-button-text-only ui-corner-right" href="javascript:
+                <td width="90px">
+                    <a style="float:left; margin-left:5px" class="tbar ui-button ui-widget ui-state-default ui-button-text-only ui-corner-right" href="javascript:
                                     $('#dlog').html( '&nbsp;' ).load( 'getresult/?event_id={{ eventid }}&var_id={{ field.var_id }}',function(){
-                                    $( '#dialog' ).dialog({width:'800px',modal: true,title:'Result Table'});});">|  Edit  |</a>
-                    <a padding="2px 2px 2px 2px" class="tbar ui-button ui-widget ui-state-default ui-button-text-only ui-corner-right" href="javascript: alert('Delete');">|  Delete  |</a>
+                                    $( '#dialog' ).dialog({width:'800px',modal: true,title:'Result Table'});});">Edit</a>
+                    <a style="float:right;margin-left:5px" class="tbar ui-button ui-widget ui-state-default ui-button-text-only ui-corner-right" href="javascript: alert('Delete');">Delete</a>
                 </td>
             </tr>
             {% endfor %}

@@ -30,9 +30,8 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',# sqlite3', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME':'catalog', # Or path to database file if using sqlite3.
         #'NAME': 'cybercom', #mstacy home db
-        #'NAME':'catalog', # Or path to database file if using sqlite3.
+        'NAME':'catalog', # work  fire.rccc.ou.edu
         'USER': '',                      # Not used with sqlite3.
         'PASSWORD': '',                  # Not used with sqlite3.
         'HOST': 'fire.rccc.ou.edu',

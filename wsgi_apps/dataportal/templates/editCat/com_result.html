@@ -1,21 +1,36 @@
             <script>onloadfunction();//$('#ftool').buttonset();
+                   //$( "#dialogdel" ).dialog({ autoOpen: false,title:'Delete' });
                     $('.tbar').hover(function(){$(this).addClass("ui-state-hover");},function(){$(this).removeClass("ui-state-hover");});
                     $('#btnAdd').click(function(){
                             $('#tabs-1' ).html( '&nbsp;' ).load(  'getcommon/?common_id=addnew');
                     });
-                    $('#btnDel').click(function(){
-                            $('#output2' ).html( '&nbsp;' ).load(  'delcommon/?common_id=' + {{ commonid }});
-                            radio11();
-                    });
-            </script>
+                    $('#btnDel').click(function(){$('#output2' ).html( '&nbsp;' ).load('delcommon/?common_id='.concat(commons_id));radio11();});
+                   /* $('#btnDel').click(function(){$( "#dialogdel" ).dialog('open');});
+                    $('#btnDelYes').click(function(){  
+                                                       var idx = $("select#Select").attr("selectedIndex");
+                                                       var selectobject=document.getElementById("Select");
+                                                       $('#output2' ).html( '&nbsp;' ).load('delcommon/?common_id='.concat(commons_id)); 
+                                                       if (idx == 0){commons_id = selectobject.options[1].value;}
+                                                       else{s = idx-1; commons_id = selectobject.options[s].value; }
+                                                       
+                                                      // radio11();
+                                                       $( "#dialogdel" ).dialog('close');});    
+                    $('#btnDelNo').click(function() {$( "#dialogdel" ).dialog('close'); } );
+                    */
+             </script>
+            <h2> Data Commons </h2>
             <div class="fieldWrapper" height="100%" width="100%" style="padding:10px 10px;">
-                <div class="left" style="float:left;text-align:right;width:20%">Commons ID:</div> 
+                <div class="left" style="float:left;text-align:right;width:20%"><strong>Commons ID</strong>:</div> 
                 <div class="right" style="float:left;margin-left:15px;width:75%" > {{commonid}} </div>
             </div>
             <form id="test" action="{{action}}" method="post" >{% csrf_token %}
                 {% for field in form %}
                 <div class="fieldWrapper" height="100%" width="100%" style="padding:10px 10px;">
-                    <div class="left" style="float:left;text-align:right;width:20%"> {{ field.label_tag }}:</div>
+                    {% if field.name == 'commons_name' or field.name == 'commons_code' %}
+                    <div class="left" style="padding:1px;float:left;text-align:right;width:20%"><strong>{{ field.label_tag }}</strong>:</div>
+                    {% else %}
+                    <div class="left" style="padding:1px;float:left;text-align:right;width:20%">{{ field.label_tag }}:</div>
+                    {% endif %}
                     <div class="right" style="float:left;margin-left:15px;width:75%"> {{ field }} </div>
                     <div class="top"> {{ field.errors }}</div>
                  </div>

@@ -64,11 +64,14 @@ class DtDataCommons(models.Model):
 class RtVariables(models.Model):
     var_id = models.CharField(max_length=30, primary_key=True)
     variable_name = models.CharField(max_length=255)
-    sort_order = models.IntegerField()
-    variable_type = models.CharField(max_length=30)
+    sort_order = models.IntegerField(null=True,blank=True)
+    variable_type = models.CharField(max_length=30,null=True,blank=True)
     status_flag = models.CharField(max_length=1)
-    var_short_name = models.CharField(max_length=30)
-    remark = models.CharField(max_length=2000)
+    var_short_name = models.CharField(max_length=30,null=True,blank=True)
+    remark = models.CharField(max_length=2000,null=True,blank=True)
+    userid = models.CharField(max_length=20)
+    def __unicode__(self):
+        return u'(%s) -  %s' % (self.var_id, self.variable_name)
     class Meta:
         db_table = u'rt_variables'
 
@@ -91,7 +94,6 @@ class DtType(models.Model):
         if self.object_type=='': self.object_type=None
         if self.object_data_type1=='': self.object_data_type1=None
         if self.object_data_opt1_unit=='': self.object_data_opt1_unit=None
-
         super(DtType,self).save()
     def __unicode__(self):
         return u'%s %s' % (self.type_id, self.type_name)
@@ -142,10 +144,10 @@ class RtLocationType(models.Model):
 class RtMethod(models.Model):
     method_code = models.CharField(max_length=50, primary_key=True)
     method_name = models.CharField(max_length=255)
-    method_desc = models.CharField(max_length=500)
+    method_desc = models.CharField(max_length=500,null=True,blank=True)
     status_flag = models.CharField(max_length=1)
-    remark = models.CharField(max_length=2000)
-    base_method = models.CharField(max_length=50)
+    remark = models.CharField(max_length=2000,null=True,blank=True)
+    base_method = models.CharField(max_length=50,null=True,blank=True)
     userid = models.CharField(max_length=20)
     timestamp_created = models.DateTimeField(default= datetime.datetime.now())    
     def __unicode__(self):
@@ -160,6 +162,8 @@ class RtMethodParameters(models.Model):
     param_name = models.CharField(max_length=255)
     param_desc = models.CharField(max_length=500)
     param_value = models.CharField(max_length=255)
+    method_id = models.AutoField(primary_key=True)
+    userid = models.CharField(max_length=20)
     class Meta:
         db_table = u'rt_method_parameters'
 
@@ -316,6 +320,8 @@ class DtResult(models.Model):
     remark = models.CharField(max_length=2000,blank=True,null=True)
     status_flag = models.CharField(max_length=1,default='A')
     validated_timestamp = models.DateTimeField(default= datetime.datetime.now())
+    #userid = models.CharField(max_length=20)
+    #timestamp_created = models.DateTimeField()
     unique_together = ("event_id", "var")
     class Meta:
         #primary_key = ('event_id','var')
@@ -354,15 +360,45 @@ class RtOrganizationTypeForm(ModelForm):
     class Meta:
          model = RtOrganizationType
 class DtDataCommonsForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(DtDataCommonsForm, self).__init__(*args, **kwargs)
+        self.fields['status_flag'].label = "Display Flag"
+        self.fields['start_date'].widget.attrs['readonly']= True
     class Meta:
         model = DtDataCommons
+        fields = ('commons_name','commons_code','commons_desc','commons_type','data_provider','program_code','status_flag','start_date')
+        widgets = {'commons_desc':forms.Textarea(attrs={'cols': 80, 'rows': 5}),
+                    }
+
 class RtVariablesForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(RtVariablesForm, self).__init__(*args, **kwargs)
+        self.fields['var_id'].label = "Variable ID"
+        self.fields['variable_name'].label = "Variable Name"
+        self.fields['remark'].label = "Variable Description"
+        self.fields['sort_order'].label = "Variable Order"
     class Meta:
         model = RtVariables
+        fields = ('var_id', 'variable_name','remark','variable_type', 'sort_order',  'status_flag', 'userid')
+        widgets = { 'remark': forms.Textarea(attrs={'cols': 75, 'rows': 5}),
+                    #'commons_id':forms.HiddenInput(),
+                    'status_flag':forms.HiddenInput(),
+                    'userid':forms.HiddenInput(),
+                    #'timestamp_created':forms.HiddenInput(),
+                     }
 class DtTypeForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(DtTypeForm, self).__init__(*args, **kwargs)
+        self.fields['type_name'].label = "Type Name"
+        self.fields['type_id'].label = "Type ID"
+        self.fields['res_unit'].label = "Resolution Unit"
+        self.fields['object_type'].label = "Data Definition"
+        self.fields['object_data_type1'].label = "Optional Data Type"
+        self.fields['object_data_opt1_unit'].label = "Optional Unit"
     class Meta:
         model = DtType
-        widgets = {'description': forms.Textarea(attrs={'cols': 80, 'rows': 5}),
+        fields = ('type_id', 'type_name', 'description','product', 'resolution', 'res_unit', 'object_type', 'object_data_type1', 'object_data_opt1_unit','userid')
+        widgets = {'description': forms.Textarea(attrs={'cols': 75, 'rows': 5}),
                     #'commons_id':forms.HiddenInput(),
                     #'status_flag':forms.HiddenInput(),
                     'userid':forms.HiddenInput(),
@@ -379,17 +415,62 @@ class RtLocationTypeForm(ModelForm):
     class Meta:
         model = RtLocationType
 class RtMethodForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(RtMethodForm, self).__init__(*args, **kwargs)
+        self.fields['method_desc'].label = "Method Description"
+        self.fields['method_name'].label = "Method Name"
+        self.fields['method_code'].label = "Method Code"
     class Meta:
         model = RtMethod
+        fields = ('method_code', 'method_name', 'method_desc', 'status_flag', 'remark','userid')
+        widgets = {'method_desc': forms.Textarea(attrs={'cols': 75, 'rows': 5}),
+                    'status_flag':forms.HiddenInput(),
+                    'userid':forms.HiddenInput(),
+                     }
 class RtMethodParametersForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(RtMethodParametersForm, self).__init__(*args, **kwargs)
+        #self.fields['param_id'].label = "Location Name"
+        self.fields['param_name'].label = "Parameter Name"
+        self.fields['param_desc'].label = "Parameter Description"
+        self.fields['param_value'].label = "Parameter Value"
     class Meta:
         model = RtMethodParameters
+        fields = ('method_code','param_name', 'param_desc', 'param_value', 'param_id', 'param_type','userid','method_id')
+        widgets = {'param_desc': forms.Textarea(attrs={'cols': 75, 'rows': 5}),
+                    'param_value': forms.Textarea(attrs={'cols': 75, 'rows': 5}),
+                    'param_id':forms.HiddenInput(),
+                    'userid':forms.HiddenInput(),
+                     }
 class DtContributorsForm(ModelForm):
     class Meta:
         model = DtContributors
 class DtLocationForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(DtLocationForm, self).__init__(*args, **kwargs)
+        self.fields['loc_name'].label = "Location Name"
+        self.fields['loc_id'].label = "Location ID"
+        self.fields['loc_desc'].label = "Description"
+        self.fields['loc_type'].label = "Location Type"
+        self.fields['loc_state'].label = "State"
+        self.fields['loc_county'].label = "County"
+        self.fields['coord_system'].label = "Coord. System"
+        self.fields['lat'].label = "Latitude"
+        self.fields['lon'].label = "Longitude"
+        self.fields['loc_order'].label = "Location order"
+        self.fields['loc_state'].label = "State"
+        #self.fields['timestamp_created'].widget.attrs['readonly']= True
     class Meta:
         model = DtLocation
+        fields = ('loc_id', 'commons_id', 'loc_name', 'loc_desc', 'lat', 'lon', 'northbounding', 'southbounding', 
+                        'eastbounding', 'westbounding', 'data_provider','remark','loc_type', 'loc_county', 'loc_state','coord_system', 'projection', 'loc_order')
+        widgets = {'loc_desc': forms.Textarea(attrs={'cols': 75, 'rows': 5}),
+                    'commons_id':forms.HiddenInput(),
+                    #'status_flag':forms.HiddenInput(),
+                    #'userid':forms.HiddenInput(),
+                    #'timestamp_created':forms.HiddenInput(),
+                     }
+
 class DtLocationParameterForm(ModelForm):
     class Meta:
         model = DtLocationParameter
@@ -426,14 +507,15 @@ class DtCatalogForm_data(AjaxForm):#ModelForm):
         #loc_id = forms.CharField(max_length=60, queryset=DtLocation.objects.filter(commons_id = 14))
     class Meta:
         model = DtCatalog
-        fields = ('commons_id','status_data', 'cat_id','cat_name', 'data_provider', 'cat_type', 'loc_id', 
-                    'cat_desc', 'cat_method', 'observed_date','observed_year', 'remark', 'custom_field_1', 
-                    'custom_field_2', 'status_flag', 'userid', 'timestamp_created')
+        fields = ('commons_id','cat_name','status_data','cat_id','loc_id','cat_desc','cat_method', 'cat_type', 
+                    'observed_date','observed_year', 'remark', 'custom_field_1', 
+                    'custom_field_2', 'data_provider','status_flag', 'userid', 'timestamp_created')
         widgets = {'cat_desc': forms.Textarea(attrs={'cols': 80, 'rows': 5}),
+                    'remark': forms.Textarea(attrs={'cols': 80, 'rows': 5}),
                     #'commons_id':forms.HiddenInput(),
                     'status_flag':forms.HiddenInput(),
                     'userid':forms.HiddenInput(),
-                    #'timestamp_created':forms.HiddenInput(),
+                    'commons_id':forms.HiddenInput(),
                      }
 class DtEventForm(ModelForm):#,commonsid=14,catid=860935):
     def __init__(self, *args, **kwargs):
@@ -447,9 +529,14 @@ class DtEventForm(ModelForm):#,commonsid=14,catid=860935):
     # cat_id = forms.IntegerField(widget=forms.TextInput(attrs={'readonly':'readonly'}))#, initial=860935)
     class Meta:
         model = DtEvent
+        fields = ('commons_id', 'event_id', 'cat_id', 'event_name', 'event_method','event_desc', 'event_type','event_date', 'remark', 'status_flag', 'userid', 'timestamp_created')
         widgets = {'event_desc': forms.Textarea(attrs={'cols': 80, 'rows': 5}),
+                    'remark': forms.Textarea(attrs={'cols': 80, 'rows': 5}),
                     'status_flag':forms.HiddenInput(),
-                    'userid':forms.HiddenInput(),}
+                    'commons_id':forms.HiddenInput(),
+                    'cat_id':forms.HiddenInput(),
+                    'userid':forms.HiddenInput(),
+                    }
 class DtEventForm1(ModelForm):
     class Meta:
         model = DtEvent
@@ -460,13 +547,18 @@ class DtResultForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(DtResultForm , self).__init__(*args, **kwargs)
         self.fields['validated_timestamp'].widget.attrs['readonly']= True
+        self.fields['validated_timestamp'].label ="Timestamp created"
+        self.fields['var'].label ="Result Variable"
         self.fields['commons_id'].widget.attrs['readonly']= True
         self.fields['event_id'].widget.attrs['readonly']= True
         #self.fields['cat_id'].label = "Catalog ID"
         self.fields['commons_id'].label = "Commons ID"
     class Meta:
         model = DtResult
+        fields = ('commons_id', 'event_id', 'var', 'result_text',  'result_order',  'remark', 'result_id', 'status_flag','validated_timestamp')
         widgets = { 'status_flag':forms.HiddenInput(),
+                    'event_id':forms.HiddenInput(),
+                    'commons_id':forms.HiddenInput(),
                     'userid':forms.HiddenInput(),
                     'result_text': forms.Textarea(attrs={'cols': 80, 'rows': 5}),
                     }
