@@ -4,6 +4,8 @@ from cybercom.data.catalog import datalayer , dataloader
 from django.contrib.auth.models import User
 #this is a test
 from django.contrib.auth.decorators import login_required
+import datetime
+
 @login_required(login_url='/accounts/login/')
 @rpcmethod(name='catalog.dtCatalog',signature=['Result:{Primarykeys}', 'Param: dictionary'], permission='auth.add_group')
 def catalog(row={},**kwargs):
@@ -79,11 +81,13 @@ def dtEventResult(row={},evtResults=[],**kwargs):
         checkpermission(str(request.user),c_id)
     except Exception as err:
         raise err
-
+    
     md=dataloader.Metadata_load()
     row['userid']=str(request.user)
     #row['status_flag']='A'
+#    print "working"
     row['timestamp_created'] = datetime.datetime.now()
+#    print row
     methpk= md.repo_insertRow('dt_event',row)
     res['dt_event'] = methpk
     for rdict in evtResults:
