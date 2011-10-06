@@ -28,9 +28,16 @@ urlpatterns = patterns('',
     url(r'^delresult/','dataportal.editCat.views.ajax_result_del', name='ajax_result_del'),
     url(r'^getlocation/','dataportal.editCat.views.ajax_loc', name='ajax_loc'),
     url(r'^getmethod/','dataportal.editCat.views.ajax_meth', name='ajax_meth'),
+    url(r'^getmethPar/','dataportal.editCat.views.ajax_methPar', name='ajax_methPar'),
     url(r'^gettype/','dataportal.editCat.views.ajax_type', name='ajax_type'),
+    url(r'^getvar/','dataportal.editCat.views.ajax_var', name='ajax_var'),
+    url(r'^getws_view/','dataportal.editCat.views.webservice_view', name='ajax_ws_view'),
+#webservice_view
 # login
     url(r'^accounts/login/$', 'django.contrib.auth.views.login', {'template_name': 'registration/login.html'}),
+    url(r'^accounts/logout/accounts/login/$', 'django.contrib.auth.views.login', {'template_name': 'registration/login.html'}),
+    url(r'^accounts/logout/$','dataportal.editCat.views.logout_view', name='logout'),
+    url(r'^accounts/login/createnewuser/$', 'dataportal.editCat.views.new_user',name='new_user'),
 # Uncomment the next line to enable the admin:
     # (r'^admin/(.*)', admin.site.root),
     #('^$', 'rpc4django.views.serve_rpc_request'),

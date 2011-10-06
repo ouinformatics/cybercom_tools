@@ -24,7 +24,7 @@
                         {% endfor %}
                     {% endif %}
                 <div class="fieldWrapper">
-                    {% if field.name == 'loc_id' or field.name == 'loc_name' or field.name == 'type_name' or field.name == 'type_id' or field.name == 'var_id' or field.name == 'variable_name' %}
+                    {% if field.name == 'method_code' or field.name == 'method_name' %}
                     <div class="left" style="padding:1px;float:left;text-align:right;width:20%"><strong>{{ field.label_tag }}</strong>:</div>
                     {% else %}
                     <div class="left" style="padding:1px;float:left;text-align:right;width:20%">{{ field.label_tag }}:</div>
@@ -42,3 +42,27 @@
             <div style="clear:both;margin-left:45%;">
                 <div id="output3"></div>
             </div>
+            <p><h2>Method Parameters</h2></p>
+            <table id="methodParTable" border="1" cellpadding="5">
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Value</th>
+                <th width="90px"><a class="tbar ui-button ui-widget ui-state-default ui-button-text-only ui-corner-right" href="javascript: 
+                                    $('#dlog1').html( '&nbsp;' ).load( 'getmethPar/?method_code=addnew', function(){
+                                    $( '#dialog1' ).dialog({width:'800px',modal: true,title:'Method Parameter Table'});});">Add Parameter</a> </th>
+            </tr>
+            {% for field in data %}
+            <tr>
+                <td> {{ field.param_name }}</td>
+                <td> {{ field.param_desc }}</td>
+                <td>{{ field.param_value }}</td>
+                <td width="90px">
+                    <a style="float:left; margin-left:5px" class="tbar ui-button ui-widget ui-state-default ui-button-text-only ui-corner-right" href="javascript:
+                                    $('#dlog1').html( '&nbsp;' ).load( 'getmethPar/?method_code={{ field.method_id }}',function(){
+                                    $( '#dialog1' ).dialog({width:'800px',modal: true,title:'Method Parameter Table'});});">Edit</a>
+                    <a style="float:right;margin-left:5px" class="tbar ui-button ui-widget ui-state-default ui-button-text-only ui-corner-right" href="javascript: alert('Delete');">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+            </table>

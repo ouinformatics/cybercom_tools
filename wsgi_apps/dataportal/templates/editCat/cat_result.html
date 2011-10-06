@@ -2,51 +2,61 @@
             <script>onloadfunction();$('#ftool').buttonset();
                     $('.tbar').hover(function(){$(this).addClass("ui-state-hover");},function(){$(this).removeClass("ui-state-hover");});
                     $('#btnAdd').click(function(){
-                            $('#tabs-1' ).html( '&nbsp;' ).load(  '/getcatalog/?catid=addnew&commons_id='.concat(commons_id));
+                            $('#tabs-1' ).html( '&nbsp;' ).load(  'getcatalog/?catid=addnew&commons_id='.concat(commons_id));
                     });
+
                     $('#btnDel').click(function(){
-                            $('#output2' ).html( '&nbsp;' ).load(  '/delcatalog/?cat_id={{catid}}&common_id='.concat(commons_id),function(){ 
+                            $('#output2' ).html( '&nbsp;' ).load(  'delcatalog/?cat_id={{catid}}&common_id='.concat(commons_id),function(){ 
                                 var idx = $("select#Select").attr("selectedIndex");
                                 var selectobject=document.getElementById("Select");
                                 if (idx == 0){catid = selectobject.options[1].value;}
                                 else{s = idx-1; catid = selectobject.options[s].value; } radio22();} );
                     });
+/*
+                    $( "#dialogdel" ).dialog({ autoOpen: false,title:'Delete' });
+                    $('#btnDel').click(function(){$( "#dialogdel" ).dialog('open');});
+                    $('#btnDelYes').click(function(){ $('#output2' ).html( '&nbsp;' ).load('delcatalog/?cat_id='concat(catid) + '&common_id='.concat(commons_id));
+                                                        radio11();
+                                                        $( "#dialogdel" ).dialog('close');});    
+                    $('#btnDelNo').click(function() {$( "#dialogdel" ).dialog('close'); } );
+*/
                     $('#btnAddLoc').click(function(){
                             var ss = $("select#id_loc_id").val();
                             if (ss == ""){
-                            $('#dlog').html( '&nbsp;' ).load( '/getlocation/?loc_id=addnew&commons_id='.concat(commons_id),function(){
+                            $('#dlog').html( '&nbsp;' ).load( 'getlocation/?loc_id=addnew&commons_id='.concat(commons_id),function(){
                                     $( '#dialog' ).dialog({width:'800px',modal: true,title:'Location Table'});});
                             }
                             else{
-                            $('#dlog').html( '&nbsp;' ).load( '/getlocation/?loc_id=' + ss + '&commons_id='.concat(commons_id),function(){
+                            $('#dlog').html( '&nbsp;' ).load( 'getlocation/?loc_id=' + ss + '&commons_id='.concat(commons_id),function(){
                                     $( '#dialog' ).dialog({width:'800px',modal: true,title:'Location Table'});});
                             }
                     });
                     $('#btnAddtype').click(function(){
                             var ss = $("select#id_cat_type").val();
                             if (ss == ""){
-                            $('#dlog').html( '&nbsp;' ).load( '/gettype/?type_id=addnew&commons_id='.concat(commons_id),function(){
+                            $('#dlog').html( '&nbsp;' ).load( 'gettype/?type_id=addnew&commons_id='.concat(commons_id),function(){
                                     $( '#dialog' ).dialog({width:'800px',modal: true,title:'Type Table'});});
                             }
                             else{
-                            $('#dlog').html( '&nbsp;' ).load( '/gettype/?type_id=' + ss + '&commons_id='.concat(commons_id),function(){
+                            $('#dlog').html( '&nbsp;' ).load( 'gettype/?type_id=' + ss + '&commons_id='.concat(commons_id),function(){
                                     $( '#dialog' ).dialog({width:'800px',modal: true,title:'Type Table'});});
                             }
                     });
                     $('#btnAddmeth').click(function(){
                             var ss = $("select#id_cat_method").val();
                             if (ss == ""){
-                            $('#dlog').html( '&nbsp;' ).load( '/getmethod/?method_id=addnew&commons_id='.concat(commons_id),function(){
+                            $('#dlog').html( '&nbsp;' ).load( 'getmethod/?method_id=addnew&commons_id='.concat(commons_id),function(){
                                     $( '#dialog' ).dialog({width:'800px',modal: true,title:'Method Table'});});
                             }
                             else{
-                            $('#dlog').html( '&nbsp;' ).load( '/getmethod/?method_id=' + ss + '&commons_id='.concat(commons_id),function(){
+                            $('#dlog').html( '&nbsp;' ).load( 'getmethod/?method_id=' + ss + '&commons_id='.concat(commons_id),function(){
                                     $( '#dialog' ).dialog({width:'800px',modal: true,title:'Method Table'});});
                             }
                     });
             </script>
-            <div class="left" style="float:left;text-align:right;width:20%">Catalog ID:</div>
-            <div class="right" style="float:left;margin-left:15px;width:75%"> {{ catid }} </div>
+            <h2> Cybercommons Catalog </h2>
+            <div class="left" style="padding:1px;float:left;text-align:right;width:20%"><strong>Catalog ID</strong>:</div>
+            <div class="right" style="padding:1px;float:left;margin-left:15px;width:75%"> {{ catid }} </div>
             <form id="test" action="{{action}}" method="post">{% csrf_token %}
                 {% for field in form.visible_fields %}
                     {% if forloop.first %}
@@ -54,17 +64,21 @@
                             {{ hidden }}
                         {% endfor %}
                     {% endif %}
-                <div class="fieldWrapper">
-                    <div class="left" style="float:left;text-align:right;width:20%">{{ field.label_tag }}:</div>
-                    <div class="right" style="float:left;margin-left:15px;width:75%">{{ field }} 
+                <div id="div_{{field.name}}" class="fieldWrapper">
+                    {% if field.name == 'cat_name' or field.name == 'status_data' or field.name == 'loc_id' %}
+                    <div class="left" style="padding:1px;float:left;text-align:right;width:20%"><strong>{{ field.label_tag }}</strong>:</div>
+                    {% else %}
+                    <div class="left" style="padding:1px;float:left;text-align:right;width:20%">{{ field.label_tag }}:</div>
+                    {% endif %}
+                    <div class="right" style="padding:1px;float:left;margin-left:15px;width:75%">{{ field }} 
                     {% if field.name == 'loc_id' %} 
                     <input id="btnAddLoc" class="tbar ui-button ui-widget ui-state-default ui-button-text-only ui-corner-right" type="button" value="Location Record" />
                     {% endif %}
                     {% if field.name == 'cat_type' %}
-                    <input id="btnAddtype" class="tbar ui-button ui-widget ui-state-default ui-button-text-only ui-corner-right" type="button" value="Type Record" />
+                    <input id="btnAddtype" class="tbar ui-button ui-widget ui-state-default ui-button-text-only ui-corner-right" type="button" value="Type     Record" />
                     {% endif %}
                     {% if field.name == 'cat_method' %}
-                    <input id="btnAddmeth" class="tbar ui-button ui-widget ui-state-default ui-button-text-only ui-corner-right" type="button" value="Method Record" />
+                    <input id="btnAddmeth" class="tbar ui-button ui-widget ui-state-default ui-button-text-only ui-corner-right" type="button" value="Method  Record" />
                     {% endif %}
                     </div>
                     <div class="top"> {{ field.errors }}</div>
