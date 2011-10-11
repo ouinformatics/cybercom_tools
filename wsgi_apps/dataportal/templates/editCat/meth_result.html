@@ -1,0 +1,68 @@
+             <script type="text/javascript" src="http://static.cybercommons.org/js/catalog/catalog.js"></script>
+            <script>onloadfunction();$('#ftool').buttonset();
+                    var options = { target: '#output3',success:showResponse};
+                    //$('#test3').ajaxForm(options);
+                    $('#test3').submit(function() {$(this).ajaxSubmit(options); return false;});
+                    $('.tbar').hover(function(){$(this).addClass("ui-state-hover");},function(){$(this).removeClass("ui-state-hover");});
+                    $('#btnAdd').click(function(){
+                         //   $('#tabs-1' ).html( '&nbsp;' ).load(  '/getcatalog/?catid=addnew&commons_id='.concat(commons_id));
+                    });
+                    $('#btnDel').click(function(){
+                        //    $('#output2' ).html( '&nbsp;' ).load(  '/delcatalog/?cat_id={{catid}}&common_id='.concat(commons_id),function(){ 
+                        //        var idx = $("select#Select").attr("selectedIndex");
+                        //        var selectobject=document.getElementById("Select");
+                       //         if (idx == 0){catid = selectobject.options[1].value;}
+                       //         else{s = idx-1; catid = selectobject.options[s].value; } radio22();} );
+                    });
+            </script>
+            <h2> {{ header }} </h2>
+            <form id="test3" action="{{action}}" method="post">{% csrf_token %}
+                {% for field in form.visible_fields %}
+                    {% if forloop.first %}
+                        {% for hidden in form.hidden_fields %}
+                            {{ hidden }}
+                        {% endfor %}
+                    {% endif %}
+                <div class="fieldWrapper">
+                    {% if field.name == 'method_code' or field.name == 'method_name' %}
+                    <div class="left" style="padding:1px;float:left;text-align:right;width:20%"><strong>{{ field.label_tag }}</strong>:</div>
+                    {% else %}
+                    <div class="left" style="padding:1px;float:left;text-align:right;width:20%">{{ field.label_tag }}:</div>
+                    {% endif %}
+                    <!--<div class="left" style="float:left;text-align:right;width:20%">{{ field.label_tag }}:</div>-->
+                    <div class="right" style="float:left;margin-left:15px;width:75%">{{ field }}</div>
+                    <div class="top"> {{ field.errors }}</div>
+                </div>
+                 {% endfor %}
+                <div class="left" style="float:left;text-align:right;"></div>
+                <div class="right" style="float:left;margin-left:45%;text-align:right">
+                    <p><input id="formsub" class="tbar ui-button ui-widget ui-state-default ui-button-text-only ui-corner-right" type="submit" value="Save Record" /></p>
+                </div>
+            </form>
+            <div style="clear:both;margin-left:45%;">
+                <div id="output3"></div>
+            </div>
+            <p><h2>Method Parameters</h2></p>
+            <table id="methodParTable" border="1" cellpadding="5">
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Value</th>
+                <th width="90px"><a class="tbar ui-button ui-widget ui-state-default ui-button-text-only ui-corner-right" href="javascript: 
+                                    $('#dlog1').html( '&nbsp;' ).load( 'getmethPar/?method_code=addnew', function(){
+                                    $( '#dialog1' ).dialog({width:'800px',modal: true,title:'Method Parameter Table'});});">Add Parameter</a> </th>
+            </tr>
+            {% for field in data %}
+            <tr>
+                <td> {{ field.param_name }}</td>
+                <td> {{ field.param_desc }}</td>
+                <td>{{ field.param_value }}</td>
+                <td width="90px">
+                    <a style="float:left; margin-left:5px" class="tbar ui-button ui-widget ui-state-default ui-button-text-only ui-corner-right" href="javascript:
+                                    $('#dlog1').html( '&nbsp;' ).load( 'getmethPar/?method_code={{ field.method_id }}',function(){
+                                    $( '#dialog1' ).dialog({width:'800px',modal: true,title:'Method Parameter Table'});});">Edit</a>
+                    <a style="float:right;margin-left:5px" class="tbar ui-button ui-widget ui-state-default ui-button-text-only ui-corner-right" href="javascript: alert('Delete');">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+            </table>
