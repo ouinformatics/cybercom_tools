@@ -29,7 +29,7 @@ for item in gps_all:
     p2 = pyproj.Proj(t_srs)
     x, y = pyproj.transform( p1, p2,  item['longitud'], item['latitude'])
     rast = '%s%s%s%s' % ('MOD09A1.A', obs_date.strftime('%Y'), nearest_8d(obs_date), '_ndvi@MOD09A1_global')
-    output.append(grass.read_command('r.what', input=rast, east_north='%s,%s' % (x, y)).strip())
+    output.append(dict(zip(['x','y','desc','ndvi'],grass.read_command('r.what', input=rast, east_north='%s,%s' % (x, y)).strip().split('|'))))
     
 print output
 
