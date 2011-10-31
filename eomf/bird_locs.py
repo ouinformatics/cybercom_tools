@@ -13,6 +13,7 @@ s_srs="+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"
 
 
 def nearest_8d( obs_date ):
+    ''' Returns the nearest 8-day composite's julian day '''
     jday = int(obs_date.strftime('%j'))
     for start, stop in zip(range(1,365,8), range(9,365,8)):
         if jday >= start and jday < stop:
