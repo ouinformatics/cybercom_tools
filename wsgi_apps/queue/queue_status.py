@@ -20,8 +20,10 @@ class Root(object):
     @mimetype('application/json')
     def runTeco(self,task_type,**kwargs):
         if task_type == 'input':
+            res = task.getTecoinput.apply_async([],queue='celery')
         if task_type == 'runTeco':
-            res= task.runTeco.    
+            res= task.runTeco.apply_async(["f"],queue='celery')   
+        return res.task_id
     @cherrypy.expose
     @mimetype('application/json')
     def getStatus(self,task_id,**kwargs):# db=None, col=None, query=None, callback=None, showids=None, date=None, **kwargs):
