@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Map srs="+init=epsg:4326" background-color="rgb(255,255,255)">
+    <Style name="out_style">
+        <Rule>
+            <RasterSymbolizer>
+                <RasterColorizer default-mode="discrete" default-color="white">
+                    <stop color="#FFFFFF" value= "-999"  />
+                    <stop color="#D2FFFF" value = "-30"  />
+                    <stop color="#C79BCF" value = "-25"  />
+                    <stop color="#94679C" value = "-20"  />
+                    <stop color="#613568" value = "-15"  />
+                    <stop color="#CDCD94" value = "-10"  />
+                    <stop color="#989861" value = "-5"  />
+                    <stop color="#646464" value = "0"  />
+                    <stop color="#4FE8E7" value = "5"  />
+                    <stop color="#27A1F9" value = "10"  />
+                    <stop color="#0024FC" value = "15"  />
+                    <stop color="#60FA00" value = "20"  />
+                    <stop color="#49C300" value = "25"  />
+                    <stop color="#328C00" value = "30"  />
+                    <stop color="#FFF600" value = "35"  />
+                    <stop color="#E3BB00" value = "40"  />
+                    <stop color="#F69500" value = "45"  />
+                    <stop color="#F21300" value = "50"  />
+                    <stop color="#CB0D00" value = "55"  />
+                    <stop color="#B40A00" value = "60"  />
+                    <stop color="#EA2CFF" value = "65"  />
+                    <stop color="#9059CB" value = "70"  />
+                    <stop color="#FDFDFD" value = "75"  />
+                </RasterColorizer> 
+            </RasterSymbolizer>
+        </Rule>
+    </Style>
+    <Layer name="out" srs="+init=epsg:4326">
+        <StyleName>out_style</StyleName>
+        <Datasource>
+            <Parameter name="file">/Users/jduckles/Documents/MapBox/data/out.vrt</Parameter>
+            <Parameter name="type">gdal</Parameter>
+            <Parameter name="band">1</Parameter>
+        </Datasource>
+    </Layer>
+</Map>

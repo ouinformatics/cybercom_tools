@@ -1,0 +1,816 @@
+iso|hv|name
+AD |h18v04|Andorra                             
+AE |h23v06|United Arab Emirates                
+AE |h22v06|United Arab Emirates                
+AF |h23v05|Afghanistan                         
+AF |h23v06|Afghanistan                         
+AG |h12v07|Antigua and Barbuda                 
+AI |h12v07|Anguilla                            
+AL |h19v04|Albania                             
+AL |h19v05|Albania                             
+AM |h21v05|Armenia                             
+AM |h21v04|Armenia                             
+AO |h19v09|Angola                              
+AO |h20v09|Angola                              
+AO |h19v10|Angola                              
+AO |h20v10|Angola                              
+AQ |h22v16|Antarctica                          
+AQ |h15v17|Antarctica                          
+AQ |h16v17|Antarctica                          
+AQ |h17v17|Antarctica                          
+AQ |h18v17|Antarctica                          
+AQ |h19v17|Antarctica                          
+AQ |h20v17|Antarctica                          
+AQ |h14v16|Antarctica                          
+AQ |h15v16|Antarctica                          
+AQ |h16v16|Antarctica                          
+AQ |h17v16|Antarctica                          
+AQ |h18v16|Antarctica                          
+AQ |h19v16|Antarctica                          
+AQ |h20v16|Antarctica                          
+AQ |h21v16|Antarctica                          
+AQ |h23v16|Antarctica                          
+AQ |h14v15|Antarctica                          
+AQ |h15v15|Antarctica                          
+AQ |h18v15|Antarctica                          
+AQ |h19v15|Antarctica                          
+AQ |h20v15|Antarctica                          
+AQ |h21v15|Antarctica                          
+AQ |h22v15|Antarctica                          
+AQ |h23v15|Antarctica                          
+AR |h12v13|Argentina                           
+AR |h14v14|Argentina                           
+AR |h13v13|Argentina                           
+AR |h11v12|Argentina                           
+AR |h12v12|Argentina                           
+AR |h13v12|Argentina                           
+AR |h11v11|Argentina                           
+AR |h12v11|Argentina                           
+AR |h13v11|Argentina                           
+AR |h13v14|Argentina                           
+AS |h01v10|American Samoa                      
+AT |h19v04|Austria                             
+AT |h18v04|Austria                             
+AU |h31v11|Australia                           
+AU |h32v11|Australia                           
+AU |h29v10|Australia                           
+AU |h30v10|Australia                           
+AU |h31v10|Australia                           
+AU |h32v10|Australia                           
+AU |h27v14|Australia                           
+AU |h30v11|Australia                           
+AU |h32v09|Australia                           
+AU |h28v13|Australia                           
+AU |h29v13|Australia                           
+AU |h27v12|Australia                           
+AU |h28v12|Australia                           
+AU |h29v12|Australia                           
+AU |h30v12|Australia                           
+AU |h31v12|Australia                           
+AU |h27v11|Australia                           
+AU |h28v11|Australia                           
+AU |h29v11|Australia                           
+AU |h30v10|Ashmore and Cartier Islands         
+AW |h11v07|Aruba                               
+AZ |h21v05|Azerbaijan                          
+AZ |h21v04|Azerbaijan                          
+BA |h19v04|Bosnia and Herzegovina              
+BB |h12v07|Barbados                            
+BD |h25v06|Bangladesh                          
+BD |h26v06|Bangladesh                          
+BE |h18v04|Belgium                             
+BE |h18v03|Belgium                             
+BF |h18v07|Burkina Faso                        
+BF |h17v07|Burkina Faso                        
+BF |h17v08|Burkina Faso                        
+BG |h19v04|Bulgaria                            
+BG |h20v04|Bulgaria                            
+BH |h22v06|Bahrain                             
+BI |h21v09|Burundi                             
+BI |h20v09|Burundi                             
+BJ |h18v08|Benin                               
+BJ |h18v07|Benin                               
+BL |h12v07|Saint Barthelemy                    
+BM |h12v05|Bermuda                             
+BN |h29v08|Brunei                              
+BO |h11v11|Bolivia                             
+BO |h12v10|Bolivia                             
+BO |h11v10|Bolivia                             
+BO |h12v11|Bolivia                             
+BO |h11v09|Bolivia                             
+BR |h15v11|Brazil                              
+BR |h14v10|Brazil                              
+BR |h13v10|Brazil                              
+BR |h12v10|Brazil                              
+BR |h14v11|Brazil                              
+BR |h11v10|Brazil                              
+BR |h10v09|Brazil                              
+BR |h11v09|Brazil                              
+BR |h12v09|Brazil                              
+BR |h13v09|Brazil                              
+BR |h14v09|Brazil                              
+BR |h11v08|Brazil                              
+BR |h12v08|Brazil                              
+BR |h13v08|Brazil                              
+BR |h15v08|Brazil                              
+BR |h13v12|Brazil                              
+BR |h12v11|Brazil                              
+BR |h13v11|Brazil                              
+BS |h11v06|The Bahamas                         
+BS |h10v06|The Bahamas                         
+BT |h26v06|Bhutan                              
+BT |h25v06|Bhutan                              
+BW |h19v10|Botswana                            
+BW |h20v10|Botswana                            
+BW |h19v11|Botswana                            
+BW |h20v11|Botswana                            
+BY |h19v03|Belarus                             
+BZ |h09v07|Belize                              
+CA |h13v02|Canada                              
+CA |h09v04|Canada                              
+CA |h10v04|Canada                              
+CA |h11v04|Canada                              
+CA |h12v04|Canada                              
+CA |h13v04|Canada                              
+CA |h14v04|Canada                              
+CA |h09v03|Canada                              
+CA |h10v03|Canada                              
+CA |h11v03|Canada                              
+CA |h12v03|Canada                              
+CA |h13v03|Canada                              
+CA |h14v03|Canada                              
+CA |h11v02|Canada                              
+CA |h12v02|Canada                              
+CA |h14v02|Canada                              
+CA |h15v02|Canada                              
+CA |h13v01|Canada                              
+CA |h14v01|Canada                              
+CA |h15v01|Canada                              
+CA |h16v01|Canada                              
+CA |h16v00|Canada                              
+CA |h17v00|Canada                              
+CD |h20v09|Democratic Republic of the Congo    
+CD |h19v09|Democratic Republic of the Congo    
+CD |h20v10|Democratic Republic of the Congo    
+CD |h21v08|Democratic Republic of the Congo    
+CD |h20v08|Democratic Republic of the Congo    
+CD |h19v08|Democratic Republic of the Congo    
+CD |h21v09|Democratic Republic of the Congo    
+CF |h19v08|Central African Republic            
+CF |h20v07|Central African Republic            
+CF |h20v08|Central African Republic            
+CG |h19v09|Republic of the Congo               
+CG |h19v08|Republic of the Congo               
+CH |h18v04|Switzerland                         
+CI |h17v08|Ivory Coast                         
+CI |h17v07|Ivory Coast                         
+CK |h03v11|Cook Islands                        
+CK |h02v10|Cook Islands                        
+CK |h03v10|Cook Islands                        
+CK |h01v10|Cook Islands                        
+CK |h02v09|Cook Islands                        
+CL |h10v11|Chile                               
+CL |h11v10|Chile                               
+CL |h13v14|Chile                               
+CL |h14v14|Chile                               
+CL |h12v12|Chile                               
+CL |h08v11|Chile                               
+CL |h11v11|Chile                               
+CL |h13v13|Chile                               
+CL |h12v13|Chile                               
+CL |h11v12|Chile                               
+CM |h19v08|Cameroon                            
+CM |h18v08|Cameroon                            
+CM |h19v07|Cameroon                            
+CN |h25v06|China                               
+CN |h23v05|China                               
+CN |h24v05|China                               
+CN |h25v05|China                               
+CN |h26v05|China                               
+CN |h27v05|China                               
+CN |h28v05|China                               
+CN |h23v04|China                               
+CN |h24v04|China                               
+CN |h25v04|China                               
+CN |h26v04|China                               
+CN |h27v04|China                               
+CN |h25v03|China                               
+CN |h26v03|China                               
+CN |h28v07|China                               
+CN |h26v06|China                               
+CN |h27v06|China                               
+CN |h28v06|China                               
+CO |h10v09|Colombia                            
+CO |h11v09|Colombia                            
+CO |h10v07|Colombia                            
+CO |h11v08|Colombia                            
+CO |h11v07|Colombia                            
+CO |h10v08|Colombia                            
+CR |h09v08|Costa Rica                          
+CR |h09v07|Costa Rica                          
+CU |h10v07|Cuba                                
+CU |h11v06|Cuba                                
+CU |h10v06|Cuba                                
+CV |h15v07|Cape Verde                          
+CW |h11v07|Curaçao                             
+CY |h20v05|Cyprus                              
+CZ |h18v03|Czech Republic                      
+CZ |h18v04|Czech Republic                      
+CZ |h19v04|Czech Republic                      
+CZ |h19v03|Czech Republic                      
+DE |h18v04|Germany                             
+DE |h18v03|Germany                             
+DJ |h22v07|Djibouti                            
+DK |h18v03|Denmark                             
+DM |h12v07|Dominica                            
+DO |h11v06|Dominican Republic                  
+DO |h11v07|Dominican Republic                  
+DZ |h18v06|Algeria                             
+DZ |h17v06|Algeria                             
+DZ |h18v07|Algeria                             
+DZ |h18v05|Algeria                             
+DZ |h17v05|Algeria                             
+DZ |h19v06|Algeria                             
+EC |h08v09|Ecuador                             
+EC |h10v08|Ecuador                             
+EC |h09v08|Ecuador                             
+EC |h08v08|Ecuador                             
+EC |h10v09|Ecuador                             
+EC |h09v09|Ecuador                             
+EE |h19v03|Estonia                             
+EG |h20v05|Egypt                               
+EG |h21v05|Egypt                               
+EG |h20v06|Egypt                               
+EG |h21v06|Egypt                               
+ER |h21v07|Eritrea                             
+ER |h22v07|Eritrea                             
+ES |h18v05|Spain                               
+ES |h16v06|Spain                               
+ES |h18v04|Spain                               
+ES |h17v05|Spain                               
+ES |h17v04|Spain                               
+ET |h22v08|Ethiopia                            
+ET |h21v08|Ethiopia                            
+ET |h21v07|Ethiopia                            
+ET |h22v07|Ethiopia                            
+FI |h18v01|Finland                             
+FI |h19v03|Finland                             
+FI |h18v02|Finland                             
+FI |h19v02|Finland                             
+FJ |h34v10|Fiji                                
+FJ |h35v10|Fiji                                
+FJ |h34v11|Fiji                                
+FJ |h00v10|Fiji                                
+FJ |h01v10|Fiji                                
+FK |h14v14|Falkland Islands                    
+FM |h33v08|Federated States of Micronesia      
+FM |h32v08|Federated States of Micronesia      
+FM |h31v08|Federated States of Micronesia      
+FM |h34v08|Federated States of Micronesia      
+FO |h17v02|Faroe Islands                       
+FR |h12v08|France                              
+FR |h23v11|France                              
+FR |h22v10|France                              
+FR |h17v04|France                              
+FR |h18v04|France                              
+FR |h18v03|France                              
+FR |h12v07|France                              
+GA |h18v08|Gabon                               
+GA |h19v09|Gabon                               
+GA |h18v09|Gabon                               
+GA |h19v08|Gabon                               
+GB |h17v02|United Kingdom                      
+GB |h17v03|United Kingdom                      
+GB |h18v03|United Kingdom                      
+GD |h11v07|Grenada                             
+GD |h12v07|Grenada                             
+GE |h21v04|Georgia                             
+GE |h20v04|Georgia                             
+GG |h17v04|Guernsey                            
+GH |h18v07|Ghana                               
+GH |h17v08|Ghana                               
+GH |h18v08|Ghana                               
+GH |h17v07|Ghana                               
+GI |h17v05|Gibraltar                           
+GL |h15v02|Greenland                           
+GL |h17v00|Greenland                           
+GL |h16v00|Greenland                           
+GL |h17v01|Greenland                           
+GL |h16v01|Greenland                           
+GL |h17v02|Greenland                           
+GL |h16v02|Greenland                           
+GL |h15v03|Greenland                           
+GM |h16v07|Gambia                              
+GN |h16v07|Guinea                              
+GN |h17v07|Guinea                              
+GN |h17v08|Guinea                              
+GN |h16v08|Guinea                              
+GQ |h19v08|Equatorial Guinea                   
+GQ |h18v09|Equatorial Guinea                   
+GQ |h18v08|Equatorial Guinea                   
+GR |h20v04|Greece                              
+GR |h19v04|Greece                              
+GR |h19v05|Greece                              
+GR |h20v05|Greece                              
+GS |h16v14|South Georgia and the Islands       
+GS |h15v14|South Georgia and the Islands       
+GT |h09v07|Guatemala                           
+GU |h32v07|Guam                                
+GW |h16v07|Guinea Bissau                       
+GY |h11v08|Guyana                              
+GY |h12v08|Guyana                              
+HK |h28v06|Hong Kong S.A.R.                    
+HM |h22v14|Heard Island and McDonald Islands   
+HN |h10v07|Honduras                            
+HN |h09v07|Honduras                            
+HR |h18v04|Croatia                             
+HR |h19v04|Croatia                             
+HT |h10v07|Haiti                               
+HT |h11v07|Haiti                               
+HT |h11v06|Haiti                               
+HU |h19v04|Hungary                             
+ID |h28v09|Indonesia                           
+ID |h31v09|Indonesia                           
+ID |h32v09|Indonesia                           
+ID |h27v08|Indonesia                           
+ID |h30v10|Indonesia                           
+ID |h28v08|Indonesia                           
+ID |h29v08|Indonesia                           
+ID |h29v09|Indonesia                           
+ID |h30v09|Indonesia                           
+ID |h27v09|Indonesia                           
+ID |h30v08|Indonesia                           
+ID |h31v08|Indonesia                           
+ID |h29v10|Indonesia                           
+IE |h17v03|Ireland                             
+IL |h21v05|Israel                              
+IL |h20v05|Israel                              
+IL |h21v06|Israel                              
+IM |h17v03|Isle of Man                         
+IN |h25v06|India                               
+IN |h26v06|India                               
+IN |h25v07|India                               
+IN |h26v07|India                               
+IN |h24v07|India                               
+IN |h27v08|India                               
+IN |h25v08|India                               
+IN |h25v05|India                               
+IN |h24v05|India                               
+IN |h27v07|India                               
+IN |h24v06|India                               
+IO |h25v09|British Indian Ocean Territory      
+IQ |h22v06|Iraq                                
+IQ |h21v05|Iraq                                
+IQ |h22v05|Iraq                                
+IQ |h21v06|Iraq                                
+IR |h22v06|Iran                                
+IR |h22v05|Iran                                
+IR |h21v05|Iran                                
+IR |h23v06|Iran                                
+IR |h23v05|Iran                                
+IS |h16v02|Iceland                             
+IS |h17v02|Iceland                             
+IT |h19v04|Italy                               
+IT |h18v05|Italy                               
+IT |h19v05|Italy                               
+IT |h18v04|Italy                               
+JE |h17v04|Jersey                              
+JM |h10v07|Jamaica                             
+JO |h21v05|Jordan                              
+JO |h21v06|Jordan                              
+JP |h32v06|Japan                               
+JP |h28v05|Japan                               
+JP |h29v05|Japan                               
+JP |h30v05|Japan                               
+JP |h27v04|Japan                               
+JP |h28v04|Japan                               
+JP |h29v06|Japan                               
+JP |h30v06|Japan                               
+KE |h21v08|Kenya                               
+KE |h21v09|Kenya                               
+KE |h22v09|Kenya                               
+KE |h22v08|Kenya                               
+KG |h23v04|Kyrgyzstan                          
+KG |h23v05|Kyrgyzstan                          
+KH |h28v07|Cambodia                            
+KH |h27v07|Cambodia                            
+KI |h35v08|Kiribati                            
+KI |h35v09|Kiribati                            
+KI |h02v08|Kiribati                            
+KI |h03v10|Kiribati                            
+KI |h02v09|Kiribati                            
+KI |h00v09|Kiribati                            
+KM |h22v10|Comoros                             
+KN |h12v07|Saint Kitts and Nevis               
+KP |h27v04|North Korea                         
+KP |h27v05|North Korea                         
+KP |h28v05|North Korea                         
+KR |h27v05|South Korea                         
+KR |h28v05|South Korea                         
+KW |h22v05|Kuwait                              
+KW |h22v06|Kuwait                              
+KY |h10v07|Cayman Islands                      
+KZ |h22v03|Kazakhstan                          
+KZ |h23v03|Kazakhstan                          
+KZ |h21v03|Kazakhstan                          
+KZ |h22v04|Kazakhstan                          
+KZ |h21v04|Kazakhstan                          
+KZ |h23v04|Kazakhstan                          
+LA |h28v07|Laos                                
+LA |h27v06|Laos                                
+LA |h27v07|Laos                                
+LB |h21v05|Lebanon                             
+LB |h20v05|Lebanon                             
+LC |h12v07|Saint Lucia                         
+LI |h18v04|Liechtenstein                       
+LK |h26v08|Sri Lanka                           
+LK |h25v08|Sri Lanka                           
+LR |h17v08|Liberia                             
+LR |h16v08|Liberia                             
+LS |h20v12|Lesotho                             
+LS |h20v11|Lesotho                             
+LT |h19v03|Lithuania                           
+LU |h18v04|Luxembourg                          
+LU |h18v03|Luxembourg                          
+LV |h19v03|Latvia                              
+LY |h18v06|Libya                               
+LY |h18v05|Libya                               
+LY |h19v05|Libya                               
+LY |h20v05|Libya                               
+LY |h20v07|Libya                               
+LY |h19v06|Libya                               
+LY |h20v06|Libya                               
+MA |h16v06|Morocco                             
+MA |h17v06|Morocco                             
+MA |h17v05|Morocco                             
+MC |h18v04|Monaco                              
+MD |h19v04|Moldova                             
+MD |h20v04|Moldova                             
+ME |h19v04|Montenegro                          
+MF |h12v07|Saint Martin                        
+MG |h22v10|Madagascar                          
+MG |h22v11|Madagascar                          
+MH |h34v08|Marshall Islands                    
+MH |h35v08|Marshall Islands                    
+MH |h34v07|Marshall Islands                    
+MK |h19v04|Macedonia                           
+ML |h18v06|Mali                                
+ML |h16v07|Mali                                
+ML |h17v07|Mali                                
+ML |h18v07|Mali                                
+ML |h17v06|Mali                                
+MM |h27v06|Myanmar                             
+MM |h27v08|Myanmar                             
+MM |h26v07|Myanmar                             
+MM |h27v07|Myanmar                             
+MM |h26v06|Myanmar                             
+MN |h24v03|Mongolia                            
+MN |h26v04|Mongolia                            
+MN |h25v04|Mongolia                            
+MN |h23v04|Mongolia                            
+MN |h24v04|Mongolia                            
+MN |h23v03|Mongolia                            
+MN |h25v03|Mongolia                            
+MO |h28v06|Macau S.A.R                         
+MP |h32v07|Northern Mariana Islands            
+MP |h31v07|Northern Mariana Islands            
+MP |h31v06|Northern Mariana Islands            
+MR |h17v07|Mauritania                          
+MR |h16v06|Mauritania                          
+MR |h17v06|Mauritania                          
+MR |h16v07|Mauritania                          
+MS |h12v07|Montserrat                          
+MT |h19v05|Malta                               
+MU |h24v10|Mauritius                           
+MU |h23v11|Mauritius                           
+MU |h23v10|Mauritius                           
+MV |h25v09|Maldives                            
+MV |h25v08|Maldives                            
+MW |h21v10|Malawi                              
+MW |h21v09|Malawi                              
+MX |h09v05|Mexico                              
+MX |h07v06|Mexico                              
+MX |h09v07|Mexico                              
+MX |h08v07|Mexico                              
+MX |h07v07|Mexico                              
+MX |h09v06|Mexico                              
+MX |h07v05|Mexico                              
+MX |h08v05|Mexico                              
+MX |h08v06|Mexico                              
+MY |h27v08|Malaysia                            
+MY |h28v08|Malaysia                            
+MY |h29v08|Malaysia                            
+MZ |h20v10|Mozambique                          
+MZ |h21v10|Mozambique                          
+MZ |h22v10|Mozambique                          
+MZ |h20v11|Mozambique                          
+MZ |h21v11|Mozambique                          
+NA |h19v11|Namibia                             
+NA |h19v10|Namibia                             
+NA |h20v10|Namibia                             
+NC |h33v10|New Caledonia                       
+NC |h33v11|New Caledonia                       
+NE |h19v06|Niger                               
+NE |h18v06|Niger                               
+NE |h19v07|Niger                               
+NE |h18v07|Niger                               
+NF |h32v11|Norfolk Island                      
+NG |h18v08|Nigeria                             
+NG |h19v08|Nigeria                             
+NG |h18v07|Nigeria                             
+NG |h19v07|Nigeria                             
+NI |h09v07|Nicaragua                           
+NL |h12v07|Netherlands                         
+NL |h18v03|Netherlands                         
+NL |h11v07|Netherlands                         
+NO |h18v01|Norway                              
+NO |h19v01|Norway                              
+NO |h18v00|Norway                              
+NO |h18v14|Norway                              
+NO |h18v03|Norway                              
+NO |h18v02|Norway                              
+NO |h19v02|Norway                              
+NO |h17v01|Norway                              
+NP |h25v06|Nepal                               
+NP |h25v05|Nepal                               
+NR |h34v09|Nauru                               
+NU |h01v10|Niue                                
+NZ |h31v13|New Zealand                         
+NZ |h31v12|New Zealand                         
+NZ |h32v12|New Zealand                         
+NZ |h02v11|New Zealand                         
+NZ |h28v14|New Zealand                         
+NZ |h01v09|New Zealand                         
+NZ |h05v13|New Zealand                         
+NZ |h29v13|New Zealand                         
+NZ |h30v13|New Zealand                         
+NZ |h00v09|New Zealand                         
+OM |h23v07|Oman                                
+OM |h22v07|Oman                                
+OM |h23v06|Oman                                
+PE |h10v08|Peru                                
+PE |h10v10|Peru                                
+PE |h09v09|Peru                                
+PE |h11v10|Peru                                
+PE |h10v09|Peru                                
+PE |h11v09|Peru                                
+PF |h04v09|French Polynesia                    
+PF |h04v10|French Polynesia                    
+PF |h03v10|French Polynesia                    
+PF |h05v11|French Polynesia                    
+PF |h04v11|French Polynesia                    
+PF |h05v10|French Polynesia                    
+PG |h31v09|Papua New Guinea                    
+PG |h32v09|Papua New Guinea                    
+PG |h33v09|Papua New Guinea                    
+PG |h09v08|Papua New Guinea                    
+PG |h10v08|Papua New Guinea                    
+PG |h32v10|Papua New Guinea                    
+PG |h33v10|Papua New Guinea                    
+PH |h29v06|Philippines                         
+PH |h30v07|Philippines                         
+PH |h30v08|Philippines                         
+PH |h29v08|Philippines                         
+PH |h29v07|Philippines                         
+PK |h24v06|Pakistan                            
+PK |h23v05|Pakistan                            
+PK |h24v05|Pakistan                            
+PK |h23v06|Pakistan                            
+PL |h19v04|Poland                              
+PL |h18v03|Poland                              
+PL |h19v03|Poland                              
+PM |h14v04|Saint Pierre and Miquelon           
+PN |h06v11|Pitcairn Islands                    
+PR |h11v07|Puerto Rico                         
+PS |h20v05|Gaza                                
+PS |h21v05|West Bank                           
+PS |h20v05|West Bank                           
+PT |h16v05|Portugal                            
+PT |h15v05|Portugal                            
+PT |h17v05|Portugal                            
+PT |h17v04|Portugal                            
+PW |h31v08|Palau                               
+PY |h13v11|Paraguay                            
+PY |h12v10|Paraguay                            
+PY |h12v11|Paraguay                            
+QA |h22v06|Qatar                               
+RO |h20v04|Romania                             
+RO |h19v04|Romania                             
+RS |h19v04|Republic of Serbia                  
+RU |h23v03|Russia                              
+RU |h20v04|Russia                              
+RU |h21v04|Russia                              
+RU |h23v04|Russia                              
+RU |h24v04|Russia                              
+RU |h25v04|Russia                              
+RU |h26v04|Russia                              
+RU |h27v04|Russia                              
+RU |h28v04|Russia                              
+RU |h19v03|Russia                              
+RU |h20v03|Russia                              
+RU |h21v03|Russia                              
+RU |h22v03|Russia                              
+RU |h24v03|Russia                              
+RU |h25v03|Russia                              
+RU |h26v03|Russia                              
+RU |h27v03|Russia                              
+RU |h28v03|Russia                              
+RU |h10v02|Russia                              
+RU |h11v02|Russia                              
+RU |h19v02|Russia                              
+RU |h20v02|Russia                              
+RU |h21v02|Russia                              
+RU |h22v02|Russia                              
+RU |h23v02|Russia                              
+RU |h24v02|Russia                              
+RU |h25v02|Russia                              
+RU |h26v02|Russia                              
+RU |h12v01|Russia                              
+RU |h19v01|Russia                              
+RU |h20v01|Russia                              
+RU |h21v01|Russia                              
+RU |h22v01|Russia                              
+RU |h23v01|Russia                              
+RU |h24v01|Russia                              
+RU |h18v00|Russia                              
+RU |h19v00|Russia                              
+RW |h21v09|Rwanda                              
+RW |h20v09|Rwanda                              
+SA |h23v07|Saudi Arabia                        
+SA |h21v05|Saudi Arabia                        
+SA |h21v07|Saudi Arabia                        
+SA |h21v06|Saudi Arabia                        
+SA |h22v07|Saudi Arabia                        
+SA |h23v06|Saudi Arabia                        
+SA |h22v06|Saudi Arabia                        
+SB |h33v10|Solomon Islands                     
+SB |h34v09|Solomon Islands                     
+SB |h33v09|Solomon Islands                     
+SB |h34v10|Solomon Islands                     
+SC |h23v09|Seychelles                          
+SC |h22v09|Seychelles                          
+SD |h20v08|Sudan                               
+SD |h21v07|Sudan                               
+SD |h20v07|Sudan                               
+SD |h21v06|Sudan                               
+SD |h20v06|Sudan                               
+SD |h21v08|Sudan                               
+SE |h18v03|Sweden                              
+SE |h18v02|Sweden                              
+SE |h19v02|Sweden                              
+SE |h19v03|Sweden                              
+SG |h28v08|Singapore                           
+SH |h17v13|Saint Helena                        
+SH |h17v12|Saint Helena                        
+SH |h17v10|Saint Helena                        
+SH |h16v09|Saint Helena                        
+SI |h18v04|Slovenia                            
+SI |h19v04|Slovenia                            
+SK |h19v04|Slovakia                            
+SL |h17v08|Sierra Leone                        
+SL |h16v07|Sierra Leone                        
+SL |h16v08|Sierra Leone                        
+SM |h18v04|San Marino                          
+SN |h16v07|Senegal                             
+SO |h22v09|Somalia                             
+SO |h23v08|Somalia                             
+SO |h22v07|Somalia                             
+SO |h23v07|Somalia                             
+SO |h22v08|Somalia                             
+SR |h12v08|Suriname                            
+ST |h18v08|Sao Tome and Principe               
+SV |h09v07|El Salvador                         
+SY |h20v05|Syria                               
+SY |h21v05|Syria                               
+SZ |h20v11|Swaziland                           
+TC |h11v06|Turks and Caicos Islands            
+TD |h20v08|Chad                                
+TD |h19v07|Chad                                
+TD |h20v07|Chad                                
+TD |h20v06|Chad                                
+TD |h19v06|Chad                                
+TD |h19v08|Chad                                
+TF |h21v11|French Southern and Antarctic Lands 
+TF |h21v13|French Southern and Antarctic Lands 
+TF |h22v10|French Southern and Antarctic Lands 
+TF |h23v10|French Southern and Antarctic Lands 
+TF |h24v12|French Southern and Antarctic Lands 
+TF |h22v13|French Southern and Antarctic Lands 
+TG |h18v07|Togo                                
+TG |h18v08|Togo                                
+TH |h28v07|Thailand                            
+TH |h27v06|Thailand                            
+TH |h27v08|Thailand                            
+TH |h28v08|Thailand                            
+TH |h27v07|Thailand                            
+TJ |h23v04|Tajikistan                          
+TJ |h23v05|Tajikistan                          
+TL |h30v09|East Timor                          
+TM |h22v04|Turkmenistan                        
+TM |h22v05|Turkmenistan                        
+TM |h23v05|Turkmenistan                        
+TM |h21v04|Turkmenistan                        
+TN |h18v05|Tunisia                             
+TO |h01v11|Tonga                               
+TO |h01v10|Tonga                               
+TR |h20v04|Turkey                              
+TR |h21v04|Turkey                              
+TR |h20v05|Turkey                              
+TR |h21v05|Turkey                              
+TR |h19v04|Turkey                              
+TT |h12v07|Trinidad and Tobago                 
+TT |h11v07|Trinidad and Tobago                 
+TV |h35v09|Tuvalu                              
+TW |h29v06|Taiwan                              
+TW |h28v06|Taiwan                              
+TZ |h20v09|United Republic of Tanzania         
+TZ |h21v09|United Republic of Tanzania         
+TZ |h21v10|United Republic of Tanzania         
+TZ |h22v10|United Republic of Tanzania         
+UA |h19v04|Ukraine                             
+UA |h20v03|Ukraine                             
+UA |h19v03|Ukraine                             
+UA |h20v04|Ukraine                             
+UG |h20v08|Uganda                              
+UG |h20v09|Uganda                              
+UG |h21v09|Uganda                              
+UG |h21v08|Uganda                              
+UM |h02v09|United States Minor Outlying Islands
+UM |h01v08|United States Minor Outlying Islands
+UM |h00v08|United States Minor Outlying Islands
+UM |h10v07|United States Minor Outlying Islands
+UM |h01v07|United States Minor Outlying Islands
+UM |h02v06|United States Minor Outlying Islands
+UM |h33v07|United States Minor Outlying Islands
+US |h10v04|United States of America            
+US |h11v04|United States of America            
+US |h12v04|United States of America            
+US |h13v04|United States of America            
+US |h06v03|United States of America            
+US |h07v03|United States of America            
+US |h08v03|United States of America            
+US |h09v03|United States of America            
+US |h10v03|United States of America            
+US |h11v03|United States of America            
+US |h08v05|United States of America            
+US |h29v03|United States of America            
+US |h09v02|United States of America            
+US |h10v02|United States of America            
+US |h11v02|United States of America            
+US |h12v02|United States of America            
+US |h13v02|United States of America            
+US |h12v01|United States of America            
+US |h13v01|United States of America            
+US |h03v07|United States of America            
+US |h02v06|United States of America            
+US |h03v06|United States of America            
+US |h08v06|United States of America            
+US |h09v06|United States of America            
+US |h10v06|United States of America            
+US |h28v03|United States of America            
+US |h09v05|United States of America            
+US |h10v05|United States of America            
+US |h11v05|United States of America            
+US |h12v05|United States of America            
+US |h08v04|United States of America            
+US |h09v04|United States of America            
+UY |h13v12|Uruguay                             
+UZ |h21v04|Uzbekistan                          
+UZ |h22v05|Uzbekistan                          
+UZ |h23v05|Uzbekistan                          
+UZ |h22v04|Uzbekistan                          
+UZ |h23v04|Uzbekistan                          
+VA |h18v04|Vatican                             
+VC |h12v07|Saint Vincent and the Grenadines    
+VE |h12v08|Venezuela                           
+VE |h10v07|Venezuela                           
+VE |h11v07|Venezuela                           
+VE |h10v08|Venezuela                           
+VE |h11v08|Venezuela                           
+VG |h11v07|British Virgin Islands              
+VI |h11v07|United States Virgin Islands        
+VN |h28v07|Vietnam                             
+VN |h27v06|Vietnam                             
+VN |h28v06|Vietnam                             
+VN |h28v08|Vietnam                             
+VN |h27v07|Vietnam                             
+VU |h34v10|Vanuatu                             
+VU |h33v10|Vanuatu                             
+VU |h33v11|Vanuatu                             
+WF |h00v10|Wallis and Futuna                   
+WS |h01v10|Samoa                               
+YE |h22v07|Yemen                               
+YE |h23v07|Yemen                               
+ZA |h20v13|South Africa                        
+ZA |h19v12|South Africa                        
+ZA |h20v12|South Africa                        
+ZA |h19v11|South Africa                        
+ZA |h20v11|South Africa                        
+ZM |h20v09|Zambia                              
+ZM |h21v09|Zambia                              
+ZM |h20v10|Zambia                              
+ZM |h21v10|Zambia                              
+ZW |h20v11|Zimbabwe                            
+ZW |h21v10|Zimbabwe                            
+ZW |h20v10|Zimbabwe                            
+ZW |h21v11|Zimbabwe                            
