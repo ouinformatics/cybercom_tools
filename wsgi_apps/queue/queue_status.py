@@ -4,6 +4,15 @@ import urllib
 from celery.result import AsyncResult
 from cybercomq.model.teco import task
 
+'''
+[
+('teco', 'cybercomq.model.teco.task.runTeco'),
+('setTecoInput', 'cybercomq.model.teco.task.setTecoinput')
+]
+
+
+'''
+
 def mimetype(type):
     def decorate(func):
         def wrapper(*args, **kwargs):
@@ -16,17 +25,6 @@ class Root(object):
     @cherrypy.expose
     def index(self):
         return None
-    @cherrypy.expose
-    @mimetype('application/json')
-    def teco(self,task_type,**kwargs):
-        if task_type.upper() == 'SETINPUT':
-            res = task.getTecoinput.apply_async([],queue='celery')
-            return json.dumps({'task_id':res.task_id},indent=2)#res.task_id
-        if task_type.upper() == 'RUN':
-            res= task.runTeco.apply_async(["f"],queue='celery')   
-            return json.dumps({'task_id':res.task_id},indent=2)#res.task_id
-        return json.dumps({'available_options':['run','setinput']},indent=2)
-        
     @cherrypy.expose
     @mimetype('application/json')
     def task(self,task_id=None,type=None,**kwargs):
