@@ -18,35 +18,20 @@ class Root(object):
         return None
     @cherrypy.expose
     @mimetype('application/json')
-    def runTeco(self,task_type,**kwargs):
-        if task_type == 'input':
+    def teco(self,task_type,**kwargs):
+        if task_type.upper() == 'SETINPUT':
             res = task.getTecoinput.apply_async([],queue='celery')
-        if task_type == 'runTeco':
+            return json.dumps({'task_id':res.task_id},indent=2)#res.task_id
+        if task_type.upper() == 'RUN':
             res= task.runTeco.apply_async(["f"],queue='celery')   
-        return res.task_id
+            return json.dumps({'task_id':res.task_id},indent=2)#res.task_id
+        return json.dumps({'available_options':['run','setinput']},indent=2)
+        
     @cherrypy.expose
     @mimetype('application/json')
-    def getStatus(self,task_id,**kwargs):# db=None, col=None, query=None, callback=None, showids=None, date=None, **kwargs):
-        """ 
-        Celery Status web service
-        """
-        return json.dumps({"status": AsyncResult(task_id).status})
-    @cherrypy.expose
-    @mimetype('application/json')
-    def getTombstone(self,task_id,**kwargs):
-        result = urllib.urlopen("http://fire.rccc.ou.edu/mongo/db_find/cybercom_queue/cybercom_queue_meta/{'spec':{'_id':'" + task_id + "'}}/Tombstone/True/")
-        return result.read()
-    @cherrypy.expose
-    @mimetype('application/json')
-    def task(self,task_id,type=None,**kwargs):
-        if type == 'status':
-            return json.dumps({"status": AsyncResult(task_id).status},indent=2)
-        if type == 'tombstone':
-            res={}
-            result = urllib.urlopen("http://fire.rccc.ou.edu/mongo/db_find/cybercom_queue/cybercom_queue_meta/{'spec':{'_id':'" + task_id + "'}}")
-            res['tombstone']=json.loads(result.read())
-            res['task_id']=task_id            
-            return json.dumps(res,indent=2) #result.read()
+    def task(self,task_id=None,type=None,**kwargs):
+        if task_id == None:
+            return json.dumps({'available_urls':['/<task_id>/','/<task_id>/status/','/<task_id>/tombstone/']},indent=2)
         if type == None:
             res = {}
             result = urllib.urlopen("http://fire.rccc.ou.edu/mongo/db_find/cybercom_queue/cybercom_queue_meta/{'spec':{'_id':'" + task_id + "'}}")
@@ -54,6 +39,15 @@ class Root(object):
             res['status']=AsyncResult(task_id).status
             res['task_id']=task_id
             return json.dumps(res,indent=2)
+        if type.lower() == 'status':
+            return json.dumps({"status": AsyncResult(task_id).status},indent=2)
+        if type.lower() == 'tombstone':
+            res={}
+            result = urllib.urlopen("http://fire.rccc.ou.edu/mongo/db_find/cybercom_queue/cybercom_queue_meta/{'spec':{'_id':'" + task_id + "'}}")
+            res['tombstone']=json.loads(result.read())
+            res['task_id']=task_id            
+            return json.dumps(res,indent=2) #result.read()
+        return json.dumps({'available_urls':['/<task_id>/','/<task_id>/status/','/<task_id>/tombstone/']},indent=2)
 cherrypy.tree.mount(Root())
 application = cherrypy.tree
 
