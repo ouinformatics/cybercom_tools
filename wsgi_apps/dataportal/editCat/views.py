@@ -159,7 +159,7 @@ def load_event(request):
         md= datalayer.Metadata()
         commons=''
         sqlWhere = "commons_id = " + commonid + " AND cat_id = " + catid + " ORDER BY event_id"
-        data= md.Search('dt_event',where=sqlWhere,column=['event_id','event_name'])
+        data= md.Search('dt_event',where=sqlWhere,column=['event_id','event_name'],isPage=True,page=1,result_per_page=1000)
         c={'data':data,'commons':commons}
         return render_to_response('editCat/select_event.html',c)
     except Exception as inst:

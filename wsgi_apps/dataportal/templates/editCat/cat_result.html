@@ -1,10 +1,22 @@
              <script type="text/javascript" src="http://static.cybercommons.org/js/catalog/catalog.js"></script>
-            <script>onloadfunction();$('#ftool').buttonset();
+            <script>onloadfunction();setLabels();//$('#ftool').buttonset();
                     $('.tbar').hover(function(){$(this).addClass("ui-state-hover");},function(){$(this).removeClass("ui-state-hover");});
                     $('#btnAdd').click(function(){
                             $('#tabs-1' ).html( '&nbsp;' ).load(  'getcatalog/?catid=addnew&commons_id='.concat(commons_id));
                     });
+                    $('#id_status_data').change(function() {
+                        setLabels();
+/*
+                        var ss = $("select#id_status_data").val();
+                        if ( ss == "Data" ){
+                        $(idl_cat_method).text('Metadata: ');
+                        }
+                        else{
 
+                        $(idl_cat_method).text('Application Method');
+                        }
+*/
+                    });
                     $('#btnDel').click(function(){
                             $('#output2' ).html( '&nbsp;' ).load(  'delcatalog/?cat_id={{catid}}&common_id='.concat(commons_id),function(){ 
                                 var idx = $("select#Select").attr("selectedIndex");
@@ -66,9 +78,9 @@
                     {% endif %}
                 <div id="div_{{field.name}}" class="fieldWrapper">
                     {% if field.name == 'cat_name' or field.name == 'status_data' or field.name == 'loc_id' %}
-                    <div class="left" style="padding:1px;float:left;text-align:right;width:20%"><strong>{{ field.label_tag }}</strong>:</div>
+                    <div class="left" style="padding:1px;float:left;text-align:right;width:20%"><strong><label id="idl_{{ field.name }}" for="id_{{ field.name }}">{{ field.label }}</label></strong>:</div>
                     {% else %}
-                    <div class="left" style="padding:1px;float:left;text-align:right;width:20%">{{ field.label_tag }}:</div>
+                    <div class="left" style="padding:1px;float:left;text-align:right;width:20%"><label id="idl_{{ field.name }}" for="id_{{ field.name }}">{{ field.label }}</label>:</div>
                     {% endif %}
                     <div class="right" style="padding:1px;float:left;margin-left:15px;width:75%">{{ field }} 
                     {% if field.name == 'loc_id' %} 

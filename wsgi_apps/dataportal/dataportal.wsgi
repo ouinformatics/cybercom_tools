@@ -10,7 +10,8 @@ execfile(activate_this, dict(__file__=activate_this))
 
 import sys
 # put the Django project on sys.path
-path = '/scratch/www/wsgi_sites'
+path = '/scratch/www/wsgi_sites' # production
+#path = '/var/www/apps' # testing
 if path not in sys.path:
     sys.path.append(path)
 

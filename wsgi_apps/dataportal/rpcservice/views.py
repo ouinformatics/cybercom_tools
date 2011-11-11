@@ -3,10 +3,21 @@ from rpc4django import rpcmethod
 from cybercom.data.catalog import datalayer , dataloader
 from django.contrib.auth.models import User
 #this is a test
-from django.contrib.auth.decorators import login_required
+#from django.contrib.auth.decorators import login_required
 import datetime
+from pymongo import Connection, json_util
+import json
+import ast
+import teco
 
-@login_required(login_url='/accounts/login/')
+
+@rpcmethod(name='queue.getLocation',signature=['Result:{Primarykeys}', 'Param: dictionary'])#, permission='auth.add_group')
+def getLocation(**kwargs):
+    a=teco.add.delay(1,1)
+    result= a.get()
+    return json.dumps(result,default=json_util.default)
+#from types import *
+#@login_required(login_url='/accounts/login/')
 @rpcmethod(name='catalog.dtCatalog',signature=['Result:{Primarykeys}', 'Param: dictionary'], permission='auth.add_group')
 def catalog(row={},**kwargs):
     '''
@@ -49,11 +60,13 @@ def catalog(row={},**kwargs):
     try:
         c_id = int(row['commons_id'])
         checkpermission(str(request.user),c_id)
+        data=dict(row)
+        data['userid']=str(request.user)
     except Exception as err:
         raise err
     #checkpermission(request,commons_id)
     md=dataloader.Metadata_load()
-    return md.catalog(row)
+    return md.repo_insertRow('dt_catalog',data)#catalog(row)
 @rpcmethod(name='catalog.EventResult',signature=['Result: JSON Success/Errors', 'Param: [row:dictionary - dt_event,evtResults:list'], permission='auth.add_group')
 def dtEventResult(row={},evtResults=[],**kwargs):
     '''
@@ -99,7 +112,43 @@ def dtEventResult(row={},evtResults=[],**kwargs):
     else:
         res['dt_result'] = result_detail
         return res
-
+@rpcmethod(name='event.LocalFile',signature=['Result: JSON Success/Errors', 'Param: [row:dictionary - dt_event,evtResults:list'], permission='auth.add_group')
+def event_local_file(commons_id,cat_id, filepath,server,**kwargs):#,userid,eventUpdateDict={'event_name':'Local File Storage','event_desc':'Local File Storage'}):
+    request = kwargs.get('request',None)
+    #check errors check permission
+    try:
+        checkpermission(str(request.user),commons_id)
+    except Exception as err:
+        raise err
+    eparam = {'commons_id':commons_id,'cat_id':cat_id,'event_name':'Local File Storage','event_desc':'Local File Storage','event_type':'Metadata','event_method':'Local_File'}
+    eparam['userid'] = str(request.user)#serid #os.getlogin()
+    #eparam.update(eventUpdateDict)
+    rparam = {'commons_id':commons_id,'var_id':'Server','result_text':server,'result_order':1,'status_flag':'A','validated':'Y'}
+    rparam1 = {'commons_id':commons_id,'var_id':'File_Path','result_text':filepath,'result_order':2,'status_flag':'A','validated':'Y'}
+    md=dataloader.Metadata_load()
+    md.event_result(eparam,[rparam,rparam1])
+@rpcmethod(name='event.WebService',signature=['Result: JSON Success/Errors', 'commons_id','cat_id','URL','event_method','eventUpdateDict'], permission='auth.add_group')
+def event_WebService(commons_id,cat_id,URL,event_method,eventUpdateDict={'event_name':'Web Service','event_desc':'Web Service'},**kwargs):
+    request = kwargs.get('request',None)
+    #check errors check permission
+    try:
+        checkpermission(str(request.user),commons_id)
+        userid= str(request.user)
+        md=dataloader.Metadata_load()
+        md.event_WebService(commons_id,cat_id,URL,event_method,userid,eventUpdateDict)
+    except Exception as err:
+        raise err
+@rpcmethod(name='event.MongoDB_Access',signature=['Result: JSON Success/Errors', 'commons_id','cat_id','datatbase','collection','server','eventUpdateDict'], permission='auth.add_group')
+def event_MongoDB_Access(commons_id,cat_id, database,collection,Query,server,eventUpdateDict={'event_name':'MongoDB','event_desc':'MongoDB Access'},**kwargs):
+    request = kwargs.get('request',None)
+    #check errors check permission
+    try:
+        checkpermission(str(request.user),commons_id)
+        userid= str(request.user)
+        md=dataloader.Metadata_load()
+        md.event_MongoDB_Access(commons_id,cat_id, database,collection,Query,server,userid,eventUpdateDict)
+    except Exception as err:
+        raise err
 @rpcmethod(name='catalog.Method',signature=['Result: boolean', 'Param: dictionary'], permission='auth.add_group')
 def dtMethod(row={},methDetail=[],**kwargs):
     '''
@@ -214,6 +263,187 @@ def getMetadataCat(commons_id,**kwargs):
         return res
     except Exception as e:
         return str(e)
+@rpcmethod(name='catalog.getTECOinput',signature=['Result:JSON Success/Errors', 'Param: dictionary'])
+def getTECOinput(location,years,dataSource='AMF',**kwargs):
+    '''
+    Retrieve Ameriflux Level 3 Data for TECO.
+    
+    Parameters:
+        location: String, years:[,]
+    Returns
+        JSON Cursor 
+    
+    '''
+    try:
+        conn = Connection('fire.rccc.ou.edu',27017)
+        db= conn.amf_level3
+        res= db.hourly.find({'location':location,'observed_year' : { '$in' :years } },{'_id':0,'Day':1,'Hour':1,'DoY':1,'Precip':1,'CO2':1,'Ta':1})
+        #return json.dumps(res, default=json_util.default)
+        #return res
+        j=[]
+        for row in res:
+           j.append(row)
+        return json.dumps(j, default=json_util.default)
+    except Exception as e:
+        return str(e)
+@rpcmethod(name='catalog.getEventResult_time',signature=['Result:JSON Success/Errors', 'Param: dictionary'])
+def getEventResultsTime( cat_id, start_date, end_date=None, var_id=None,**kwargs):
+    ''' 
+    Based on a cat_id and start/end time return object
+        containing all event <-> results for that time range.
+
+    Example:
+        # Standard time range
+        event_results_by_time(807, 1448132, datetime(2011,5,1), datetime(2011,5,10))
+
+        # Without a start date, the end date becomes datetime.now()
+        event_results_by_time(807, 1448132, datetime(2011,08,1))
+
+        # Just return a specific var_id
+        event_results_by_time(807, 1448132, datetime(2011,08,1), var_id='URL')
+
+    '''
+    try:
+        md = datalayer.Metadata()
+        start = start_date
+        if end_date:
+            end =  end_date
+        else:
+            end = datetime.datetime.now().strftime('%Y-%m-%d')
+        if var_id:
+            whr = "var_id = '%s' and event_id in(select event_id from dt_event where cat_id=%d and event_date >= '%s' and event_date <= '%s')" % (var_id, cat_id, start , end)
+            return [ item.values()[0] for item in md.Search('dt_result', where = whr,column=['result_text']) ]
+        else:
+            whr = "event_id in(select event_id from dt_event where cat_id=%d and event_date >= '%s' and event_date <= '%s')" % ( cat_id, start , end)
+            return md.Search('dt_result', where = whr,column=['var_id','result_text'])    
+    except Exception as e:
+        return str(e)
+@rpcmethod(name='catalog.getEventResult_time_Param',signature=['Result:JSON Success/Errors', 'Param: dictionary'])
+def getEventResultsTime1( param, **kwargs):#cat_id, start_date, end_date=None, var_id=None,**kwargs):
+        #ramreturn start_date #+ ' ' + str(type(start_date))
+    ''' 
+    Based on a cat_id and start/end time return object
+        containing all event <-> results for that time range.
+
+    Example:
+        # Standard time range
+        event_results_by_time(807, 1448132, datetime(2011,5,1), datetime(2011,5,10))
+
+        # Without a start date, the end date becomes datetime.now()
+        event_results_by_time(807, 1448132, datetime(2011,08,1))
+
+        # Just return a specific var_id
+        event_results_by_time(807, 1448132, datetime(2011,08,1), var_id='URL')
+
+    '''
+    try:
+        #return param
+        #param= ast.literal_eval(param1)
+        md = datalayer.Metadata()
+        start = param['start_date']
+        if 'end_date' in param:
+            end =  param['end_date']
+        else:
+            end = datetime.datetime.now().strftime('%Y-%m-%d')
+        if 'var_id' in param:
+            whr = "var_id = '%s' and event_id in(select event_id from dt_event where cat_id=%d and event_date >= '%s' and event_date <= '%s')" % (param['var_id'], param['cat_id'], start , end)
+            return [ item.values()[0] for item in md.Search('dt_result', where = whr,column=['result_text']) ]
+        else:
+            whr = "event_id in(select event_id from dt_event where cat_id=%d and event_date >= '%s' )" % ( param['cat_id'], start)# , end)
+            return md.Search('dt_result', where = whr,column=['var_id','result_text'])    
+    except Exception as e:
+        raise e
+@rpcmethod(name='catalog.getEventResult_Country',signature=['Result:JSON Success/Errors', 'Param: dictionary'])
+def getEventResultsTime2( param, **kwargs):#cat_id, start_date, end_date=None, var_id=None,**kwargs):
+        #ramreturn start_date #+ ' ' + str(type(start_date))
+    ''' 
+    Based on a Special Specific web service. Commons_id = 807 unless specified
+            cat_id, country code and start/end time return object containing all event <-> results for that time range.
+        Param: {'cat_id':<required>,'country':<required>,'start_date':<required>,'end_date':<optional>,'var_id':<optional>
+
+    Example:
+        # Standard time range
+            catalog.getEventResult_Country({'cat_id':1448132,'country':'US','start_date': datetime(2011,5,1),'end_date': datetime(2011,5,10),'commons_id':807})
+
+        # Without a end date, the end date becomes datetime.now()
+        # Just return a specific var_id
+            catalog.getEventResult_Country({'cat_id':1448132,'country':'US','start_date': datetime(2011,5,1),'end_date': datetime(2011,5,10),'commons_id':807,'var_id':'URL'}) 
+        #end_date, var_id,commons_id are optional
+    '''
+    try:
+        #return param
+        #param= ast.literal_eval(param1)
+        #str="select r.result_text from dt_result as r, dt_event as e ,rt_method_parameters as p "
+        #str=str + "where e.loc_id=p.param_value and r.event_id=e.event_id "
+        #and p.param_name='US' and e.cat_id=1452143 and event_date>='2001-01-01' and event_date<='2001-01-01' and r.var_id='URL' order by event_date;
+        md = datalayer.Metadata()
+        start = param['start_date']
+        country =param['country']
+        if 'end_date' in param:
+            end =  param['end_date']
+        else:
+            end = datetime.datetime.now().strftime('%Y-%m-%d')
+        if 'var_id' in param:
+            whr="country='%s' and cat_id=%d and event_date>='%s' and event_date<='%s' and var_id='%s' order by event_date" % (param['country'],param['cat_id'],start,end,param['var_id'])
+            return [ item.values()[0] for item in md.Search('eomf_event_product', where = whr,column=['result_text']) ]
+        else:
+            whr="country='%s' and cat_id=%d and event_date>='%s' and event_date<='%s' order by event_date" % (param['country'],param['cat_id'],start,end)
+            #whr = "event_id in(select event_id from dt_event where cat_id=%d and event_date >= '%s' )" % ( param['cat_id'], start)# , end)
+            return md.Search('eomf_event_product', where = whr,column=['event_name','var_id','result_text'])
+    except Exception as e:
+        raise e
+@rpcmethod(name='catalog.getCatalogItems_byName',signature=['Result:JSON Success/Errors', 'Param: dictionary'])
+def getCatalogItems( param, **kwargs):#cat_id, start_date, end_date=None, var_id=None,**kwargs):
+        #ramreturn start_date #+ ' ' + str(type(start_date))
+    ''' 
+    Based on a Commons ID and Catalog Name  returns matching records.
+
+    Example:
+        # Standard
+        getCatalogItems_byName({'commons_id':300,'cat_name':'test_name'})
+
+    '''
+    try:
+        md = datalayer.Metadata()
+        if 'commons_id' in param:
+            commons =  param['commons_id']
+        else:
+            raise 'commons_id not in Parameters'
+        if 'cat_name' in param:
+            whr = "commons_id = %d and cat_name = '%s'" % (param['commons_id'], param['cat_name'])
+            return md.Search('dt_catalog', where = whr,column=['cat_name'])
+        else:
+            raise 'cat_name not in Parameters'
+    except Exception as e:
+        raise e
+@rpcmethod(name='catalog.getEventItems_byName',signature=['Result:JSON Success/Errors', 'Param: dictionary'])
+def getEventItems( param, **kwargs):#cat_id, start_date, end_date=None, var_id=None,**kwargs):
+        #ramreturn start_date #+ ' ' + str(type(start_date))
+    ''' 
+    Based on a Commons ID and Catalog ID and Event Name  returns matching records.
+
+    Example:
+        # Standard
+        getEventItems_byName({'commons_id':300,'cat_id':123456,'event_name':'test_name'})
+
+    '''
+    try:
+        md = datalayer.Metadata()
+        if 'commons_id' in param:
+            commons =  param['commons_id']
+        else:
+            raise 'commons_id not in Parameters'
+        if 'cat_id' in param:
+            catid =  param['cat_id']
+        else:
+            raise 'cat_id not in Parameters'
+        if 'event_name' in param:
+            whr = "commons_id = %d and cat_id = %d and  event_name = '%s'" % (param['commons_id'],param['cat_id'], param['event_name'])
+            return md.Search('dt_event', where = whr,column=['event_name'])
+        else:
+            raise 'event_name not in Parameters'
+    except Exception as e:
+        raise e
 @rpcmethod(name='catalog.Location',signature=['Result: boolean', 'Param: dictionary'], permission='auth.add_group')
 def dtLocation(row={},locDetail=[],**kwargs):
     '''Description of dt_location'''
