@@ -2,9 +2,23 @@ import cherrypy
 import json 
 import urllib
 from celery.result import AsyncResult
-from cybercomq.model.teco import task
+from celery.execute import send_task
+
 
 '''
+Run without arguments:
+www.cybercommons.org/api/q/run/teco
+
+Run with positional arguments
+www.cybercommons.org/api/q/run/teco/SomeString/Anotherstring/
+
+Run with keyword arguments:
+www.cybercommons.org/api/q/run/teco?arg1=SomeString&arg2=Anotherstring
+
+www.cybercommons.org/api/q/status/UUID
+
+
+Method name lookups should be driven by catalog.
 [
 ('teco', 'cybercomq.model.teco.task.runTeco'),
 ('setTecoInput', 'cybercomq.model.teco.task.setTecoinput')
@@ -25,6 +39,14 @@ class Root(object):
     @cherrypy.expose
     def index(self):
         return None
+    @cherrypy.expose
+    @mimetype('application/json')
+    def run(self,*args,**kwargs):
+        funcname = args[0]
+        queue = args[1]
+        funcargs = args[2:]
+        taskobj = send_task( funcname, args=funcargs, kwargs=kwargs, queue=queue, track_started=True )
+        return json.dumps({'task_id':taskobj.task_id}, indent=2)
     @cherrypy.expose
     @mimetype('application/json')
     def task(self,task_id=None,type=None,**kwargs):
