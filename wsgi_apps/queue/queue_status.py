@@ -57,7 +57,12 @@ class Root(object):
         return json.dumps({'task_id':taskobj.task_id}, indent=2)
     @cherrypy.expose
     @mimetype('application/json')
-    def task(self,task_id=None,type=None,**kwargs):
+    def task(self,task_id=None,type=None,callback=None,**kwargs):
+        if callback == None:
+            return self.serilize(task_id,type)
+        else:
+            return str(callback) + '(' + self.serilize(task_id,type) + ')'
+    def serilize(self,task_id,type):
         if task_id == None:
             return json.dumps({'available_urls':['/<task_id>/','/<task_id>/status/','/<task_id>/tombstone/']},indent=2)
         if type == None:
@@ -73,7 +78,7 @@ class Root(object):
             res={}
             result = urllib.urlopen("http://fire.rccc.ou.edu/mongo/db_find/cybercom_queue/cybercom_queue_meta/{'spec':{'_id':'" + task_id + "'}}")
             res['tombstone']=json.loads(result.read())
-            res['task_id']=task_id            
+            res['task_id']=task_id
             return json.dumps(res,indent=2) #result.read()
         return json.dumps({'available_urls':['/<task_id>/','/<task_id>/status/','/<task_id>/tombstone/']},indent=2)
 cherrypy.tree.mount(Root())
