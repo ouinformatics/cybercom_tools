@@ -3,7 +3,7 @@ import json
 import urllib
 from celery.result import AsyncResult
 from celery.execute import send_task
-
+from celery.task.control import inspect
 
 '''
 Run without arguments:
@@ -27,6 +27,11 @@ Method name lookups should be driven by catalog.
 
 '''
 
+i = inspect()
+REGISTERED_TASKS = set()
+for item in i.registered().values():
+    REGISTERED_TASKS.update(item)
+
 def mimetype(type):
     def decorate(func):
         def wrapper(*args, **kwargs):
@@ -43,6 +48,9 @@ class Root(object):
     @mimetype('application/json')
     def run(self,*args,**kwargs):
         funcname = args[0]
+        if funcname not in REGISTERED_TASKS:
+            return json.dumps({'error': "Unknown task", 'available_tasks': list(REGISTERED_TASKS)}, indent=2)
+        
         queue = args[1]
         funcargs = args[2:]
         taskobj = send_task( funcname, args=funcargs, kwargs=kwargs, queue=queue, track_started=True )
