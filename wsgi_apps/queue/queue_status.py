@@ -32,6 +32,9 @@ REGISTERED_TASKS = set()
 for item in i.registered().values():
     REGISTERED_TASKS.update(item)
 
+AVAILABLE_QUEUES = set([ item[0]['exchange']['name'] for item in i.active_queues().values() ])
+
+
 def mimetype(type):
     def decorate(func):
         def wrapper(*args, **kwargs):
@@ -47,11 +50,16 @@ class Root(object):
     @cherrypy.expose
     @mimetype('application/json')
     def run(self,*args,**kwargs):
-        funcname = args[0]
+        funcq = args[0].split('@') #split function queue 
+        funcname = funcq[0]
+        if len(funcq) == 1:
+            queue = 'celery'
+        else:
+            queue = funcq[1]
         if funcname not in REGISTERED_TASKS:
             return json.dumps({'error': "Unknown task", 'available_tasks': list(REGISTERED_TASKS)}, indent=2)
-        
-        queue = args[1]
+        if queue not in AVAILABLE_QUEUES:
+            return json.dumps({'error': "Unknown queue", 'available_queues': list(AVAILABLE_QUEUES)}, indent=2)
         funcargs = args[2:]
         taskobj = send_task( funcname, args=funcargs, kwargs=kwargs, queue=queue, track_started=True )
         return json.dumps({'task_id':taskobj.task_id}, indent=2)
