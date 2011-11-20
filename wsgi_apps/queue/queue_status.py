@@ -62,7 +62,10 @@ class Root(object):
             return json.dumps({'error': "Unknown queue", 'available_queues': list(AVAILABLE_QUEUES)}, indent=2)
         funcargs = args[2:]
         taskobj = send_task( funcname, args=funcargs, kwargs=kwargs, queue=queue, track_started=True )
-        return json.dumps({'task_id':taskobj.task_id}, indent=2)
+        if 'callback' not in kwargs:
+            return json.dumps({'task_id':taskobj.task_id}, indent=2)
+        else:
+            return str(kwargs['callback']) + "(" + json.dumps({'task_id':taskobj.task_id}, indent=2) + ")"
     @cherrypy.expose
     @mimetype('application/json')
     def task(self,task_id=None,type=None,callback=None,**kwargs):
