@@ -70,10 +70,10 @@ class Root(object):
     @mimetype('application/json')
     def task(self,task_id=None,type=None,callback=None,**kwargs):
         if callback == None:
-            return self.serilize(task_id,type)
+            return self.serialize(task_id,type)
         else:
-            return str(callback) + '(' + self.serilize(task_id,type) + ')'
-    def serilize(self,task_id,type):
+            return str(callback) + '(' + self.serialize(task_id,type) + ')'
+    def serialize(self,task_id,type):
         if task_id == None:
             return json.dumps({'available_urls':['/<task_id>/','/<task_id>/status/','/<task_id>/tombstone/']},indent=2)
         if type == None:
