@@ -1,13 +1,14 @@
 import cherrypy
 import json 
 import urllib
+import pickle
 from celery.result import AsyncResult
 from celery.execute import send_task
 from celery.task.control import inspect
 
 '''
 Run without arguments:
-www.cybercommons.org/api/q/run/teco
+www.cybercommons.org/api/q/run/cybercom.teco.tasks.runTeco/arg1/arg2?kwarg1=SomeArg
 
 Run with positional arguments
 www.cybercommons.org/api/q/run/teco/SomeString/Anotherstring/
@@ -50,6 +51,8 @@ class Root(object):
     @cherrypy.expose
     @mimetype('application/json')
     def run(self,*args,**kwargs):
+        if len(args) == 0:
+            return json.dumps({'error': "Unknown task", 'available_tasks': list(REGISTERED_TASKS)}, indent=2)
         funcq = args[0].split('@') #split function queue 
         funcname = funcq[0]
         if len(funcq) == 1:
@@ -60,7 +63,7 @@ class Root(object):
             return json.dumps({'error': "Unknown task", 'available_tasks': list(REGISTERED_TASKS)}, indent=2)
         if queue not in AVAILABLE_QUEUES:
             return json.dumps({'error': "Unknown queue", 'available_queues': list(AVAILABLE_QUEUES)}, indent=2)
-        funcargs = args[2:]
+        funcargs = args[1:]
         taskobj = send_task( funcname, args=funcargs, kwargs=kwargs, queue=queue, track_started=True )
         return json.dumps({'task_id':taskobj.task_id}, indent=2)
     @cherrypy.expose
@@ -72,6 +75,7 @@ class Root(object):
             res = {}
             result = urllib.urlopen("http://fire.rccc.ou.edu/mongo/db_find/cybercom_queue/cybercom_queue_meta/{'spec':{'_id':'" + task_id + "'}}")
             res["tombstone"]=json.loads(result.read())
+            res['tombstone'][0]['result'] = pickle.loads(res['tombstone'][0]['result'].encode())
             res['status']=AsyncResult(task_id).status
             res['task_id']=task_id
             return json.dumps(res,indent=2)
