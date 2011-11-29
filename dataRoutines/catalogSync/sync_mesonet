@@ -1,0 +1,47 @@
+#!/usr/bin/env python26
+'''
+Mark Stacy - 6/1/2011
+markstacy@ou.edu
+
+argv[1] = Days since now() or startdate
+argv[2] = Start Date format 2011-05-23
+'''
+import commands, datetime,sys
+
+argv=sys.argv
+filepath = '/scratch/data/meso_site/'#argv[1]
+try:
+    ndays = int(argv[1])
+except:
+    ndays=1
+
+location = ['ADAX','ALTU','ARNE','BEAV','BESS','BIXB','BLAC','BOIS','BOWL','BREC','BRIS','BUFF','BURB','BURN','BUTL','BYAR','CAMA','CENT','CHAN','CHER','CHEY','CHIC','CLAY','CLOU','COOK','COPA','DURA','ELRE','ERIC','EUFA','FAIR','FORA','FREE','FTCB','GOOD','GUTH','HASK','HINT','HOBA','HOLL','HOOK','HUGO','IDAB','JAYX','KENT','KETC','LAHO','LANE','MADI','MANG','MARE','MAYR','MCAL','MEDF','MEDI','MIAM','MINC','MTHE','NEWK','NOWA','OILT','OKEM','OKMU','PAUL','PAWN','PERK','PRYO','PUTN','REDR','RETR','RING','SALL','SEIL','SHAW','SKIA','SLAP','SPEN','STIG','STIL','STUA','SULP','TAHL','TALI','TIPT','TISH','VINI','WALT','WASH','WATO','WAUR','WEAT','WEST','WILB','WIST','WOOD','WYNO','NINN','ACME','APAC','HECT','VANO','ALV2','GRA2','PORT','INOL','NRMN','CLRM','NEWP','BROK','MRSH','ARD2','FITT','OKCN','OKCW','OKCE','CARL','WEBR','KIN2','HOLD','ANT2']
+try:
+    std= argv[2]
+    dt=datetime.datetime.strptime(std,"%Y-%m-%d") 
+    dt= dt + datetime.timedelta(1)
+except:
+    dt=datetime.datetime.now()
+startdate = dt + datetime.timedelta(-(ndays)) # Subtract days since now()
+dt1 = dt + datetime.timedelta(1) # Add on day to include yesterday in range loop
+enddate = datetime.datetime(dt1.year,dt1.month,dt1.day,0,0,0)
+print '***************************************************************'
+print 'sync_mesonet started ' + str(dt)
+print 'sync to local data file store - pulling data for ' + str(startdate)
+
+
+def daterange(start_date, end_date):
+    for n in range((end_date - start_date).days):
+        yield start_date + datetime.timedelta(n)
+def getdata(loc):
+    for single_date in daterange(startdate,enddate):
+        file = single_date.strftime('%Y%m%d') + loc.lower()
+        commands.getoutput('mkdir -p /scratch/data/meso_site/' + loc.upper() +'/' + single_date.strftime('%Y'))
+        cmd = 'http://www.mesonet.org/index.php/dataMdfMts/dataController/getFile/' + file + '/mts/TEXT/'
+        cmd= 'wget -N -O ' + filepath +  loc.upper() +'/' + single_date.strftime('%Y') + '/' + file + '.txt ' + cmd
+        #print cmd
+        commands.getoutput(cmd)
+for loc in location:
+    getdata(loc)
+print 'sync_mesonet finished Successfully'
+print '***************************************************************' 
