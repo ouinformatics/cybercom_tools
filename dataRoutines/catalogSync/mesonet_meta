@@ -1,13 +1,13 @@
-#from cybercom.data.catalog import datalayer
-import dataloader
+#!/home/mstacy/bin/python
+import dataloader, commands
 from datetime import datetime, timedelta 
-import sys.argv as argv
+#import sys.argv as argv
 #*******Configuration variables******************
 MongoDB = 'mesonet'
 MongoCollection = 'weather'
 userid ='mstacy'
 Server='fire.rccc.ou.edu'
-file_find_results = argv[1]
+#file_find_results = argv[1]
 commonsID = 600
 
 #******Class declarations***********************
@@ -17,18 +17,25 @@ ml=dataloader.Mongo_load(MongoDB)
 #*****Functions ********************************
 
 def loadMD_Mongo(filepath):
-    session=md.getSession()
-    try:
-        pks=catalog(filepath)
-        event_LocalFile(filepath,pks)
-        event_RemoteWS(filepath,pks)
-        event_LocalWS(filepath,pks)
-        event_Mongo(filepath,pks)
-        success=insertmongo(filepath,pks)
-        session.commit()
-    except:
-        session.rollback()
-        raise
+    temp=filepath.split('/')
+    fname=temp[len(temp)-1].rstrip('\n').rstrip('\r')
+    fname= "'" + fname + "'"
+    if not md.catalogexists({'cat_name':fname,'commons_id':commonsID}):
+        session=md.getSession()
+        try:
+            pks=catalog(filepath)
+            event_LocalFile(filepath,pks)
+            event_RemoteWS(filepath,pks)
+            event_LocalWS(filepath,pks)
+            event_Mongo(filepath,pks)
+            success=insertmongo(filepath,pks)
+            session.commit()
+            return True
+        except:
+            session.rollback()
+            raise
+    else:
+        return False
 def catalog(filepath):
     '''Catalog mesonet datafiles - Mesonet specific function'''
     param={'commons_id':commonsID,'cat_type':'MESO_DAILY','cat_method':'Meso_Sync'}
@@ -76,6 +83,17 @@ def calcTime(row):
     except:
         raise
 def iterate_file():
+    i=0
+    dt=datetime.now()
+    dtstr = dt.strftime("%Y-%m-%d")
+    #dtstr='2011-08-01'
+    commands.getoutput("touch --date '" + dtstr + "' /tmp/start")
+    for file in commands.getoutput("find /scratch/data/meso_site/ -type f -newer /tmp/start -size +11").split('\n'):
+        if loadMD_Mongo(file): i=i+1
+        #print file
+        #i=i+1
+    print str(i) + ' files cataloged and inserted into Mongo'
+def iterate_fil1e():
     f1=open(file_find_results,'r')
     i=0
     for file in f1:
