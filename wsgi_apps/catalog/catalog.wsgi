@@ -1,4 +1,10 @@
-activate_this = '/scratch/www/wsgi_sites/catalog/virtpy/bin/activate_this.py'
+import os
+if os.uname()[1] == 'test.cybercommons.org':
+    basedir = '/var/www/apps/'
+elif os.uname()[1] == 'fire.rccc.ou.edu':
+    basedir = '/scratch/www/wsgi_sites/'
+
+activate_this = os.path.join(basedir,'catalog/virtpy/bin/activate_this.py')
 execfile(activate_this, dict(__file__=activate_this))
 
 import site
