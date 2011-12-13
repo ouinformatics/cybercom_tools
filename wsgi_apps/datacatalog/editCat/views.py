@@ -140,8 +140,8 @@ def ajax_result(request):
                 #print eventid
                 form = models.DtResultForm(initial={"commons_id":commm,"event_id":eventid,"status_flag":"A","userid":str(request.user),"timestamp_created":datetime.datetime.now() })
                 #data=[]
-        action='getresult/?var_id=' + varid
-        c={'form':form,'action':action,'eventid':eventid,'varid':resultid}#varid}
+        action='getresult/?result_id=' + resultid
+        c={'form':form,'action':action,'eventid':eventid,'resultid':resultid}#varid}
         c.update(csrf(request))
         return render_to_response('editCat/result.html',c)#dtcatalog.html',c)# {
     except Exception as inst:
@@ -221,7 +221,7 @@ def ajax_event(request):
                 #print "after form"
                 md= datalayer.Metadata()
                 sqlWhere = "event_id = " + eventid
-                data= md.Search('dt_result',where=sqlWhere,column=['var_id','result_text'])
+                data= md.Search('dt_result',where=sqlWhere,column=['var_id','result_text','result_id'])
             else:
                 catid = request.GET.get( 'catid' )
                 commm = request.GET.get( 'commons_id' )
