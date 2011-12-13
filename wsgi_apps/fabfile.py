@@ -20,6 +20,17 @@ def testing():
     env.log_path = '%(path)s/log' % env
     env.hosts = ['test.cybercommons.org']
 
+def fire():
+    """
+    Setup on fire.rccc.ou.edu
+    """
+    env.settings = 'production'
+    env.path = '/scratch/www/wsgi_sites/%(sitename)s' % env
+    env.virtpy = '%(path)s/virtpy' % env
+    env.log_path = '%(path)s/log' % env
+    env.hosts = ['fire.rccc.ou.edu']
+
+    
 def production():
     """
     Work on production environment
@@ -28,7 +39,7 @@ def production():
     env.path = '/scratch/www/wsgi_sites/%(sitename)s' % env
     env.virtpy = '%(path)s/virtpy' % env
     env.log_path = '%(path)s/log' % env
-    env.hosts = ['fire.rccc.ou.edu']
+    env.hosts = ['production.cybercommons.org']
     
 def setup():
     """ 
@@ -76,7 +87,7 @@ def bounce_apache():
     """ Restart the apache web server """
     sudo('/etc/init.d/httpd restart')
 
-def apache_config():
+def apache_config(secure=True):
     """
     Set the apache config file to point to wsgi.  Assumes app will be accessible at /sitename/ and 
       .wsgi named sitename.wsgi
@@ -85,6 +96,20 @@ def apache_config():
     comment('/etc/httpd/conf.d/wsgi_sites.conf', r'^WSGIScriptAlias /%(sitename)s .*$' % env, use_sudo=True)
     confline = 'WSGIScriptAlias /%(sitename)s %(path)s/%(sitename)s.wsgi' %env
     append('%(apache_config)s' % env, confline, use_sudo=True)
+    if secure:
+        secure_app = """
+<Location /%(sitename)s>
+  AuthType Basic 
+  require valid-user
+  TKTAuthLoginURL http://test.cybercommons.org/accounts/login/
+  TKTAuthTimeoutURL http://test.cybercommons.org/accounts/login/?timeout=1 
+  TKTAuthPostTimeoutURL http://test.cybercommons.org/accounts/login/?posttimeout=1 
+  TKTAuthUnauthURL http://test.cybercommons.org/accounts/login/?unauth=1 
+  TKTAuthIgnoreIP on
+  TKTAuthBackArgName next
+</Location>
+""" % (env)
+        append('%(apache_config)s' % env, secure_app, use_sudo=True)
 
 def copy_working_dir():
     """
