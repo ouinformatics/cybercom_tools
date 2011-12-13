@@ -1,0 +1,19 @@
+{% extends "base_edit.html" %}
+{% block content %}
+                    <div id="control">
+                        <select id="Select"  style="width:100%;" size="57" >
+                            {% for val in data %}
+                                <option value={{val.commons_id}}>{{val.commons_id}} : {{val.commons_code}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div id="result">
+                        <div id="tabs">
+                            <ul>
+                                <li><a href="#tabs-1">Edit Catalog Items</a></li>
+                                <li><a href="#tabs-2">Webservice</a></li>
+                            </ul>
+                            <div id="tabs-1"></div>
+                            <div id="tabs-2">Webservice template add .</div>    
+                    </div>
+{% endblock %}

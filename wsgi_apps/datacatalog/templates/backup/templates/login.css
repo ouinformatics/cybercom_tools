@@ -1,0 +1,9 @@
+
+
+
+#content {
+        width: 600px;
+        position: relative;
+        left : 50%;
+        margin-left: -300px;
+    }
