@@ -1,0 +1,69 @@
+            <div>Commons ID: {{commonid}} </div> 
+            <script>onloadfunction();//$('#ftool').buttonset();
+                    $('.tbar').hover(function(){$(this).addClass("ui-state-hover");},function(){$(this).removeClass("ui-state-hover");});
+                    $('#btnAdd').click(function(){
+                            $('#tabs-1' ).html( '&nbsp;' ).load(  '/getcommon/?common_id=addnew');
+                    });
+                    $('#btnDel').click(function(){
+                            $('#output2' ).html( '&nbsp;' ).load(  '/delcommon/?common_id=' + {{ commonid }});
+                    });
+/*$('#test').submit(function(data) {
+                            var test_form = $('#test');
+                            test_form.ajaxForm({
+                            url : this.action,
+                            dataType : 'json',
+                            success : function(json){
+                                if (json.errors != undefined)
+                                    alert('erros');
+                                    process_form_errors(json, login_form);
+                                else
+                                    alert('Inside success');
+                                    return false;//alert('success')//do something if there aren't errors
+                                }   
+                            });
+                            });
+                                    /*$.ajax({ type: 'POST',
+                                             url: '{{action}}'
+                                             data: data1
+                                             success: alert('Success');
+                                            });
+                                    return false;
+                                });
+                                function hide_form_errors()
+                                {                           
+                                    $('.errorlist').remove();
+                                }
+
+                                function process_form_errors(json, form)
+                                {           
+                                    hide_form_errors();
+                                    form.clearForm();
+                                    errors = json.errors;
+    
+                                    if (errors.__all__ != undefined)
+                                        form.append(errors.__all__);
+
+                                        prefix = form.find(":hidden[name='prefix']").val();
+
+                                        prefix == undefined ? prefix = '' : prefix = prefix + '-';
+                                    for (field in errors)
+                                        $('#id_' + prefix + field).after(errors[field]);
+                                }*/
+            </script>
+            <form id="test" action="{{action}}" method="post" >{% csrf_token %}
+                {% for field in form %}
+                <div class="fieldWrapper" height="100%" width="100%">
+                    <div class="left" style="float:left;text-align:right;width:20%"> {{ field.label_tag }}:</div>
+                    <div class="right" style="float:left;margin-left:15px;width:75%"> {{ field }} </div>
+                    <div class="top"> {{ field.errors }}</div>
+                 </div>
+                 {% endfor %}
+                <li>{{ form.DELETE }}</li>
+                <div class="left" style="float:left;text-align:right;"></div>
+                <div class="right" style="float:left;margin-left:15px;text-align:right">
+                 <p><input id="btnAdd" class="tbar ui-button ui-widget ui-state-default ui-button-text-only ui-corner-right" type="button" value="Add New Record" />
+                    <input id="btnDel" class="tbar ui-button ui-widget ui-state-default ui-button-text-only ui-corner-right" type="button" value="Delete Record" />
+                    <input id="formsub" class="tbar ui-button ui-widget ui-state-default ui-button-text-only ui-corner-right" type="submit" value="Save Record" /></p>
+                </div>
+            </form>
+            <div id="output2"></div>

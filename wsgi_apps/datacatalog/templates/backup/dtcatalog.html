@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+        <head>
+                <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+                <title>Cybercommons Data Catalog</title>
+                <link type="text/css" href="http://static.cybercommons.org/css/cybercomui/jquery-ui-1.8.13.custom.css" rel="stylesheet" />      
+                <script type="text/javascript" src="http://static.cybercommons.org/js/jquery-1.4.4.min.js"></script>
+                <script type="text/javascript" src="http://static.cybercommons.org/js/jquery-ui-1.8.10.custom.min.js"></script>
+                <script type="text/javascript">
+                        $(function(){
+        
+                                // Tabs
+                                $('#tabs').tabs();
+        
+                        });
+                </script>
+                <style type="text/css">
+                        /*demo page css*/
+                        body{ font: 62.5% "Trebuchet MS", sans-serif; margin: 50px;}
+                        .demoHeaders { margin-top: 1em; }
+                        #dialog_link {padding: .4em 1em .4em 20px;text-decoration: none;position: relative;}
+                        #dialog_link span.ui-icon {margin: 0 5px 0 0;position: absolute;left: .2em;top: 50%;margin-top: -8px;}
+                        ul#icons {margin: 0; padding: 0;}
+                        ul#icons li {margin: 2px; position: relative; padding: 4px 0; cursor: pointer; float: left;  list-style: none;}
+                        ul#icons span.ui-icon {float: left; margin: 0 4px;}
+                </style>        
+        </head>
+        <body>
+        <h1>Cybercommons Data Catalog!</h1>
+        <p style="font-size: 1.3em; line-height: 1.5; margin: 1em 0; width: 50%;">This is the start of the next day. Data Catalog Search!!!!!!</p>
+
+        <p style="font-weight: bold; margin: 2em 0 1em; font-size: 1.3em;">YOUR Search:</p>
+
+
+                <!-- Tabs -->
+                <h2 class="demoHeaders">Tabs</h2>
+                <div id="tabs">
+                        <ul>
+                                <li><a href="#tabs-1">Edit Catalog Items</a></li>
+                                <li><a href="#tabs-2">Webservice</a></li>
+                        </ul>
+                        <div id="tabs-1">
+                             <form action="/catalog/" method="post">{% csrf_token %}
+                                {% for field in form %}
+                                    <div class="fieldWrapper">
+                                         {{ field.label_tag }}: {{ field }}  {{ field.errors }}
+                                    </div>
+                                {% endfor %}
+                                <p><input type="submit" value="Save Record" /></p>
+                            </form>
+                        </div>
+                        <div id="tabs-2">Webservice template add .</div>
+                </div>
+
+
+        </body>
+
+</form>
+</html>

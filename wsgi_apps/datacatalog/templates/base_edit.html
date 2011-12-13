@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+        <head>
+                <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+                <title>Cybercommons Data Catalog</title>
+                <link type="text/css" href="http://static.cybercommons.org/css/cybercomui/jquery-ui-1.8.13.custom.css" rel="stylesheet" />      
+                <script type="text/javascript" src="http://static.cybercommons.org/js/jquery-1.4.4.min.js"></script>
+                <script type="text/javascript" src="http://static.cybercommons.org/js/jquery-ui-1.8.10.custom.min.js"></script>
+                <script type="text/javascript" src="http://static.cybercommons.org/js/jquery.form.js"></script>
+                <script type="text/javascript" src="http://static.cybercommons.org/js/catalog/catalog.js"></script>
+                <script type="text/javascript" src="http://static.cybercommons.org/js/catalog/jqdialog.min.js"></script>
+                <link type="text/css" href="http://static.cybercommons.org/js/catalog/catalog.css" rel="stylesheet" />
+                <script type="text/javascript">
+                        $(document).ready(function(){ onloadfunction();
+                            $('#radio2').attr('disabled', 'disabled');
+                            $('#radio3').attr('disabled', 'disabled');
+                            $('#tabs').tabs();
+                                $( "#control" ).resizable({handles:'e'});
+                                $('#Nav').buttonset();
+                                $('#Commons').click(function(){
+                                    alert("Catalog id = " + catid);
+                                });
+                            setSelect();
+                            $("#dialog").css("display","none");
+                            $("#dialog1").css("display","none");
+                            radio11();
+                            $('#tabs-2' ).html( '&nbsp;' ).load( 'getws_view/?method=catalog.dataCommons');
+                            $('#Nav :radio').click(function(){
+                                    switch($(this).attr("id")){
+                                    case "radio1":
+                                        curform="commons";
+                                        radio11();
+                                        break;
+                                    case "radio2":
+                                        curform="catalog";
+                                        radio22();
+                                        break;
+                                    case "radio3":
+                                        curform="eventResult";
+                                        radio33();
+                                        break;
+                                    }
+                            });
+                        });
+                </script>
+        </head>
+        <body>
+                <div id="header" >
+                    <img src="http://static.cybercommons.org/css/cyberlogo/CyberCommonsScreen.png" alt="Cybercommons Data Catalog" height="45" />
+                <div id="userid" style="float:right;margin:15px;font-size:15px;color:black"> <a href="accounts/logout/">logout</a></div>
+                </div>
+                <div id="Navigation">
+                    <div id = "Nav">
+                    <input type="radio" id="radio1" name="radio" checked="checked" /><label for="radio1">|    Data Commons    |</label>
+                    <input type="radio" id="radio2" name="radio" /><label for="radio2">|   Catalog   |</label>
+                    <input type="radio" id="radio3" name="radio" /><label for="radio3">|     Event  <->  Results     |</label>
+                    </div>
+                </div>
+                <div id ="contents">
+                    {% block content %}{% endblock %}
+                </div>
+                <div id="dialog"  class="ui-widget ui-state-default ui-button-text-only ui-corner-right" title="Basic dialog">
+                    <div id="dlog">stuff</div>
+                </div>
+                <div id="dialog1"  class="ui-widget ui-state-default ui-button-text-only ui-corner-right" title="Basic dialog">
+                    <div id="dlog1">stuff</div>
+                </div>
+        </body>
+</html>

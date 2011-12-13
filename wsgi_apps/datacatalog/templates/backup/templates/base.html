@@ -1,0 +1,23 @@
+<html>
+
+<head>
+<title>Cybercmons </title>
+    <link type="text/css" href="http://static.cybercommons.org/css/cybercomui/jquery-ui-1.8.13.custom.css" rel="stylesheet" />      
+    <link type="text/css" href="http://static.cybercommons.org/css/catalog/login.css" rel="stylesheet" /> 
+    <script type="text/javascript" src="http://static.cybercommons.org/js/jquery-1.4.4.min.js"></script>
+    <script type="text/javascript" src="http://static.cybercommons.org/js/jquery-ui-1.8.10.custom.min.js"></script>
+    <script type="text/javascript" src="http://static.cybercommons.org/js/jquery.center.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            jQuery('#content').center();
+            jQuery('#login').center();
+        });
+    </script>
+</head>
+<body>
+    <div id="content">
+      {% block content %}{% endblock %}
+    </div>
+</body>
+</html>
+

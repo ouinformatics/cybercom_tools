@@ -1,0 +1,59 @@
+<html>
+<head>
+                <title>Cybercommons Data Catalog</title>
+                <link type="text/css" href="http://static.cybercommons.org/css/cybercomui/jquery-ui-1.8.13.custom.css" rel="stylesheet" />      
+                <script type="text/javascript" src="http://static.cybercommons.org/js/jquery-1.4.4.min.js"></script>
+                <script type="text/javascript" src="http://static.cybercommons.org/js/jquery-ui-1.8.10.custom.min.js"></script>
+                <script type="text/javascript" src="http://static.cybercommons.org/js/jquery.form.js"></script>
+                <script type="text/javascript" src="http://static.cybercommons.org/js/catalog/flexigrid.js"></script>
+                <script type="text/javascript" src="http://static.cybercommons.org/js/catalog/flexigrid.pack.js"></script>
+                <link type="text/css" href="http://static.cybercommons.org/js/catalog/catalog.css" rel="stylesheet" />
+                <link type="text/css" href="http://static.cybercommons.org/js/catalog/css/flexigrid.css" rel="stylesheet" />
+                <link type="text/css" href="http://static.cybercommons.org/js/catalog/css/flexigrid.pack.css" rel="stylesheet" />
+                <script type="text/javascript">
+                        $(document).ready(function(){ 
+                                $( "#table-1" ).flexigrid({height:'auto',striped:false,buttons : [
+        {name: 'Add', bclass: 'add', onpress : test},
+        {name: 'Delete', bclass: 'delete', onpress : test},
+        {separator: true}
+        ],});
+                        });
+function test(){ 
+                            // formData is an array; here we use $.param to convert it to a string to display it 
+                            // but the form plugin does this for you automatically when it submits the data 
+                          //  var queryString = $.param(formData); 
+                         
+                            // jqForm is a jQuery object encapsulating the form element.  To access the 
+                            // DOM element for the form do this: 
+                            // var formElement = jqForm[0]; 
+                         
+                            alert('About to submit: \n\n') 
+                         
+                            // here we could return false to prevent the form from being submitted; 
+                            // returning anything other than false will allow the form submit to continue 
+                            return true; 
+                        }
+                </script>
+</head>
+<body>
+    <form method="post" action="">
+        {{ formset.management_form }}
+        <table id="table-1">
+            {% for form in formset %}
+                {% if forloop.first %}
+                    <tr>
+                    {% for field in form %}
+                     <th>{{ field.label_tag }}</th>
+                    {% endfor %}
+                    </tr>
+                {% endif %}
+                <tr>
+                {% for field in form %}
+                     <td>{{ field }}</td>
+                {% endfor %}
+                </tr>
+            {% endfor %}
+        </table>
+    </form>
+</body>
+</html>
