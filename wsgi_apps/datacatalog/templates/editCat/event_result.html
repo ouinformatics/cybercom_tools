@@ -79,7 +79,7 @@
                 <th>Variable</th>
                 <th>Result</th>
                 <th><a class="tbar ui-button ui-widget ui-state-default ui-button-text-only ui-corner-right" href="javascript: 
-                                    $('#dlog').html( '&nbsp;' ).load( 'getresult/?event_id={{ eventid }}&var_id=addnew&commons_id='.concat(commons_id), function(){
+                                    $('#dlog').html( '&nbsp;' ).load( 'getresult/?event_id={{ eventid }}&result_id=addnew&commons_id='.concat(commons_id), function(){
                                     $( '#dialog' ).dialog({width:'800px',modal: true,title:'Result Table'});});">Add Result</a> </th>
             </tr>
             {% for field in data %}
@@ -92,11 +92,14 @@
                 {% endif %}
                 <td width="90px">
                     <a style="float:left; margin-left:5px" class="tbar ui-button ui-widget ui-state-default ui-button-text-only ui-corner-right" href="javascript:
-                                    $('#dlog').html( '&nbsp;' ).load( 'getresult/?event_id={{ eventid }}&var_id={{ field.var_id }}',function(){
+                                    $('#dlog').html( '&nbsp;' ).load( 'getresult/?event_id={{ eventid }}&result_id={{ field.result_id }}',function(){
                                     $( '#dialog' ).dialog({width:'800px',modal: true,title:'Result Table'});});">Edit</a>
-                    <a style="float:right;margin-left:5px" class="tbar ui-button ui-widget ui-state-default ui-button-text-only ui-corner-right" href="javascript: alert('Delete');">Delete</a>
+                    <a style="float:right;margin-left:5px" class="tbar ui-button ui-widget ui-state-default ui-button-text-only ui-corner-right" href="javascript:
+                                    $('#delete_result').html( '&nbsp;' ).load( 'delresult/?commons_id='.concat(commons_id).concat('&result_id={{ field.result_id }}'),function(){
+                                     radio33();});">Delete</a>
                 </td>
             </tr>
             {% endfor %}
-            </table> 
+            </table>
+            <div id ="delete_result"></div> 
             </div>
