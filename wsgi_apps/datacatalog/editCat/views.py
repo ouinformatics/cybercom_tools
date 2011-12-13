@@ -74,16 +74,16 @@ def empty_Load(request):
 #*******************************************************************************************
 @login_required()
 def ajax_result_del(request):
-    commonid = request.GET.get( 'common_id' )
-    eventid = request.GET.get( 'event_id' )
+    commonid = request.GET.get( 'commons_id' )
+    resultid = request.GET.get( 'result_id' )
     try:
         c_id=int(commonid)
-        c_id=int(eventid)
+       # c_id=int(eventid)
         checkAccess(str(request.user),commonid)
-        c_id=int(commonid)
+        #c_id=int(commonid)
         md= datalayer.Metadata()
-        md.Delete('dt_result',where="event_id = " + eventid)
-        md.Delete('dt_event',where="event_id = " + eventid)
+        md.Delete('dt_result',where="result_id = " + resultid)
+        #md.Delete('dt_event',where="event_id = " + eventid)
         #d = models.DtDataCommons.objects.get(commons_id=commonid)
         #print d
         #d.delete()
@@ -99,9 +99,10 @@ def ajax_result(request):
             #print request.POST
             #result_id= 
             #varid = request.META['QUERY_STRING'].split('=')[1]
-            if varid != 'addnew':
+            resultid = request.META['QUERY_STRING'].split('=')[1]
+            if resultid != 'addnew':
                 #x = int(eventid)
-                rst = models.DtResult.objects.get(event_id = request.POST['event_id'], result_id = request.POST['result_id')#var = varid)
+                rst = models.DtResult.objects.get(event_id = request.POST['event_id'], result_id = resultid )#request.POST['result_id'])#var = varid)
                 form = models.DtResultForm(request.POST,request.FILES,instance = rst)
             else:
                 form = models.DtResultForm(request.POST,request.FILES)
