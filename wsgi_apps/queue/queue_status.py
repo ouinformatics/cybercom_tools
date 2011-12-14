@@ -5,6 +5,8 @@ import pickle
 from celery.result import AsyncResult
 from celery.execute import send_task
 from celery.task.control import inspect
+from pymongo import Connection
+from datetime import datetime
 
 '''
 Run without arguments:
@@ -45,6 +47,9 @@ def mimetype(type):
     return decorate
 
 class Root(object):
+    def __init__(self,mongoHost='fire.rccc.ou.edu',port=27017,database='cybercom_queue',collection='task_log'):
+        self.db = Connection(mongoHost,port)[database]
+        self.collection = collection
     @cherrypy.expose
     def index(self):
         return None
@@ -73,6 +78,15 @@ class Root(object):
             callback = None
         
         taskobj = send_task( funcname, args=funcargs, kwargs=kwargs, queue=queue, track_started=True )
+        #logging tasks performed
+        try:
+            if cherrypy.request.login:
+                user = cherrypy.request.login
+            else:
+                user = "Anonymous"
+            self.db[self.collection].insert({'task_id':taskobj.task_id,'user':user,'task_name':funcname,'args':args,'kwargs':kwargs,'queue':queue,'timestamp':datetime.now()})
+        except:
+            pass
         if not callback:
             return json.dumps({'task_id':taskobj.task_id}, indent=2)
         else:
