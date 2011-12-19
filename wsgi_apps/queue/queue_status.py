@@ -9,19 +9,8 @@ from pymongo import Connection
 from datetime import datetime
 
 '''
-Run without arguments:
-www.cybercommons.org/api/q/run/cybercom.teco.tasks.runTeco/arg1/arg2?kwarg1=SomeArg
 
-Run with positional arguments
-www.cybercommons.org/api/q/run/teco/SomeString/Anotherstring/
-
-Run with keyword arguments:
-www.cybercommons.org/api/q/run/teco?arg1=SomeString&arg2=Anotherstring
-
-www.cybercommons.org/api/q/status/UUID
-
-
-Method name lookups should be driven by catalog.
+Method name lookups should eventually be driven by catalog.
 [
 ('teco', 'cybercomq.model.teco.task.runTeco'),
 ('setTecoInput', 'cybercomq.model.teco.task.setTecoinput')
@@ -66,9 +55,13 @@ class Root(object):
         else:
             queue = funcq[1]
         if funcname not in REGISTERED_TASKS: # Check if funcname is know, if not show possible names
-            return json.dumps({'error': "Unknown task", 'available_tasks': list(REGISTERED_TASKS)}, indent=2)
+            rtasks = list(REGISTERED_TASKS)
+            rtasks.sort() 
+            return json.dumps({'error': "Unknown task", 'available_tasks': rtasks}, indent=2)
         if queue not in AVAILABLE_QUEUES: # Check if queue is known, if not show possible queue
-            return json.dumps({'error': "Unknown queue", 'available_queues': list(AVAILABLE_QUEUES)}, indent=2)
+            aqs = list(AVAILABLE_QUEUES)
+            aqs.sort() 
+            return json.dumps({'error': "Unknown queue", 'available_queues': aqs}, indent=2)
         funcargs = args[1:] # Slice out function arguments for passing along to task.
         
         if kwargs.has_key('callback'):
