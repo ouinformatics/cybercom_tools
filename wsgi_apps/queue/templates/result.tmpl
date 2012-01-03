@@ -1,0 +1,37 @@
+<html>
+<head>
+#compiler-settings
+cheetahVarStartToken = @
+#end compiler-settings
+<title>Cybercommons task results</title>
+<link type="text/css" href="http://static.cybercommons.org/css/cybercomui/jquery-ui-1.8.13.custom.css" rel="Stylesheet"/>
+<script type="text/javascript" src="http://static.cybercommons.org/js/jquery-1.7.min.js"></script>
+<script type="text/javascript" src="http://static.cybercommons.org/js/jquery-ui-1.8.10.custom.min.js"></script>
+<script type="text/javascript" src="http://static.cybercommons.org/js/jquery.cookie.js"></script>
+<script>
+    $(document).ready(function(){
+       // $('#result' ).html( '&nbsp;' ).load('../task/@task_id/tombstone');
+    });
+</script>
+</head>
+<body>
+  <div class="ui-widget-header ui-corner-all" style="padding:2px;indent:2px;">Cybercommons Task Result</div>
+  #for @task in @tasks
+  <h1>@task['task_name']</h1>
+  <table>
+  #for @k,@v in @task.items()
+   <tr><td><strong>@k</strong></td><td>@v</td></tr>
+  #end for
+  </table>
+  #end for
+  <div id='result_title' class="ui-widget-header ui-corner-all" style="padding:5px;indent:5px;"> Results </div>
+  #for @t in @tomb
+  <table>
+  #for @k,@v in @t.items()
+   <tr><td><strong>@k</strong></td><td>@v</td></tr>
+  #end for
+  </table>
+  #end for
+  <p id='result'></p>
+</body>
+</html>
