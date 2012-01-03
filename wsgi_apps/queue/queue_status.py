@@ -7,7 +7,7 @@ from celery.execute import send_task
 from celery.task.control import inspect
 from pymongo import Connection
 from datetime import datetime
-
+from Cheetah.Template import Template
 '''
 
 Method name lookups should eventually be driven by catalog.
@@ -37,11 +37,31 @@ def mimetype(type):
 
 class Root(object):
     def __init__(self,mongoHost='fire.rccc.ou.edu',port=27017,database='cybercom_queue',collection='task_log'):
-        self.db = Connection(mongoHost,port)[database]
+        self.db = Connection(mongoHost,port)#[database]
+        self.database = database
         self.collection = collection
     @cherrypy.expose
     def index(self):
         return None
+    @cherrypy.expose
+    def report(self,taskid):
+        db=self.db[self.database]#[self.collection]
+        res=db[self.collection].find({'task_id':taskid})
+        resb = {}
+        tresult=db['cybercom_queue_meta'].find({'_id':taskid})
+        if not tresult.count() == 0:
+            #resb = tresult[0]
+        #resb=pickle.loads(tresult[0].encode())
+        #resb['result']=pickle.loads(tresult[0]['result'].encode())
+        #resb['status']=pickle.loads(tresult[0]['status'].encode())
+            #print tresult[0]["result"]
+            resb['Result'] = pickle.loads(tresult[0]['result'].encode())
+            resb['Status'] = tresult[0]['status']
+            #print tresult[0]["result"]
+            #print pickle.loads(tresult[0]['result'].encode())
+        nameSpace = dict(tasks=res,task_id=taskid,tomb=[resb])#tresult)
+        t = Template(file='templates/result.tmpl', searchList=[nameSpace])
+        return t.respond()
     @cherrypy.expose
     @mimetype('application/json')
     def run(self,*args,**kwargs):
@@ -77,7 +97,7 @@ class Root(object):
                 user = cherrypy.request.login
             else:
                 user = "Anonymous"
-            self.db[self.collection].insert({'task_id':taskobj.task_id,'user':user,'task_name':funcname,'args':args,'kwargs':kwargs,'queue':queue,'timestamp':datetime.now()})
+            self.db[self.database][self.collection].insert({'task_id':taskobj.task_id,'user':user,'task_name':funcname,'args':args,'kwargs':kwargs,'queue':queue,'timestamp':datetime.now()})
         except:
             pass
         if not callback:
@@ -87,10 +107,15 @@ class Root(object):
     @cherrypy.expose
     @mimetype('application/json')
     def task(self,task_id=None,type=None,callback=None,**kwargs):
-        if callback == None:
-            return self.serialize(task_id,type)
-        else:
-            return str(callback) + '(' + self.serialize(task_id,type) + ')'
+        try:
+            if callback == None:
+                return self.serialize(task_id,type)
+            else:
+                return str(callback) + '(' + self.serialize(task_id,type) + ')'
+        except Exception as inst:
+            #error = str(type(inst)) + '\n'
+            #error = error + str(inst)
+            return str(inst)#error
     def serialize(self,task_id,type):
         if task_id == None:
             return json.dumps({'available_urls':['/<task_id>/','/<task_id>/status/','/<task_id>/tombstone/']},indent=2)
@@ -109,6 +134,8 @@ class Root(object):
             res={}
             result = urllib.urlopen("http://fire.rccc.ou.edu/mongo/db_find/cybercom_queue/cybercom_queue_meta/{'spec':{'_id':'" + task_id + "'}}")
             res['tombstone']=json.loads(result.read())
+            if len(res['tombstone']) > 0:
+                res['tombstone'][0]['result'] = pickle.loads(res['tombstone'][0]['result'].encode())
             res['task_id']=task_id
             return json.dumps(res,indent=2) #result.read()
         return json.dumps({'available_urls':['/<task_id>/','/<task_id>/status/','/<task_id>/tombstone/']},indent=2)
