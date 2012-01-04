@@ -45,7 +45,7 @@ class Root(object):
     def index(self):
         return None
     @cherrypy.expose
-    def usertasks(self,task_name=None,pageNumber=1,nPerPage=10):
+    def usertasks(self,task_name=None,pageNumber=1,nPerPage=50):
         db=self.db[self.database][self.collection]
         try:
             page=int(pageNumber)
