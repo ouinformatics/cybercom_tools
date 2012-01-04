@@ -1,5 +1,5 @@
 import cherrypy
-import json, os 
+import json, os, math 
 import urllib
 import pickle
 from celery.result import AsyncResult
@@ -49,8 +49,10 @@ class Root(object):
         db=self.db[self.database][self.collection]
         try:
             page=int(pageNumber)
+            perPage=int(nPerPage)
         except:
             page=1
+            perPage=100
         try:
             if cherrypy.request.login:
                 user = cherrypy.request.login
@@ -60,9 +62,12 @@ class Root(object):
             pass        
         if not task_name:
             res=db.find({'user':user}).skip((page-1)*nPerPage).limit(nPerPage).sort([('timestamp',-1)]) 
+            rows=db.find({'user':user}).count()
         else:
             res=db.find({'user':user,'task_name':task_name}).skip((page-1)*nPerPage).limit(nPerPage).sort([('timestamp',-1)])
-        nameSpace = dict(tasks=res,page=page)#tresult)
+            rows=db.find({'user':user,'task_name':task_name}).count()
+        ePage= int(math.ceil(float(rows)/float(perPage)))
+        nameSpace = dict(tasks=res,page=page,endPage=ePage)#tresult)
         t = Template(file = templatepath + '/usertasks.tmpl', searchList=[nameSpace])
         return t.respond()
     @cherrypy.expose
