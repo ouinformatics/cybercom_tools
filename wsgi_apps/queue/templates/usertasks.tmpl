@@ -1,0 +1,45 @@
+#compiler-settings
+cheetahVarStartToken = @
+#end compiler-settings
+#if @page == 1
+<html>
+<head>
+#compiler-settings
+cheetahVarStartToken = @
+#end compiler-settings
+<title>Cybercommons User Tasks</title>
+<link type="text/css" href="http://static.cybercommons.org/css/cybercomui/jquery-ui-1.8.13.custom.css" rel="Stylesheet"/>
+<script type="text/javascript" src="http://static.cybercommons.org/js/jquery-1.7.min.js"></script>
+<script type="text/javascript" src="http://static.cybercommons.org/js/jquery-ui-1.8.10.custom.min.js"></script>
+<script type="text/javascript" src="http://static.cybercommons.org/js/jquery.cookie.js"></script>
+<script>
+    $(document).ready(function(){
+       // $('#result' ).html( '&nbsp;' ).load('../task//tombstone');
+        var page=2;
+        $('#addrecords').button();
+    });
+    $('#addrecords').click(function(){
+        var d = $.get('/queue/usertasks?pageNumber=2',function(d){$('#tasktable').append(d.responseText);});
+        $('#tasktable').append(d.responseText);
+    });
+</script>
+</head>
+<body>
+ <div id='usertasks'>
+  <div class="ui-widget-header ui-corner-all" style="padding:2px;indent:2px;">Cybercommons User Tasks</div>
+  <table id='tasktable' border = "1">
+  <tr><th>Task Name</th><th>Results</th><th>Timestamp</th></tr>
+  #for @task in @tasks
+   <tr><td><strong>@task['task_name']</strong></td><td><a href="/queue/report/@task['task_id']" target="_blank">Task Results</a></td><td>@task['timestamp']</td></tr>
+  #end for
+  <tr id='append'></tr>
+  </table>
+    <button id='addrecords'>Add More tasks</button>
+ </div>
+</body>
+</html>
+#else
+  #for @task in @tasks
+    <tr><td><strong>@task['task_name']</strong></td><td><a href="/queue/report/@task['task_id']" target="_blank">Task Results</a></td><td>@task['timestamp']</td></tr>
+  #end for
+#end if

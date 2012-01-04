@@ -1,5 +1,5 @@
 import cherrypy
-import json 
+import json, os 
 import urllib
 import pickle
 from celery.result import AsyncResult
@@ -18,7 +18,8 @@ Method name lookups should eventually be driven by catalog.
 
 
 '''
-
+templatepath= os.path.abspath(os.path.join(os.path.dirname(__file__), 'templates'))
+print templatepath
 i = inspect()
 REGISTERED_TASKS = set()
 for item in i.registered().values():
@@ -44,6 +45,27 @@ class Root(object):
     def index(self):
         return None
     @cherrypy.expose
+    def usertasks(self,task_name=None,pageNumber=1,nPerPage=10):
+        db=self.db[self.database][self.collection]
+        try:
+            page=int(pageNumber)
+        except:
+            page=1
+        try:
+            if cherrypy.request.login:
+                user = cherrypy.request.login
+            else:
+                user = "guest"
+        except:
+            pass        
+        if not task_name:
+            res=db.find({'user':user}).skip((page-1)*nPerPage).limit(nPerPage).sort([('timestamp',-1)]) 
+        else:
+            res=db.find({'user':user,'task_name':task_name}).skip((page-1)*nPerPage).limit(nPerPage).sort([('timestamp',-1)])
+        nameSpace = dict(tasks=res,page=page)#tresult)
+        t = Template(file = templatepath + '/usertasks.tmpl', searchList=[nameSpace])
+        return t.respond()
+    @cherrypy.expose
     def report(self,taskid):
         db=self.db[self.database]#[self.collection]
         res=db[self.collection].find({'task_id':taskid})
@@ -60,7 +82,7 @@ class Root(object):
             #print tresult[0]["result"]
             #print pickle.loads(tresult[0]['result'].encode())
         nameSpace = dict(tasks=res,task_id=taskid,tomb=[resb])#tresult)
-        t = Template(file='templates/result.tmpl', searchList=[nameSpace])
+        t = Template(file=templatepath + '/result.tmpl', searchList=[nameSpace])
         return t.respond()
     @cherrypy.expose
     @mimetype('application/json')
