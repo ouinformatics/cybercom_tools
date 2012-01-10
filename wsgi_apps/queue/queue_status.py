@@ -1,5 +1,5 @@
 import cherrypy
-import json, os, math 
+import json, os, math,commands 
 import urllib
 import pickle
 from celery.result import AsyncResult
@@ -45,7 +45,12 @@ class Root(object):
     def index(self):
         return None
     @cherrypy.expose
-    def usertasks(self,task_name=None,pageNumber=1,nPerPage=50):
+    @mimetype('text/html')
+    def usertasks(self,task_name=None,pageNumber=1,nPerPage=50,callback=None,**kwargs):
+        ''' usertasks returns celery tasks perform and the link to the task result page.
+            task_name-  string optional
+            pageNumber and nPerPage is optional
+        ''' 
         db=self.db[self.database][self.collection]
         try:
             page=int(pageNumber)
@@ -61,34 +66,45 @@ class Root(object):
         except:
             pass        
         if not task_name:
-            res=db.find({'user':user}).skip((page-1)*nPerPage).limit(nPerPage).sort([('timestamp',-1)]) 
+            res=db.find({'user':user}).skip((page-1)* int(nPerPage)).limit(int(nPerPage)).sort([('timestamp',-1)]) 
             rows=db.find({'user':user}).count()
         else:
-            res=db.find({'user':user,'task_name':task_name}).skip((page-1)*nPerPage).limit(nPerPage).sort([('timestamp',-1)])
+            res=db.find({'user':user,'task_name':task_name}).skip((page-1) * int(nPerPage)).limit(int(nPerPage)).sort([('timestamp',-1)])
             rows=db.find({'user':user,'task_name':task_name}).count()
         ePage= int(math.ceil(float(rows)/float(perPage)))
         nameSpace = dict(tasks=res,page=page,endPage=ePage)#tresult)
         t = Template(file = templatepath + '/usertasks.tmpl', searchList=[nameSpace])
-        return t.respond()
+        if callback:
+            return str(callback) + "(" + json.dumps({'html':t.respond()}) + ")"
+        else:
+            return t.respond()
     @cherrypy.expose
-    def report(self,taskid):
-        db=self.db[self.database]#[self.collection]
+    @mimetype('text/html')
+    def report(self,taskid,callback=None,**kwargs):
+        ''' Generates task result page. This description provides provenance and all information need to rerun tasks
+            taskid is required
+        '''
+        db=self.db[self.database]
         res=db[self.collection].find({'task_id':taskid})
         resb = {}
         tresult=db['cybercom_queue_meta'].find({'_id':taskid})
         if not tresult.count() == 0:
-            #resb = tresult[0]
-        #resb=pickle.loads(tresult[0].encode())
-        #resb['result']=pickle.loads(tresult[0]['result'].encode())
-        #resb['status']=pickle.loads(tresult[0]['status'].encode())
-            #print tresult[0]["result"]
+            resb['Completed']=str(tresult[0]['date_done'])
             resb['Result'] = pickle.loads(tresult[0]['result'].encode())
+            try:
+                urlcheck = commands.getoutput("wget --spider " + resb['Result'] + " 2>&1| grep 'Remote file exists'")
+                if urlcheck:
+                    resb['Result']='<a href="' + resb['Result'] + '" target="_blank">' + resb['Result'] + '</a>'
+            except:
+                pass
             resb['Status'] = tresult[0]['status']
-            #print tresult[0]["result"]
-            #print pickle.loads(tresult[0]['result'].encode())
-        nameSpace = dict(tasks=res,task_id=taskid,tomb=[resb])#tresult)
+            resb['Traceback'] =pickle.loads( tresult[0]['traceback'].encode())
+        nameSpace = dict(tasks=res,task_id=taskid,tomb=[resb])
         t = Template(file=templatepath + '/result.tmpl', searchList=[nameSpace])
-        return t.respond()
+        if callback:
+            return str(callback) + "(" + json.dumps({'html':t.respond()}) + ")"   
+        else:
+            return t.respond()
     @cherrypy.expose
     @mimetype('application/json')
     def run(self,*args,**kwargs):
