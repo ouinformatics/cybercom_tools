@@ -31,6 +31,8 @@ def new_user(request):
 def login(request, template_name='registration/login.html'):
     #django.contrib.auth.views.login
     response = views.login(request,template_name=template_name)
+    if request.method == 'GET':
+        logout(request)
     request.environ['authtkt.forget'](request, response)
     return response
 def logout_view(request,redirect=None):
@@ -64,6 +66,6 @@ def userdata(request,**kwargs):
         prof={'username':'guest','name':'guest'}
     #return JsonResponse(prof,callback=callback)#request.GET.get('jsoncallback'))
     if callback != '':
-        return HttpResponse( str(callback) + "(" + json.dumps([{'user':prof}],indent=2) + ")" )
+        return HttpResponse( str(callback) + "(" + json.dumps({'user':prof},indent=2) + ")" )
     else:
-        return HttpResponse( json.dumps([{'user':prof}],indent=2) )
+        return HttpResponse( json.dumps({'user':prof},indent=2) )
