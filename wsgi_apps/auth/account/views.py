@@ -50,15 +50,20 @@ def profile(request):
     html = "<h1> Welcome %s </h1><p> Thank you for visiting your profile page. Future development will allow you to set new passwords, share application data with other registered users, plus many other profile tasks.</p>" % (name) 
     return HttpResponse(html)
     return HttpResponse(str(dir(u)))#"[User account - Profile Page]")
-@login_required()
-def userdata(request,callback=None):
-    u = User.objects.get(username__exact= request.user )
-    if u.get_full_name() is None or u.get_full_name() == '' or u.get_full_name() == '>':
-        name = u.username
+
+def userdata(request,**kwargs):
+    callback = request.GET.get('callback', '')
+    try:
+        u = User.objects.get(username__exact= request.user )
+        if u.get_full_name() is None or u.get_full_name() == '' or u.get_full_name() == '>':
+            name = u.username
+        else:
+            name = u.get_full_name()
+        prof ={'username':u.username,'name':name}
+    except:
+        prof={'username':'guest','name':'guest'}
+    #return JsonResponse(prof,callback=callback)#request.GET.get('jsoncallback'))
+    if callback != '':
+        return HttpResponse( str(callback) + "(" + json.dumps([{'user':prof}],indent=2) + ")" )
     else:
-        name = u.get_full_name()
-    prof ={'username':u.username,'name':name}
-    if callback:
-        return HttpResponse(str(callback) + "(" + json.dumps({'user':prof},indent=2) + ")")
-    else:
-        return HttpResponse(json.dumps({'user':prof},indent=2))
+        return HttpResponse( json.dumps([{'user':prof}],indent=2) )
