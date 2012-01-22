@@ -11,7 +11,9 @@ from django.contrib.auth import logout,authenticate,views
 from django.contrib.auth.models import User
 from cybercom.data.catalog import datalayer
 import json
+from django.views.decorators.csrf import csrf_exempt
 
+#@csrf_exempt
 def new_user(request):
     if request.method == 'POST':
         try:
@@ -33,9 +35,10 @@ def login(request, template_name='registration/login.html'):
     response = views.login(request,template_name=template_name)
     if request.method == 'GET':
         logout(request)
-    request.environ['authtkt.forget'](request, response)
+        request.environ['authtkt.forget'](request, response)
     return response
 def logout_view(request,redirect=None):
+    
     logout(request)
     if redirect:
         url = '/accounts/login/?next= %s ' % (redirect)
@@ -52,6 +55,8 @@ def profile(request):
     html = "<h1> Welcome %s </h1><p> Thank you for visiting your profile page. Future development will allow you to set new passwords, share application data with other registered users, plus many other profile tasks.</p>" % (name) 
     return HttpResponse(html)
     return HttpResponse(str(dir(u)))#"[User account - Profile Page]")
+def testuser(request,**kwargs):
+    return HttpResponse(str(request.environ['authtkt.identify']))
 
 def userdata(request,**kwargs):
     callback = request.GET.get('callback', '')
@@ -65,6 +70,7 @@ def userdata(request,**kwargs):
     except:
         prof={'username':'guest','name':'guest'}
     #return JsonResponse(prof,callback=callback)#request.GET.get('jsoncallback'))
+    #if request.environ['REMOTE_USER']
     if callback != '':
         return HttpResponse( str(callback) + "(" + json.dumps({'user':prof},indent=2) + ")" )
     else:

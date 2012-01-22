@@ -102,6 +102,7 @@ MIDDLEWARE_CLASSES = (
     'authtkt.middleware.AuthTktMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'django.contrib.auth.middleware.RemoteUserMiddleware',
 )
 
 ROOT_URLCONF = 'auth.urls'
