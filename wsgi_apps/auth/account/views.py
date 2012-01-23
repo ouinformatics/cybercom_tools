@@ -72,6 +72,18 @@ def userdata(request,**kwargs):
     #return JsonResponse(prof,callback=callback)#request.GET.get('jsoncallback'))
     #if request.environ['REMOTE_USER']
     if callback != '':
-        return HttpResponse( str(callback) + "(" + json.dumps({'user':prof},indent=2) + ")" )
+        try:
+            response = HttpResponse( str(callback) + "(" + json.dumps({'user':prof},indent=2) + ")" )
+            request.environ['authtkt.identify'](request,response)
+            return response
+        except:
+            prof={'username':'guest','name':'guest'}
+            return HttpResponse( str(callback) + "(" + json.dumps({'user':prof},indent=2) + ")" )
     else:
-        return HttpResponse( json.dumps({'user':prof},indent=2) )
+        try:
+            response=HttpResponse( json.dumps({'user':prof},indent=2) )
+            request.environ['authtkt.identify'](request,response)
+            return response
+        except:
+            prof={'username':'guest','name':'guest'}
+            return HttpResponse( json.dumps({'user':prof},indent=2) )
