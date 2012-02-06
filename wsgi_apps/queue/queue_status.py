@@ -1,5 +1,5 @@
 import cherrypy
-import json 
+import json, os, math,commands 
 import urllib
 import pickle
 from celery.result import AsyncResult
@@ -7,7 +7,7 @@ from celery.execute import send_task
 from celery.task.control import inspect
 from pymongo import Connection
 from datetime import datetime
-
+from Cheetah.Template import Template
 '''
 
 Method name lookups should eventually be driven by catalog.
@@ -18,7 +18,8 @@ Method name lookups should eventually be driven by catalog.
 
 
 '''
-
+templatepath= os.path.abspath(os.path.join(os.path.dirname(__file__), 'templates'))
+print templatepath
 i = inspect()
 REGISTERED_TASKS = set()
 for item in i.registered().values():
@@ -37,11 +38,73 @@ def mimetype(type):
 
 class Root(object):
     def __init__(self,mongoHost='fire.rccc.ou.edu',port=27017,database='cybercom_queue',collection='task_log'):
-        self.db = Connection(mongoHost,port)[database]
+        self.db = Connection(mongoHost,port)#[database]
+        self.database = database
         self.collection = collection
     @cherrypy.expose
     def index(self):
         return None
+    @cherrypy.expose
+    @mimetype('text/html')
+    def usertasks(self,task_name=None,pageNumber=1,nPerPage=50,callback=None,**kwargs):
+        ''' usertasks returns celery tasks perform and the link to the task result page.
+            task_name-  string optional
+            pageNumber and nPerPage is optional
+        ''' 
+        db=self.db[self.database][self.collection]
+        try:
+            page=int(pageNumber)
+            perPage=int(nPerPage)
+        except:
+            page=1
+            perPage=100
+        try:
+            if cherrypy.request.login:
+                user = cherrypy.request.login
+            else:
+                user = "guest"
+        except:
+            pass        
+        if not task_name:
+            res=db.find({'user':user}).skip((page-1)* int(nPerPage)).limit(int(nPerPage)).sort([('timestamp',-1)]) 
+            rows=db.find({'user':user}).count()
+        else:
+            res=db.find({'user':user,'task_name':task_name}).skip((page-1) * int(nPerPage)).limit(int(nPerPage)).sort([('timestamp',-1)])
+            rows=db.find({'user':user,'task_name':task_name}).count()
+        ePage= int(math.ceil(float(rows)/float(perPage)))
+        nameSpace = dict(tasks=res,page=page,endPage=ePage)#tresult)
+        t = Template(file = templatepath + '/usertasks.tmpl', searchList=[nameSpace])
+        if callback:
+            return str(callback) + "(" + json.dumps({'html':t.respond()}) + ")"
+        else:
+            return t.respond()
+    @cherrypy.expose
+    @mimetype('text/html')
+    def report(self,taskid,callback=None,**kwargs):
+        ''' Generates task result page. This description provides provenance and all information need to rerun tasks
+            taskid is required
+        '''
+        db=self.db[self.database]
+        res=db[self.collection].find({'task_id':taskid})
+        resb = {}
+        tresult=db['cybercom_queue_meta'].find({'_id':taskid})
+        if not tresult.count() == 0:
+            resb['Completed']=str(tresult[0]['date_done'])
+            resb['Result'] = pickle.loads(tresult[0]['result'].encode())
+            try:
+                urlcheck = commands.getoutput("wget --spider " + resb['Result'] + " 2>&1| grep 'Remote file exists'")
+                if urlcheck:
+                    resb['Result']='<a href="' + resb['Result'] + '" target="_blank">' + resb['Result'] + '</a>'
+            except:
+                pass
+            resb['Status'] = tresult[0]['status']
+            resb['Traceback'] =pickle.loads( tresult[0]['traceback'].encode())
+        nameSpace = dict(tasks=res,task_id=taskid,tomb=[resb])
+        t = Template(file=templatepath + '/result.tmpl', searchList=[nameSpace])
+        if callback:
+            return str(callback) + "(" + json.dumps({'html':t.respond()}) + ")"   
+        else:
+            return t.respond()
     @cherrypy.expose
     @mimetype('application/json')
     def run(self,*args,**kwargs):
@@ -77,7 +140,7 @@ class Root(object):
                 user = cherrypy.request.login
             else:
                 user = "Anonymous"
-            self.db[self.collection].insert({'task_id':taskobj.task_id,'user':user,'task_name':funcname,'args':args,'kwargs':kwargs,'queue':queue,'timestamp':datetime.now()})
+            self.db[self.database][self.collection].insert({'task_id':taskobj.task_id,'user':user,'task_name':funcname,'args':args,'kwargs':kwargs,'queue':queue,'timestamp':datetime.now()})
         except:
             pass
         if not callback:
@@ -87,10 +150,15 @@ class Root(object):
     @cherrypy.expose
     @mimetype('application/json')
     def task(self,task_id=None,type=None,callback=None,**kwargs):
-        if callback == None:
-            return self.serialize(task_id,type)
-        else:
-            return str(callback) + '(' + self.serialize(task_id,type) + ')'
+        try:
+            if callback == None:
+                return self.serialize(task_id,type)
+            else:
+                return str(callback) + '(' + self.serialize(task_id,type) + ')'
+        except Exception as inst:
+            #error = str(type(inst)) + '\n'
+            #error = error + str(inst)
+            return str(inst)#error
     def serialize(self,task_id,type):
         if task_id == None:
             return json.dumps({'available_urls':['/<task_id>/','/<task_id>/status/','/<task_id>/tombstone/']},indent=2)
@@ -109,6 +177,8 @@ class Root(object):
             res={}
             result = urllib.urlopen("http://fire.rccc.ou.edu/mongo/db_find/cybercom_queue/cybercom_queue_meta/{'spec':{'_id':'" + task_id + "'}}")
             res['tombstone']=json.loads(result.read())
+            if len(res['tombstone']) > 0:
+                res['tombstone'][0]['result'] = pickle.loads(res['tombstone'][0]['result'].encode())
             res['task_id']=task_id
             return json.dumps(res,indent=2) #result.read()
         return json.dumps({'available_urls':['/<task_id>/','/<task_id>/status/','/<task_id>/tombstone/']},indent=2)
