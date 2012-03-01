@@ -29,24 +29,9 @@ cheetahVarStartToken = @
     #end for
     </td></tr>
     <tr><td valign="top" align="right" style="max-width:75px;"><strong>Keyword Arguments</strong></td><td>
-    <table>
     #for @k,@v in @task['kwargs'].items()
-        #if @k == 'task_id'
-             <tr><td colspan ='2'> <a href="javascript: if ($('#task_id').html()=='') {
-                                            $('#task_id').html( '&nbsp;' ).load('/queue/report/@v');
-                                         }
-                                    else { 
-                                            if ($('#task_id').is(':hidden')){
-                                                $('#task_id').show();     }
-                                            else { $('#task_id').hide();  }
-                                          }">Workflow Parent Task (@v)</a>
-                </td></tr>
-                <tr><td colspan='2'><div id='task_id'></div></td><tr>
-        #else
-            <tr><td valign="top" align="right"><strong>@k</strong></td><td>@v</td></tr>
-        #end if
+    @k : @v <br/>
     #end for
-    </table>
     </td></tr>
     <tr><td valign="top" align="right"><strong>Queue</strong></td><td>@task['queue']</td></tr>
     <tr><td valign="top" align="right"><strong>Initiated</strong></td><td>@task['timestamp']</td></tr>
