@@ -36,7 +36,7 @@ def production():
     Work on production environment
     """
     env.settings = 'production'
-    env.path = '/scratch/www/wsgi_sites/%(sitename)s' % env
+    env.path = '/var/www/apps/%(sitename)s' % env
     env.virtpy = '%(path)s/virtpy' % env
     env.log_path = '%(path)s/log' % env
     env.hosts = ['production.cybercommons.org']
@@ -87,7 +87,7 @@ def bounce_apache():
     """ Restart the apache web server """
     sudo('/etc/init.d/httpd restart')
 
-def apache_config(secure=True):
+def apache_config(secure=False):
     """
     Set the apache config file to point to wsgi.  Assumes app will be accessible at /sitename/ and 
       .wsgi named sitename.wsgi
