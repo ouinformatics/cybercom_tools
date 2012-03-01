@@ -1,0 +1,53 @@
+#compiler-settings
+cheetahVarStartToken = @
+#end compiler-settings
+<style>
+    #sortable12,#sortable13, #sortable1, #sortable2 { list-style-type: none; margin: 0; padding: 0; float: left; margin-right: 10px; }
+    #sortable12 li,#sortable13 li,#sortable1 li, #sortable2 li { margin: 0 5px 5px 5px; text-align:center;padding: 5px; font-size: 1.2em; width: 120px; }
+    #sidebar {display:inline;text-align:center;border-style:solid;border-width:5px;background-color:yellow;}
+    #alist {margin-left:40px;}
+    .selector{padding-left:10px;}
+    #fcast{padding-left:10px;}
+    .lowrow{padding:5px;}
+    
+    #listCont{padding:5px;}
+    #sortable2{margin:10px;margin-left:30px;padding:5px;width:142;}
+</style>
+<script>
+    function processData(){
+            var d = $.param($("#siteparam").serializeArray()).replace(/=/g,"':'").replace(/&/g,"','");
+            var params = "{'" + d + "'}"
+            alert(params); 
+            return params;
+    }
+</script>
+<div id="divform" class='form-stacked'>
+    <div class="ui-widget-header ui-corner-all" style="padding:2px;indent:2px;">@site Parameters</div>
+        <form id="siteparam" class="form-stacked">
+            <fieldset>
+            <div class="span4"style="float:left">
+            
+            #for @sp in @siteparam
+                #for @col in @col1
+                <label for="@col">@col</label><input type="text" name="@col" id="@col" value="@sp[@col]"><br/>
+                #end for
+                </div>
+                <div class="span1"style="float:left;COLOR:white;">.</div>
+                <div class="span4"style="float:left">
+                #for @col in @col2
+                <label for="@col">@col</label><input type="text" name="@col" id="@col" value="@sp[@col]"><br/>
+                #end for
+                </div>
+                <div class="span1"style="float:left;COLOR:white;">.</div>
+                <div class="span4"style="float:left">
+                #for @col in @col3
+                <label for="@col">@col</label><input type="text" name="@col" id="@col" value="@sp[@col]"><br/>
+                #end for
+                #for @col in @hidden
+                <input type="hidden" name="@col" id="@col" value="@sp[@col]">
+                #end for
+            #end for
+            </div>
+            </fieldset>
+        </form>
+    </div>

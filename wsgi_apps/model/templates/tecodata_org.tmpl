@@ -1,0 +1,143 @@
+#compiler-settings
+cheetahVarStartToken = @
+#end compiler-settings
+<html>
+<head>
+<title>Cybercommons Initilize TECO</title>
+<link type="text/css" href="http://static.cybercommons.org/css/cybercomui/jquery-ui-1.8.13.custom.css" rel="Stylesheet"/>
+<link rel="stylesheet" href="http://twitter.github.com/bootstrap/1.4.0/bootstrap.min.css">
+<script type="text/javascript" src="http://static.cybercommons.org/js/jquery-1.7.min.js"></script>
+<script type="text/javascript" src="http://static.cybercommons.org/js/jquery-ui-1.8.10.custom.min.js"></script>
+<script type="text/javascript" src="http://static.cybercommons.org/js/jquery.cookie.js"></script>
+<style>
+    BODY{font-family:sans-serif; }
+    #sortable12,#sortable13, #sortable1, #sortable2 { list-style-type: none; margin: 0; padding: 0; float: left; margin-right: 10px; }
+    #sortable12 li,#sortable13 li,#sortable1 li, #sortable2 li { margin: 0 5px 5px 5px; text-align:center;padding: 5px; font-size: 1.2em; width: 120px; }
+    #sidebar {display:inline;text-align:center;border-style:solid;border-width:5px;background-color:yellow;}
+    #alist {margin-left:40px;}
+    .selector{padding-left:10px;}
+    #fcast{padding-left:10px;}
+    .lowrow{padding:5px;}
+    
+    #listCont{padding:5px;}
+    #sortable2{margin:10px;margin-left:30px;padding:5px;width:142;}
+</style>
+<script>
+    var years = @years;
+    var nfyear = years[years.length-1] + 1;
+    $(document).ready(function(){
+        $('#NYresult').html('<ul id="sortable13" class="connectedSortable"><li class="ui-state-default availyears">' + nfyear.toString()  + '</li></ul>');
+        $(".availyears").draggable({ revert: true, helper: "clone" });
+        $("#Startyear").droppable({ accept:'.special',drop: function( event, ui ) {
+           $('#SYresult').html('<ul id="sortable1" class="connectedSortable"><li class="ui-state-default availyears">' + ui.draggable[0].innerHTML + '</li></ul>');
+                if(parseInt(ui.draggable[0].innerHTML)>parseInt($("#Endyear #sortable1 li:eq(0)").html())){
+                        $('#EYresult').html('<ul id="sortable1" class="connectedSortable"><li class="ui-state-default availyears">' + ui.draggable[0].innerHTML + '</li></ul>');
+                        nfyear = parseInt(ui.draggable[0].innerHTML) + 1
+                        $('#NYresult').html('<ul id="sortable13" class="connectedSortable"><li class="ui-state-default availyears">' + nfyear.toString()  + '</li></ul>');
+                        $('.fyearli').remove();
+                        }
+             }
+            ,hoverClass:"ui-state-active" //"ui-state-highlight"
+        });
+        $("#Endyear").droppable({accept:'.special', hoverClass:"ui-state-active", drop: function( event, ui ) {
+            var val = parseInt(ui.draggable[0].innerHTML);
+            nfyear = val +1;
+            var snval = nfyear.toString();
+           $('#EYresult').html('<ul id="sortable1" class="connectedSortable"><li class="ui-state-default availyears">' + ui.draggable[0].innerHTML + '</li></ul>'); 
+            $('#NYresult').html('<ul id="sortable13" class="connectedSortable"><li class="ui-state-default availyears">' + snval + '</li></ul>'); 
+            $('.fyearli').remove();
+            }
+        });
+        $("#dataused").droppable({accept:'.special', hoverClass:"ui-state-active", drop: function( event, ui ) {
+            $('#FYresult').html('<ul id="sortable12" class="connectedSortable"><li class="ui-state-default availyears">' + ui.draggable[0].innerHTML + '</li></ul>'); }
+        });
+        $( ".selector" ).droppable( "option", "accept", '.special' );
+        $(".selector").hover(function() {
+                $(this).addClass( "ui-state-active" );
+            },function(){
+            $(this).removeClass("ui-state-active");
+            });
+        $('#addbutton').click(function(){
+            var itm = $('#sortable13 li:eq(0)').html() + "," + $('#sortable12 li:eq(0)').html()
+            $('#sortable2').append('<li class="ui-state-default availyears fyearli">' + itm + " </li>")
+            nfyear = nfyear+1;
+            $('#NYresult').html('<ul id="sortable13" class="connectedSortable"><li class="ui-state-default availyears">' + nfyear.toString()  + '</li></ul>');
+        });
+    });
+    function next(){ 
+            if(parseInt($("#sortable12 li:eq(0)").html()) != years[years.length-1]){
+                $("#sortable12 li:eq(0)").html(parseInt($("#sortable12 li:eq(0)").html())+1);
+            }
+    }
+    function clearall(){ 
+            nfyear= nfyear - $('#sortable2 li').length; 
+            $('.fyearli').remove();
+            $('#NYresult').html('<ul id="sortable13" class="connectedSortable"><li class="ui-state-default availyears">' + nfyear.toString()  + '</li></ul>');
+    }
+    function clearlast(){
+            nfyear= nfyear - 1;
+            $('#sortable2 li').last().remove();
+            $('#NYresult').html('<ul id="sortable13" class="connectedSortable"><li class="ui-state-default availyears">' + nfyear.toString()  + '</li></ul>');
+    }
+</script>
+</head>
+<body>
+  <div class="container-fluid">
+    <div class="sidebar bordered-table">
+        <div class="ui-widget-header ui-corner-all" style="padding:2px;indent:2px;">@site Available Data</div>
+        <div id='alist'>
+        <ul id="sortable1" class="connectedSortable">
+            #for @task in @years
+            <li class="ui-state-default availyears special">@task</li>
+            #end for
+        </ul>
+        </div>
+    </div>
+    <div class="content bordered-table">
+        <div class="ui-widget-header ui-corner-all" style="padding:2px;indent:2px;">Set Data Start and End Year</div>
+        <div id='yearcontainer' class="row">
+          <div id='Startyear'class="span4 bordered-table selector">
+                <h2>Start Year</h2><br/>
+                <div id='SYresult'><ul id="sortable1" class="connectedSortable"><li class="ui-state-default availyears">1991</li></ul></div><br/>
+                <br/>( Drop available years to change )<br/>
+          </div>
+            <div class="span1" style="COLOR:white;"> . </div>
+          <div id='Endyear'class="span4 bordered-table selector">
+                <h2>End Year</h2><br/>
+                <div id='EYresult'><ul id="sortable1" class="connectedSortable"><li class="ui-state-default availyears">2006</li></ul></div><br/>
+                <br/>( Drop available years to change )<br/>
+          </div>
+        </div>
+        <div class="ui-widget-header ui-corner-all" style="padding:2px;indent:2px;">Set Forcasting Data</div>
+        <div class="row lowrow">
+            <div class="span4 bordered-table">
+                <div id="fcast" class="bordered-table ">
+                  <h2>Forcasting Year</h2><br/>
+                  <div id='NYresult'><ul id="sortable13" class="connectedSortable"><li class="ui-state-default availyears"></li></ul></div><br/>
+                  <br/>
+                </div>
+                <div id="dataused" class="bordered-table selector" style="clear:both;">
+                    <h2>Data Used</h2><br/>
+                    <div id='FYresult'><ul id="sortable12" class="connectedSortable"><li class="ui-state-default availyears">@years[0]</li></ul></div>
+                        <a class="span1" style="padding:5px;" href="javascript:next();">Next</a><br/>
+                    <br/>( Drop available years to change )<br/>
+                </div>
+            </div>
+            <div style="float:left;height:3em;padding-top:80px;" class="span1">
+                <input id="addbutton" type="button" name="Submit" value="add" class=button style="float:center">
+            </div>
+            <div id="listCont" class="span4 bordered-table">
+                <div class="ui-widget-header ui-corner-all" style="padding:2px;indent:2px;">Please add Forcasting Data</div>
+              <ul id="sortable2"  class="connectedSortable bordered-table">
+
+              </ul>
+              <div id="controldiv" style="clear:both;padding-left:35px;">
+                <a class="span1" style="padding:5px;" href="javascript:clearall();">Clear All</a>
+                <a style="padding:5px;" class"span1"  href="javascript:clearlast();">Clear Last</a>
+              </div>
+            </div>
+        </div>
+    </div>
+  </div>
+</body>
+</html>
