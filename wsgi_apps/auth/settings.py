@@ -4,7 +4,7 @@ DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
-    # ('Your Name', 'your_email@example.com'),
+     ('Mark Stacy', 'markstacy@ou.edu'),
 )
 
 MANAGERS = ADMINS
@@ -21,7 +21,8 @@ DATABASES = {
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }
 }
-
+EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+EMAIL_FILE_PATH = '/tmp/app-messages'
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.
@@ -67,8 +68,8 @@ STATIC_URL = '/static/'
 # URL prefix for admin static files -- CSS, JavaScript and images.
 # Make sure to use a trailing slash.
 # Examples: "http://foo.com/static/admin/", "/static/admin/".
-ADMIN_MEDIA_PREFIX = '/static/admin/'
-
+#ADMIN_MEDIA_PREFIX = '/static/admin/'
+ADMIN_MEDIA_PREFIX = 'http://static.cybercommons.org/media/django_admin/media/'
 # Additional locations of static files
 STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
@@ -88,6 +89,8 @@ STATICFILES_FINDERS = (
 #SECRET_KEY = 'ip03&xep8j-++xigu*+#np%ytdgna$xi9+c6+f$3$k^06g4yi#'
 SECRET_KEY = "cc90e55712bd08830fd3a82adbeb2cfb" #cybercommons Mod_auth_tkt secret
 LOGIN_URL = '/accounts/login/'
+SESSION_COOKIE_DOMAIN ='.cybercommons.org'
+CSRF_COOKIE_DOMAIN = '.cybercommons.org'
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
