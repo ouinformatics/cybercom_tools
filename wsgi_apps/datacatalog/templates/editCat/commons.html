@@ -1,5 +1,18 @@
 {% extends "base_edit.html" %}
 {% block content %}
+                    <div id="header" >
+                    <img src="http://static.cybercommons.org/css/cyberlogo/CyberCommonsScreen.png" alt="Cybercommons Data Catalog" height="45" />
+                <div id="userid" style="float:right;margin:15px;font-size:15px;color:black"> <a href="/accounts/logout/">logout</a></div>
+                </div>
+                <div id="Navigation">
+                    <div id = "Nav">
+                    <input type="radio" id="radio1" name="radio" checked="checked" /><label for="radio1">|    Data Commons    |</label>
+                    <input type="radio" id="radio2" name="radio" /><label for="radio2">|   Catalog   |</label>
+                    <input type="radio" id="radio3" name="radio" /><label for="radio3">|     Event  <->  Results     |</label>
+                    </div>
+                </div>
+                <div id ="contents">
+
                     <div id="control">
                         <select id="Select"  style="width:100%;" size="57" >
                             {% for val in data %}
@@ -16,4 +29,12 @@
                             <div id="tabs-1"></div>
                             <div id="tabs-2">Webservice template add .</div>    
                     </div>
+                </div>
+                <div id="dialog"  class="ui-widget ui-state-default ui-button-text-only ui-corner-right" title="Basic dialog">
+                    <div id="dlog">stuff</div>
+                
+                </div>
+                <div id="dialog1"  class="ui-widget ui-state-default ui-button-text-only ui-corner-right" title="Basic dialog">
+                    <div id="dlog1">stuff</div>
+                </div>
 {% endblock %}

@@ -1,22 +1,22 @@
 import os
 if os.uname()[1] == 'test.cybercommons.org':
-    basedir = '/var/www/apps/'
+    basedir = '/var/www/apps'
 elif os.uname()[1] == 'fire.rccc.ou.edu':
-    basedir = '/scratch/www/wsgi_sites/'
+    basedir = '/scratch/www/wsgi_sites'
+elif os.uname()[1] == 'production.cybercommons.org':
+    basedir = '/var/www/apps'
 
-activate_this = basedir + 'datacatalog/virtpy/bin/activate_this.py'
+activate_this = basedir + '/datacatalog/virtpy/bin/activate_this.py'
 execfile(activate_this, dict(__file__=activate_this))
 
 
 import sys
 # put the Django project on sys.path
-#path = '/scratch/www/wsgi_sites' # production
-path = '/var/www/apps' # testing
-if path not in sys.path:
-    sys.path.append(path)
+if basedir not in sys.path:
+    sys.path.append(basedir)
 
 import site
-site.addsitedir(basedir + 'datacatalog')
+site.addsitedir(basedir + '/datacatalog')
 
 os.environ['DJANGO_SETTINGS_MODULE'] = 'datacatalog.settings'
 
