@@ -21,7 +21,7 @@ from rpc4django.utils import CookieTransport # pip install rpc4django
 username = 'username'
 password ='password'
             
-URL = 'http://fire.rccc.ou.edu/dataportal/RPC2/'
+URL = '{{ rpclink }}'
                     
 s = ServerProxy(URL, transport=CookieTransport())
 
@@ -31,4 +31,4 @@ row = {'commons_name':<value>,'commons_code':<value>,'commons_desc':<optional>}
 if s.system.login(username, password):
     catItems = s.{{ method }}(row)</textarea>
 <h4> Cybercommons Web Services</h4>
-<a href="http://fire.rccc.ou.edu/dataportal/RPC2/">JSON-RPC Available Web Services</a>
+<a href="RPC/">JSON-RPC Available Web Services</a>

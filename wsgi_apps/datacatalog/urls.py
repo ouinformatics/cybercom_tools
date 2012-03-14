@@ -12,7 +12,7 @@ urlpatterns = patterns('',
     # Uncomment the admin/doc line below and add 'django.contrib.admindocs' 
     # to INSTALLED_APPS to enable admin documentation:
     # (r'^admin/doc/', include('django.contrib.admindocs.urls')),
-    #url('', 'datacatalog.editCat.views.main_commons', name='commons'),
+    #url(r'', 'datacatalog.editCat.views.main_commons', name='commons'),
     url(r'^$', 'datacatalog.editCat.views.main_commons', name='commons'),
     url(r'^catalog/','datacatalog.editCat.views.catalog', name='catalog'),
     url(r'^commons/','datacatalog.editCat.views.main_catalog', name='commons'),
@@ -43,7 +43,7 @@ urlpatterns = patterns('',
 # Uncomment the next line to enable the admin:
     # (r'^admin/(.*)', admin.site.root),
     #('^$', 'rpc4django.views.serve_rpc_request'),
-    #('^RPC2/$', 'rpc4django.views.serve_rpc_request'),
+    ('^RPC/$', 'rpc4django.views.serve_rpc_request'),
     # Uncomment the admin/doc line below to enable admin documentation:
     #url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 

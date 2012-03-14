@@ -8,3 +8,4 @@ psycopg2==2.4.1
 pymongo==1.11
 simplejson==2.1.6
 wsgiref==0.1.2
+https://github.com/ouinformatics/cybercom/tarball/master

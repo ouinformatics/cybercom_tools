@@ -2,7 +2,7 @@
 {% load url from future %}
 
 {% block content %}
-<meta charset="utf-8">
+<!--<meta charset="utf-8">
     <style>
         body { font-size: 62.5%; }
         label, input { display:block; }
@@ -20,35 +20,35 @@
             onload();
             $('#id_username').focus();
             });
-    </script>
+    </script>-->
 
 
 <div id="login" style="margin-top:40px;margin-left:40px;">
-<form method="post" action="{% url 'auth.account.views.login' %}">
-{% csrf_token %}
-<table id="table">
-<tr>
-    <td>{{ form.username.label_tag }}</td>
-    <td>{{ form.username }}</td>
-</tr>
-<tr>
-    <td>{{ form.password.label_tag }}</td>
-    <td>{{ form.password }}</td>
-</tr>
-{% if form.errors %}
-<tr>
-<td style="width:140px;color:red;" colspan="2"><p>Your username and password didn't match.Please try again.</p></td>
-</tr>
-{% endif %}
-</table>
-<div id="float_right">
-<input  id="loginbutton" type="submit" value="login" style="margin-right:60px;" />
-<input type="hidden" name="next" value="{{ next }}" />
-</div>
-</form>
-<div style="padding-top:45px;clear:both;">
-<button id="create-user">Create new user</button>
-</div>
+  <form method="post" action="{% url 'django.contrib.auth.views.login' %}">
+  {% csrf_token %}
+    <table id="table">
+    <tr>
+      <td>{{ form.username.label_tag }}</td>
+      <td>{{ form.username }}</td>
+   </tr>
+   <tr>
+     <td>{{ form.password.label_tag }}</td>
+     <td>{{ form.password }}</td>
+  </tr>
+  {% if form.errors %}
+  <tr>
+    <td style="width:140px;color:red;" colspan="2"><p>Your username and password didn't match.Please try again.</p></td>
+  </tr>
+  {% endif %}
+  </table>
+  <div id="float_right">
+    <input  id="loginbutton" type="submit" value="login" style="margin-right:60px;" />
+    <input type="hidden" name="next" value="{{ next }}" />
+  </div>
+  </form>
+  <div style="padding-top:45px;clear:both;">
+    <button id="create-user">Create new user</button>
+  </div>
 
 </div>
 
@@ -71,8 +71,6 @@
             $('#id_username').focus();
             });
     </script>-->
-
-
 
 <div class="demo" style="position: fixed; left:49%;top:65%;">
 

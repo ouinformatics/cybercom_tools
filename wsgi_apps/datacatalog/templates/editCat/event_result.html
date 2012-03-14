@@ -76,21 +76,27 @@
             <p><h2>Event Results</h2></p>
             <table id="resultTable" border="1" cellpadding="5">
             <tr>
-                <th>Variable</th>
-                <th>Result</th>
-                <th><a class="tbar ui-button ui-widget ui-state-default ui-button-text-only ui-corner-right" href="javascript: 
+                <th width="15%">Variable</th>
+                <th width="75%">Result</th>
+                <th width="10%"><a class="tbar ui-button ui-widget ui-state-default ui-button-text-only ui-corner-right" href="javascript: 
                                     $('#dlog').html( '&nbsp;' ).load( 'getresult/?event_id={{ eventid }}&result_id=addnew&commons_id='.concat(commons_id), function(){
                                     $( '#dialog' ).dialog({width:'800px',modal: true,title:'Result Table'});});">Add Result</a> </th>
             </tr>
             {% for field in data %}
             <tr>
-                <td> {{ field.var_id }}</td>
+                <td width="15%"> {{ field.var_id }}</td>
+                   <!-- {% url field.result_text as the_url %}
+                    {% if the_url %}
+                      <td><a href="{{ the_url }}">Link to optional stuff</a></td>
+                    {% else %}
+                      <td>{{ field.result_text }}</td>
+                    {% endif %}-->
                 {% if field.var_id == "URL" %}
-                  <td><a href="{{ field.result_text }}" target="_blank">{{ field.result_text }}</a></td>
+                  <td width="75%"><a href="{{ field.result_text }}" target="_blank">{{ field.result_text }}</a></td>
                 {% else %}
-                  <td>{{ field.result_text }}</td>
+                  <td>{{ field.result_text|safe }}</td>
                 {% endif %}
-                <td width="90px">
+                <td width="10%">
                     <a style="float:left; margin-left:5px" class="tbar ui-button ui-widget ui-state-default ui-button-text-only ui-corner-right" href="javascript:
                                     $('#dlog').html( '&nbsp;' ).load( 'getresult/?event_id={{ eventid }}&result_id={{ field.result_id }}',function(){
                                     $( '#dialog' ).dialog({width:'800px',modal: true,title:'Result Table'});});">Edit</a>

@@ -10,23 +10,31 @@ import sys
 #)
 
 # These are all optional and set to their default values
-#RPC4DJANGO_LOG_REQUESTS_RESPONSES = True
-#RPC4DJANGO_RESTRICT_INTROSPECTION = False
-#RPC4DJANGO_RESTRICT_JSONRPC = False
-#RPC4DJANGO_RESTRICT_XMLRPC = False
-#RPC4DJANGO_RESTRICT_METHOD_SUMMARY = False
-#RPC4DJANGO_RESTRICT_RPCTEST = False
-#RPC4DJANGO_RESTRICT_REST = False
-#RPC4DJANGO_RESTRICT_OOTB_AUTH = False
-#RPC4DJANGO_HTTP_ACCESS_CREDENTIALS = True
-#RPC4DJANGO_HTTP_ACCESS_ALLOW_ORIGIN = True
+RPC4DJANGO_LOG_REQUESTS_RESPONSES = True
+RPC4DJANGO_RESTRICT_INTROSPECTION = False
+RPC4DJANGO_RESTRICT_JSONRPC = False
+RPC4DJANGO_RESTRICT_XMLRPC = False
+RPC4DJANGO_RESTRICT_METHOD_SUMMARY = False
+RPC4DJANGO_RESTRICT_RPCTEST = False
+RPC4DJANGO_RESTRICT_REST = False
+RPC4DJANGO_RESTRICT_OOTB_AUTH = False
+RPC4DJANGO_HTTP_ACCESS_CREDENTIALS = True
+RPC4DJANGO_HTTP_ACCESS_ALLOW_ORIGIN = True
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
-
+APPEND_SLASH = True
+URI_ADD_ON = {'www.cybercommons.org':'/app/catalog/',
+                'www2.cybercommons.org':'/catalog/',
+                'production.cybercommons.org':'/catalog/',
+                'test.cybercommons.org':'/catalog/'
+            }
 ADMINS = (
-    # ('Your Name', 'your_email@domain.com'),
+     ('Mark Stacy', 'markstacy@ou.edu'),
 )
+AUTHTKT_DOMAIN= 'subdomain'
+SESSION_COOKIE_DOMAIN ='.cybercommons.org'
+CSRF_COOKIE_DOMAIN = '.cybercommons.org'
 
 MANAGERS = ADMINS
 DATABASES = {
@@ -88,6 +96,8 @@ ADMIN_MEDIA_PREFIX = '/media/'
 SECRET_KEY = "cc90e55712bd08830fd3a82adbeb2cfb"
 #SECRET_KEY = 'RPC4Django Example -- Super Secret. Shhhhhh'
 LOGIN_URL = '/accounts/login/'# '/auth/login.cgi'
+SESSION_COOKIE_DOMAIN='.cybercommons.org'
+CSRF_COOKIE_DOMAIN = '.cybercommons.org'
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
@@ -135,8 +145,8 @@ INSTALLED_APPS = (
     'django.contrib.admindocs',
 #    'django.contrib.messages',#add admin
 #    'dataportal.testapp',
-#    'dataportal.rpcservice',
-#    'rpc4django',
+    'datacatalog.rpcservice',
+    'rpc4django',
     'authtkt',
     'editCat',
 )

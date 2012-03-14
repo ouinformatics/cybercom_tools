@@ -6,7 +6,7 @@ from django.http import HttpResponseRedirect
 from django.core.context_processors import csrf
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
-import models
+import models, commands
 from cybercom.data.catalog import datalayer
 from django.forms.formsets import formset_factory
 from django.forms.models import modelformset_factory
@@ -15,6 +15,7 @@ from django.contrib.auth.models import User
 #from xmlrpclib import ServerProxy
 #from rpc4django.utils import CookieTransport
 #rpcURL = 'http://127.0.0.1:8000/RPC2/'
+from django.conf import settings
 try:
     import json
 except ImportError:
@@ -41,15 +42,18 @@ def logout_view(request):
 def webservice_view(request):
     try:
         methid = request.GET.get( 'method' )
-        head = methid 
+        head = methid
+        host = request.get_host()
+        loc =settings.URI_ADD_ON[host] + 'RPC/'
+        link = request.build_absolute_uri(loc)#settings.URI_ADD_ON[baseuri] + 'catalog/RPC/') 
         if methid == 'catalog.dtCatalog':
-            return render_to_response('editCat/ws2_results.html',{'header':head,'method':methid})
+            return render_to_response('editCat/ws2_results.html',{'header':head,'method':methid,'rpclink':link})
         if methid == 'catalog.dataCommons':
-            return render_to_response('editCat/ws_results.html',{'header':head,'method':methid})
+            return render_to_response('editCat/ws_results.html',{'header':head,'method':methid,'rpclink':link})
         if methid == 'catalog.EventResult':
-            return render_to_response('editCat/ws3_results.html',{'header':head,'method':methid})
+            return render_to_response('editCat/ws3_results.html',{'header':head,'method':methid,'rpclink':link})
     except Exception as inst:
-        return HttpResponse(str(inst))
+        return HttpResponse(str(inst)+ ' crap')
 #************** Formset Commons ******************************
 #@login_required(login_url='accounts/login/')
 @login_required()
@@ -223,6 +227,13 @@ def ajax_event(request):
                 md= datalayer.Metadata()
                 sqlWhere = "event_id = " + eventid
                 data= md.Search('dt_result',where=sqlWhere,column=['var_id','result_text','result_id'])
+                for row in data:
+                    try:
+                        urlcheck = commands.getoutput("wget --spider " + row['result_text'] + " 2>&1| grep 'Remote file exists'")
+                        if urlcheck:
+                            row['result_text']= "<a href='" + row['result_text'] + "' target='_blank'>" + row['result_text'] + "</a>"
+                    except:
+                        pass
             else:
                 catid = request.GET.get( 'catid' )
                 commm = request.GET.get( 'commons_id' )
@@ -237,7 +248,7 @@ def ajax_event(request):
 
 #**************  Commons  **********************************************************************
 #@login_required(login_url='accounts/login/')
-@login_required()
+@login_required()#redirect_field_name=request.build_absolute_uri(settings.URI_ADD_ON[request.get_host])) #request.'my_redirect_field')
 def main_commons(request):
     userid=str(request.user)
     md= datalayer.Metadata()

@@ -1,5 +1,5 @@
 import cherrypy
-import json, os, math,commands 
+import json, os, math,commands,ast
 import urllib
 import pickle
 from celery.result import AsyncResult
@@ -46,7 +46,7 @@ class Root(object):
         return None
     @cherrypy.expose
     @mimetype('text/html')
-    def usertasks(self,task_name=None,pageNumber=1,nPerPage=50,callback=None,**kwargs):
+    def usertasks(self,task_name=None,pageNumber=1,nPerPage=500,callback=None,**kwargs):
         ''' usertasks returns celery tasks perform and the link to the task result page.
             task_name-  string optional
             pageNumber and nPerPage is optional
@@ -64,7 +64,7 @@ class Root(object):
             else:
                 user = "guest"
         except:
-            pass        
+            pass 
         if not task_name:
             res=db.find({'user':user}).skip((page-1)* int(nPerPage)).limit(int(nPerPage)).sort([('timestamp',-1)]) 
             rows=db.find({'user':user}).count()
@@ -73,10 +73,12 @@ class Root(object):
             rows=db.find({'user':user,'task_name':task_name}).count()
         ePage= int(math.ceil(float(rows)/float(perPage)))
         nameSpace = dict(tasks=res,page=page,endPage=ePage)#tresult)
-        t = Template(file = templatepath + '/usertasks.tmpl', searchList=[nameSpace])
+        #t = Template(file = templatepath + '/usertasks.tmpl', searchList=[nameSpace])
         if callback:
+            t = Template(file = templatepath + '/usertasks_call.tmpl', searchList=[nameSpace])
             return str(callback) + "(" + json.dumps({'html':t.respond()}) + ")"
         else:
+            t = Template(file = templatepath + '/usertasks.tmpl', searchList=[nameSpace])
             return t.respond()
     @cherrypy.expose
     @mimetype('text/html')
@@ -99,11 +101,26 @@ class Root(object):
                 pass
             resb['Status'] = tresult[0]['status']
             resb['Traceback'] =pickle.loads( tresult[0]['traceback'].encode())
-        nameSpace = dict(tasks=res,task_id=taskid,tomb=[resb])
-        t = Template(file=templatepath + '/result.tmpl', searchList=[nameSpace])
+        for row in res:
+            resclone=row
+            for k,v in resclone['kwargs'].items():
+                try:
+                    temp = ast.literal_eval(v)
+                    if type(temp) is dict:
+                        hml = "<table class='table table-border'>"
+                        for key, val in temp.items():
+                            hml = hml + "<tr><td>" + str(key) + "</td><td>" + str(val) + "</td></tr>"
+                        hml = hml + "</table>"
+                        resclone['kwargs'][k]=hml
+                except:
+                    pass
+        nameSpace = dict(tasks=[resclone],task_id=taskid,tomb=[resb])
+        #t = Template(file=templatepath + '/result.tmpl', searchList=[nameSpace])
         if callback:
+            t = Template(file=templatepath + '/result_call.tmpl', searchList=[nameSpace])
             return str(callback) + "(" + json.dumps({'html':t.respond()}) + ")"   
         else:
+            t = Template(file=templatepath + '/result.tmpl', searchList=[nameSpace])
             return t.respond()
     @cherrypy.expose
     @mimetype('application/json')

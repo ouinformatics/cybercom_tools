@@ -1,24 +1,6 @@
-<html>
-<head>
 #compiler-settings
 cheetahVarStartToken = @
 #end compiler-settings
-<title>Cybercommons task results</title>
-<link type="text/css" href="http://static.cybercommons.org/css/cybercomui/jquery-ui-1.8.13.custom.css" rel="Stylesheet"/>
-<script type="text/javascript" src="http://static.cybercommons.org/js/jquery-1.7.min.js"></script>
-<script type="text/javascript" src="http://static.cybercommons.org/js/jquery-ui-1.8.10.custom.min.js"></script>
-<script type="text/javascript" src="http://static.cybercommons.org/js/jquery.cookie.js"></script>
-<style>
-    BODY{font-family:sans-serif; }
-    #vright{valign:top; align:right}    
-</style>
-<script>
-    $(document).ready(function(){
-       // $('#result' ).html( '&nbsp;' ).load('../task/@task_id/tombstone');
-    });
-</script>
-</head>
-<body>
   <div class="ui-widget-header ui-corner-all" style="padding:2px;indent:2px;">Cybercommons Task Parameters</div>
   #for @task in @tasks
   <table cellpadding=2px >
@@ -32,7 +14,7 @@ cheetahVarStartToken = @
     <table>
     #for @k,@v in @task['kwargs'].items()
         #if @k == 'task_id'
-             <tr><td colspan ='2'> <a href="javascript: if ($('#task_id').html()=='') {
+             <tr><td colspan ='2'> <a style='color:blue;' href="javascript: if ($('#task_id').html()=='') {
                                             $('#task_id').html( '&nbsp;' ).load('/queue/report/@v');
                                          }
                                     else { 
@@ -60,5 +42,3 @@ cheetahVarStartToken = @
   #end for
   </table>
   #end for
-</body>
-</html>

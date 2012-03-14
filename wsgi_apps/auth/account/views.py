@@ -32,19 +32,28 @@ def new_user(request):
         return HttpResponse("[]")
 def login(request, template_name='registration/login.html'):
     #django.contrib.auth.views.login
+    #redirect_to = request.REQUEST.get('next', '')
+    #print redirect_to
     response = views.login(request,template_name=template_name)
-    if request.method == 'GET':
-        logout(request)
-        request.environ['authtkt.forget'](request, response)
+    #if request.method == 'GET':
+    #    request.environ['authtkt.forget'](request, response)
     return response
-def logout_view(request,redirect=None):
-    
-    logout(request)
-    if redirect:
-        url = '/accounts/login/?next= %s ' % (redirect)
-    else:
-        url = '/accounts/login/?next=/accounts/login/'
-    return HttpResponseRedirect(url)#'accounts/login/?next=/dataportal/')
+def logout_view(request,redirect=None,template_name='registration/logout.html'):
+    #django.contrib.auth.views.logout_then_login
+    response = views.logout_then_login(request)
+    response.delete_cookie('auth_tkt')
+   # response = views.logout(request,template_name=template_name) 
+    #logout(request)
+    #response = views.logout(request,template_name=template_name)
+    #request.environ['authtkt.forget'](request, response)
+    #logout(request)
+    #request.environ['authtkt.forget'](request, response)
+    return response
+    #if redirect:
+    #    url = '/accounts/login/?next= %s ' % (redirect)
+    #else:
+    #    url = '/accounts/login/' #?next=/accounts/login/'
+    #return HttpResponseRedirect(url)#'accounts/login/?next=/dataportal/')
 @login_required()
 def profile(request):
     u = User.objects.get(username__exact= request.user )
@@ -52,9 +61,18 @@ def profile(request):
         name = u.username
     else:
         name = u.get_full_name()
-    html = "<h1> Welcome %s </h1><p> Thank you for visiting your profile page. Future development will allow you to set new passwords, share application data with other registered users, plus many other profile tasks.</p>" % (name) 
-    return HttpResponse(html)
-    return HttpResponse(str(dir(u)))#"[User account - Profile Page]")
+    try:
+        md= datalayer.Metadata()
+        host= request.get_host()
+        baseurl = request.get_host()#'www.cybercommons.org' 
+        where = "event_id in (select event_id from dt_event where commons_id=814 and event_name='%s') order by result_order" % (baseurl)
+        data = md.Search('dt_result',where=where,column=['var_id','result_text','result_type'])
+    except:
+        data=[]
+    return render_to_response('registration/profile.html',{'user':name,'baseAccount_path':'/accounts/','apps':data,'host':host})
+    #html = "<h1> Welcome %s </h1><p> Thank you for visiting your profile page. Future development will allow you to set new passwords, share application data with other registered users, plus many other profile tasks.</p>" % (name) 
+    #return HttpResponse(html)
+    #return HttpResponse(str(dir(u)))#"[User account - Profile Page]")
 def testuser(request,**kwargs):
     return HttpResponse(str(request.environ['authtkt.identify']))
 
@@ -73,7 +91,7 @@ def userdata(request,**kwargs):
     #if request.environ['REMOTE_USER']
     if callback != '':
         try:
-            response = HttpResponse( str(callback) + "(" + json.dumps({'user':prof},indent=2) + ")" )
+            return  HttpResponse( str(callback) + "(" + json.dumps({'user':prof},indent=2) + ")" )
             request.environ['authtkt.identify'](request,response)
             return response
         except:
@@ -81,7 +99,7 @@ def userdata(request,**kwargs):
             return HttpResponse( str(callback) + "(" + json.dumps({'user':prof},indent=2) + ")" )
     else:
         try:
-            response=HttpResponse( json.dumps({'user':prof},indent=2) )
+            return HttpResponse( json.dumps({'user':prof},indent=2) )
             request.environ['authtkt.identify'](request,response)
             return response
         except:

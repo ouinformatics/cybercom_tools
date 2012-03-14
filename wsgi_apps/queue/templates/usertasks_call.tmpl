@@ -1,0 +1,31 @@
+#compiler-settings
+cheetahVarStartToken = @
+#end compiler-settings
+#if @page == 1
+<script>
+    $(document).ready(function(){
+        var page=1;
+        var endPage= @endPage ;
+        if (page >= endPage){$('#addrecords').hide(); }
+        $('#addrecords').button();
+        $('#addrecords').click(function(){
+            var url= document.URL + '?pageNumber='.concat(page+1);
+            $.get(url,function(data){page++; if (page >= endPage){$('#addrecords').hide(); } $('#tasktable').append(data);});
+        });
+    });
+</script>
+ <div id='usertasks'>
+  <table id='tasktable' style="height:200px;" cellpadding=5 border = "1">
+    <tfoot><tr class="ui-widget-header ui-corner-all" style="padding:2px;indent:2px;"><td colspan=3><button id='addrecords' style="font-size:14px;">Load additional tasks</button></td></tr></tfoot>
+    <thead><tr class="ui-widget-header ui-corner-all" style="padding:2px;indent:2px;"><th colspan=3>Cybercommons User Tasks</th></tr>
+    <tr class="ui-widget-header ui-corner-all" style="padding:2px;indent:2px;"><th>Task Name</th><th>Results</th><th>Timestamp</th></tr></thead>
+  #for @task in @tasks
+   <tr><td><strong>@task['task_name']</strong></td><td><a style='color:blue;' href="http://test.cybercommons.org/queue/report/@task['task_id']" target="_blank">Task Results</a></td><td>@task['timestamp']</td></tr>
+  #end for
+  </table>
+ </div>
+#else
+  #for @task in @tasks
+    <tr><td><strong>@task['task_name']</strong></td><td><a style='color:blue;' href="http://test.cybercommons.org/queue/report/@task['task_id']" target="_blank">Task Results</a></td><td>@task['timestamp']</td></tr>
+  #end for
+#end if
