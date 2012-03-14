@@ -7,9 +7,11 @@ cheetahVarStartToken = @
 <META HTTP-EQUIV="Content-Script-Type" CONTENT="text/javascript">
 <title>Cybercommons User Tasks</title>
 <link type="text/css" href="http://static.cybercommons.org/css/cybercomui/jquery-ui-1.8.13.custom.css" rel="Stylesheet"/>
+<link type="text/css" href="http://static.cybercommons.org/css/cybercom/style.css" rel="Stylesheet"/>
 <script type="text/javascript" src="http://static.cybercommons.org/js/jquery-1.7.min.js"></script>
 <script type="text/javascript" src="http://static.cybercommons.org/js/jquery-ui-1.8.10.custom.min.js"></script>
 <script type="text/javascript" src="http://static.cybercommons.org/js/jquery.cookie.js"></script>
+<script type="text/javascript" src="http://static.cybercommons.org/js/jquery.dataTables.min.js"></script>
 <style>BODY{font-family:sans-serif; }</style>
 <script>
     $(document).ready(function(){
@@ -21,6 +23,8 @@ cheetahVarStartToken = @
             var url= document.URL + '?pageNumber='.concat(page+1);
             $.get(url,function(data){page++; if (page >= endPage){$('#addrecords').hide(); } $('#tasktable').append(data);});
         });
+    $('#tasktable').dataTable( { "bJQueryUI": true, "bLengthChange": false, "bAutoWidth": false } );
+
     });
 </script>
 </head>
