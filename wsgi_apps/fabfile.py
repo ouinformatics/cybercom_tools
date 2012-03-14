@@ -130,4 +130,12 @@ def install_requirements():
     else:
         print red("Can't find requirements.txt!")
 
-
+def upgrade_requirements():
+    """ 
+    Install the contents of requirements.txt to the virtual environment 
+    """
+    check = exists('%(path)s/requirements.txt' % env)
+    if check:
+        virtualenv('pip install --upgrade -E %(virtpy)s -r %(path)s/requirements.txt' % env)
+    else:
+        print red("Can't find requirements.txt!")
