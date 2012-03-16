@@ -1,0 +1,9 @@
+pymongo 
+psycopg2 
+iso8601
+simplejson
+geojson
+sqlalchemy
+cherrypy
+Cheetah
+https://github.com/ouinformatics/cybercom/tarball/master

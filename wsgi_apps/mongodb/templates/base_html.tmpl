@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+#compiler-settings
+cheetahVarStartToken = @
+#end compiler-settings
+<title>Cybercommons Catalog</title>
+<!--<link type="text/css" href="http://static.cybercommons.org/css/cybercomui/jquery-ui-1.8.13.custom.css" rel="Stylesheet"/>
+<link type="text/css" rel="stylesheet" href="http://static.cybercommons.org/css/bootstrp/bootstrap.min.css"/>
+<link type="text/css" href="http://static.cybercommons.org/css/cybercom/style.css" rel="Stylesheet"/>-->
+<script type="text/javascript" src="http://static.cybercommons.org/js/jquery-1.7.min.js"></script>
+<script type="text/javascript" src="http://static.cybercommons.org/js/jquery-ui-1.8.10.custom.min.js"></script>
+<script type="text/javascript" src="http://static.cybercommons.org/js/jquery.form.js"></script>
+<script type="text/javascript" src="http://static.cybercommons.org/js/jquery.jeditable.mini.js"></script>
+<link type="text/css" href="http://static.cybercommons.org/css/cybercomui/jquery-ui-1.8.13.custom.css" rel="Stylesheet"/>
+<link type="text/css" rel="stylesheet" href="http://static.cybercommons.org/css/bootstrp/bootstrap.min.css"/>
+<link type="text/css" href="http://static.cybercommons.org/css/cybercom/style.css" rel="Stylesheet"/>
+<script>
+$(document).ready(function() { 
+    var options = { 
+        target:        '#output1',   // target element(s) to be updated with server response 
+        //beforeSubmit:  showRequest,  // pre-submit callback 
+        //success:       showResponse  // post-submit callback 
+ 
+        // other available options: 
+        //url:       url         // override for form's 'action' attribute 
+        //type:      type        // 'get' or 'post', override for form's 'method' attribute 
+        //dataType:  null        // 'xml', 'script', or 'json' (expected server response type) 
+        //clearForm: true        // clear all form fields after successful submit 
+        //resetForm: true        // reset the form after successful submit 
+ 
+        // $.ajax options can be used here too, for example: 
+        //timeout:   3000 
+    }; 
+ 
+    // bind form using 'ajaxForm' 
+    $('.catform').ajaxForm(options); 
+    $('.edit').editable('http://production.cybercommons.org/mongodb/save/');
+});
+</script>
+</head>
+</head>
+<body>
+@body
+</body>
+</html>

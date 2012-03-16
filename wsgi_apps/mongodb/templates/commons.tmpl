@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+#compiler-settings
+cheetahVarStartToken = @
+#end compiler-settings
+<title>Cybercommons Catalog</title>
+<link type="text/css" href="http://static.cybercommons.org/css/cybercom/style.css" rel="Stylesheet"/>
+<link type="text/css" href="http://static.cybercommons.org/css/cybercomui/jquery-ui-1.8.13.custom.css" rel="Stylesheet"/>
+<link type="text/css" rel="stylesheet" href="http://static.cybercommons.org/css/bootstrp/bootstrap.min.css"/>
+<link type="text/css" href="http://static.cybercommons.org/css/cybercom/style.css" rel="Stylesheet"/>
+<script type="text/javascript" src="http://static.cybercommons.org/js/jquery-1.7.min.js"></script>
+<script type="text/javascript" src="http://static.cybercommons.org/js/jquery-ui-1.8.10.custom.min.js"></script>
+<!--<script type="text/javascript" src="http://static.cybercommons.org/js/jquery.cookie.js"></script>-->
+<script type="text/javascript" src="http://static.cybercommons.org/js/jquery.form.js"></script>
+<style>
+    BODY {background:#E7E1D3;font-family:sans-serif; }
+    #vright{valign:top; align:right}    
+</style>
+<script>
+// prepare the form when the DOM is ready 
+$(document).ready(function() { 
+    var options = { 
+        target:        '#output1',   // target element(s) to be updated with server response 
+        beforeSubmit:  showRequest,  // pre-submit callback 
+        success:       showResponse  // post-submit callback 
+ 
+        // other available options: 
+        //url:       url         // override for form's 'action' attribute 
+        //type:      type        // 'get' or 'post', override for form's 'method' attribute 
+        //dataType:  null        // 'xml', 'script', or 'json' (expected server response type) 
+        //clearForm: true        // clear all form fields after successful submit 
+        //resetForm: true        // reset the form after successful submit 
+ 
+        // $.ajax options can be used here too, for example: 
+        //timeout:   3000 
+    }; 
+ 
+    // bind form using 'ajaxForm' 
+    $('.catform').ajaxForm(options); 
+}); 
+// pre-submit callback 
+function showRequest(formData, jqForm, options) { 
+    // formData is an array; here we use $.param to convert it to a string to display it 
+    // but the form plugin does this for you automatically when it submits the data 
+    var queryString = $.param(formData); 
+ 
+    // jqForm is a jQuery object encapsulating the form element.  To access the 
+    // DOM element for the form do this: 
+    // var formElement = jqForm[0]; 
+ 
+    alert('About to submit: \n\n' + queryString); 
+ 
+    // here we could return false to prevent the form from being submitted; 
+    // returning anything other than false will allow the form submit to continue 
+    return true; 
+} 
+// post-submit callback 
+function showResponse(responseText, statusText, xhr, $form)  { 
+    // for normal html responses, the first argument to the success callback 
+    // is the XMLHttpRequest object's responseText property 
+ 
+    // if the ajaxForm method was passed an Options Object with the dataType 
+    // property set to 'xml' then the first argument to the success callback 
+    // is the XMLHttpRequest object's responseXML property 
+ 
+    // if the ajaxForm method was passed an Options Object with the dataType 
+    // property set to 'json' then the first argument to the success callback 
+    // is the json data object returned by the server 
+ 
+    alert('status: ' + statusText + '\n\nresponseText: \n' + responseText + 
+        '\n\nThe output div should have already been updated with the responseText.'); 
+}
+</script>
+</head>
+<body>
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span4">
+        <strong>jkfjkldsfklsdljkl</strong>
+      <!--Sidebar content-->
+    </div>
+    <div class="span12">
+      <!--Body content-->
+        <div class="ui-widget-header ui-corner-all" style="padding:2px;indent:2px;">Cybercommons Task Parameters</div>
+        #for @task in @tasks
+        <table class="table table-striped table-bordered table-condensed" cellpadding=2px >
+        <tr>
+        <th>ID</th>
+        <th>Values</th>
+        </tr>
+        <tr class="odd"><td valign="top" align="right"><strong>ID</strong></td><td><strong>@task['_id']</strong></td></tr>
+        <tr class="even"><td valign="top" align="right" style="max-width:75px;"><strong>Record</strong></td><td>
+        <!--</td></tr>
+        </table>-->
+
+        <form id="11catform" class="catform form-horizontal"  action="/" method="POST">
+            <fieldset>
+                <legend>Commons</legend>
+            #for @k,@v in @task.items()
+                <div class="control-group">
+                    <label class="control-label" for="@k">@k</label>
+                    <div class="controls">
+                        <input type="text" name="@k" class="input-xlarge" id="@k" value="@v"/><p class="help-block">@k</p>
+                    </div>
+                </div>
+            #end for
+            <div class="form-actions" >
+                <button type="submit" class="btn btn-primary">Save changes</button>
+                <button class="btn">Cancel</button>
+            </div>
+            </fieldset>
+        </form>
+        <div id="output1"></div>
+        </td></tr>
+        </table>
+        #end for
+    </div>
+  </div>
+</div>
+</body>
+</html>

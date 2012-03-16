@@ -1,0 +1,34 @@
+#compiler-settings
+cheetahVarStartToken = @
+#end compiler-settings
+#from base_html import base_html
+#extends base_html
+#def body
+<table class="form-horizontal">
+<tr><td style="width:10%"><a href='/catalog/'>Database</a></td><td>@database</td></tr>
+<tr><td><a href='/catalog/@database'>Collection</a></td><td>@collection</td></tr>
+<tr><td>Record</td><td>
+        #for @task in @data
+        <form id="11catform" class="catform form-horizontal"  action="/save" method="POST">
+            <fieldset>
+            #for @k,@v in @task.items()
+                <div class="control-group">
+                    <label class="control-label" for="@k">@k</label>
+                    <div class="controls">
+                        <input type="text" name="@k" class="input-xlarge" id="@k" value='''@v'''/>
+                    </div>
+                </div>
+            #end for
+            <input type="hidden" name="collection" id="collection" value="@collection">
+            <input type="hidden" name="database" id="database" value="@database">
+            <div class="form-actions" >
+                <button type="submit" class="btn btn-primary">Save changes</button>
+                <button class="btn">Cancel</button>
+            </div>
+            </fieldset>
+        </form>
+        <div id="output1"></div>
+        </td></tr>
+        </table>
+        #end for
+#end def

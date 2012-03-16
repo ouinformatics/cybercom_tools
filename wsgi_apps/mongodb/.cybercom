@@ -1,0 +1,9 @@
+[database]
+host = localhost
+#host = fire.rccc.ou.edu 
+#host1 = mongodb://fire.rccc.ou.edu:27017,129.15.41.76:27017,earth.rccc.ou.edu:27017
+replica_set = cybercom
+read_preference = SECONDARY
+[catalog]
+database = catalog
+ 
