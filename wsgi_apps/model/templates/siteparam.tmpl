@@ -54,6 +54,12 @@ cheetahVarStartToken = @
                 #for @col in @col3
                 <label for="@col">@col</label><input type="text" name="@col" id="@col" value="@sp[@col]"><br/>
                 #end for
+                </div>
+                <div class="span1"style="float:left;COLOR:white;">.</div>
+                <div class="span4"style="float:left">
+                #for @col in @carboncol
+                <label for="@col">@col</label><input type="text" name="@col" id="@col" value="@sp[@col]"><br/>
+                #end for
                 #for @col in @hidden
                 <input type="hidden" name="@col" id="@col" value="@sp[@col]">
                 #end for
