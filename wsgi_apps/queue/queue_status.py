@@ -8,25 +8,50 @@ from celery.task.control import inspect
 from pymongo import Connection
 from datetime import datetime
 from Cheetah.Template import Template
-'''
 
-Method name lookups should eventually be driven by catalog.
-[
-('teco', 'cybercomq.model.teco.task.runTeco'),
-('setTecoInput', 'cybercomq.model.teco.task.setTecoinput')
-]
-
-
-'''
 templatepath= os.path.abspath(os.path.join(os.path.dirname(__file__), 'templates'))
-print templatepath
-i = inspect()
-REGISTERED_TASKS = set()
-for item in i.registered().values():
-    REGISTERED_TASKS.update(item)
 
-AVAILABLE_QUEUES = set([ item[0]['exchange']['name'] for item in i.active_queues().values() ])
+def check_memcache(host='127.0.0.1',port=11211):
+    ''' Check if memcache server is running '''
+    import socket
+    s = socket.socket()
+    try:
+        s.connect((host,port))
+        return True
+    except:
+        return False
 
+if check_memcache():
+    import memcache 
+else:
+    memcache = None
+
+def update_tasks():
+    ''' Enable the use of memcache to save tasks and queues when possible '''
+    i = inspect()
+    if memcache:
+        mc = memcache.Client(['127.0.0.1:11211'])
+        tasks = 'REGISTERED_TASKS'
+        queues = 'AVAILABLE_QUEUES'
+        REGISTERED_TASKS = mc.get(tasks)
+        AVAILABLE_QUEUES = mc.get(queues)
+        if not REGISTERED_TASKS:
+            REGISTERED_TASKS = set()
+            for item in i.registered().values():
+                REGISTERED_TASKS.update(item)
+            mc.set(tasks, REGISTERED_TASKS, 10)
+            REGISTERED_TASKS = mc.get('REGISTERED_TASKS')
+        if not AVAILABLE_QUEUES:
+            mc.set(queues, set([ item[0]['exchange']['name'] for item in i.active_queues().values() ]), 10)
+            AVAILABLE_QUEUES = mc.get('AVAILABLE_QUEUES')
+    else:
+        REGISTERED_TASKS = set()
+        for item in i.registered().values():
+            REGISTERED_TASKS.update(item)
+
+        AVAILABLE_QUEUES = set([ item[0]['exchange']['name'] for item in i.active_queues().values() ])
+    return (REGISTERED_TASKS,AVAILABLE_QUEUES)
+            
 
 def mimetype(type):
     def decorate(func):
@@ -42,8 +67,10 @@ class Root(object):
         self.database = database
         self.collection = collection
     @cherrypy.expose
+    @mimetype('text/html')
     def index(self):
-        return None
+        doc = """<html><body><ul><li><a href="report">report</a></li><li><a href="usertasks">tasks</a></li> </ul></body></html>"""
+        return doc
     @cherrypy.expose
     @mimetype('text/html')
     def usertasks(self,task_name=None,pageNumber=1,nPerPage=500,callback=None,**kwargs):
@@ -125,6 +152,8 @@ class Root(object):
     @cherrypy.expose
     @mimetype('application/json')
     def run(self,*args,**kwargs):
+        REGISTERED_TASKS,AVAILABLE_QUEUES = update_tasks()
+        #return REGISTERED_TASKS
         # If no arguments return list of tasks
         if len(args) == 0:
             return json.dumps({'error': "Unknown task", 'available_tasks': list(REGISTERED_TASKS)}, indent=2)
