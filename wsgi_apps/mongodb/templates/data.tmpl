@@ -1,0 +1,55 @@
+#compiler-settings
+cheetahVarStartToken = @
+#end compiler-settings
+#from base_html import base_html
+#extends base_html
+#def body
+<table class="form-horizontal">
+<tr><td style="width:10%"><a href='@baseurl/@FName/'>Database</a></td><td>@database</td></tr>
+<tr><td><a href='@baseurl/@FName/@database/'>Collection</a></td><td>@collection</td></tr>
+<tr><td>Record</td><td>
+ #if @data != ''
+   Views:   
+   <a href='../json/'>JSON</a></td></tr></table>
+   <div class="row">
+     <ul class="pager">
+      <li class="previous">
+        <a href="../@prev/">&larr; Older</a>
+      </li>
+      <li class="next">
+        <a href="../@next/">Newer &rarr;</a>
+      </li>
+   </div>
+    <div>
+        #for @task in @data
+        <form id="cform" class="catform well form-horizontal"  action="@baseurl/save" method="POST">
+            <fieldset>
+            #for @k,@v in @task.items()
+                <div class="control-group">
+                    <label class="control-label" for="@k">@k</label>
+                    <div class="controls">
+                        <input type="text" name="@k" class="input-xlarge" id="@k" value="@v"/>
+                    </div>
+                </div>
+            #end for
+            <input type="hidden" name="collection" id="collection" value="@collection">
+            <input type="hidden" name="database" id="database" value="@database">
+            <div class="form-actions" >
+                <button type="submit" class="btn btn-primary">Save changes</button>
+                <button class="btn">Cancel</button>
+            </div>
+            </fieldset>
+        </form>
+        <div id="output1"></div>
+        #end for
+    </div>
+ #else
+  Views:
+   <a href='../1/'>FORM</a></td></tr> </table>
+  <pre   style="word-wrap: break-word; white-space: pre-wrap;">
+    <div class="edit">
+  @serial
+    </div>
+  </pre>
+ #end if
+#end def

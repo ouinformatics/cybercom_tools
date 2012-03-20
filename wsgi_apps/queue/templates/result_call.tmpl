@@ -15,7 +15,7 @@ cheetahVarStartToken = @
     #for @k,@v in @task['kwargs'].items()
         #if @k == 'task_id'
              <tr><td colspan ='2'> <a style='color:blue;' href="javascript: if ($('#task_id').html()=='') {
-                                            $('#task_id').html( '&nbsp;' ).load('/queue/report/@v');
+                     $.getJSON('http://test.cybercommons.org/queue/report/@v/?callback=?',function(data){$('#task_id' ).html(data.html); });
                                          }
                                     else { 
                                             if ($('#task_id').is(':hidden')){

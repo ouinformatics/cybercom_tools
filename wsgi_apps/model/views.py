@@ -68,13 +68,14 @@ class Root(object):
         col2 =['GRmax','Gsmax','stom_n','a1','Ds0','Vcmx0','extkU','xfang','alpha','co2ca','Tau_Leaf','Tau_Wood','Tau_Root']
         col3=['Tau_F','Tau_C','Tau_Micro','Tau_SlowSOM','Tau_Passive','TminV','TmaxV','ToptV','Tcold','Gamma_Wmax','Gamma_Tmax']
         hidden=['site','inputfile','NEEfile','outputfile','lat','Longitude']
+        carboncol=['nsc','Q_leaf','Q_wood','Q_root1','Q_root2','Q_root3','Q_coarse','Q_fine','Q_micr','Q_slow','Q_pass']
         #    'vegtype','GRmax','LAIMAX','co2ca','Tau_Leaf','Ds0','extkU','wsmax']
         #col2=['SapR','SapS','Vcmx0','wsmin','stom_n','Gsmax','Tau_Micro','Longitude','xfang','a1',
         #    'Rootmax','lat','alpha','SLA','Tau_F','Tau_C','Tau_Root','gddonset','Tau_SlowSOM','_id','inputfile']
 
         #yrs.sort()
         #res = sp.next()
-        nameSpace = dict(siteparam=sp,site=site,col1=col1,col2=col2,col3=col3,hidden=hidden)#tresult)
+        nameSpace = dict(siteparam=sp,site=site,col1=col1,col2=col2,col3=col3,hidden=hidden,carboncol=carboncol)#tresult)
         #print nameSpace
         #t = Template(file = templatepath + '/siteparam.tmpl', searchList=[nameSpace])
         if callback:

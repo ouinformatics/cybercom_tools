@@ -1,0 +1,13 @@
+#compiler-settings
+cheetahVarStartToken = @
+#end compiler-settings
+#from base_html import base_html
+#extends base_html
+#def body
+<table class="table table-striped table-bordered table-condensed">
+<tr><td style="width:10%;">Database</td><td>
+    #for @item in @database
+        <a href='@baseurl/@FName/@item/'>@item</a><br/>
+    #end for
+    </td><table>
+#end def
