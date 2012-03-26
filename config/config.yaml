@@ -13,12 +13,14 @@ wsgi_servers:
       type: apache
       production: False
       mod_authtkt: True
+      memcache: True
     - name: production
       host: production.cybercommons.org
       appdir: /var/www/apps/
       type: apache
       production: True
       mod_authtkt: True
+      memcache: True
 
 static_servers:
     - name: static
