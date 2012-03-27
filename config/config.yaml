@@ -53,16 +53,20 @@ celery_workers:
       host: static.cybercommons.org
       type: RHEL6
       dir: /opt/celeryq/
+      broker: cybercom_queue
     - name: gis
       host: 129.15.41.74
       type: SCILIN6
       dir: /opt/celeryq/
+      broker: cybercom_queue
     - name: earth
       defaultq: True
       host: earth.cybercommons.org
       type: RHEL5
       dir: /opt/celeryq
+      broker: cybercom_queue
     - name: arcgis
       host: 129.15.41.83
       type: RHEL5
       dir: /opt/celeryq
+      broker: cybercom_queue
