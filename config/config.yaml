@@ -1,10 +1,19 @@
 mongo_clusters:
     - host: fire.rccc.ou.edu
       port: 27017
-
+      replicaset: cybercom
+      
 catalog:
     - host: fire.rccc.ou.edu
       type: postgresql
+      production: True
+      database: catalog
+      port: 5432
+    - host: fire.rccc.ou.edu
+      type: mongodb
+      port: 27017
+      production: False
+      database: catalog
 
 wsgi_servers:
     - name: test
