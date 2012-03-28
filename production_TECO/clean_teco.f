@@ -73,7 +73,7 @@
        real,dimension(5):: Gaussx,Gaussw,Gaussw_cum 
 !      parameters to tune
        real,dimension(32):: randnums	! added by myself
-       real,dimension(1,32):: params	! added by myself
+       real,dimension(1,43):: params	! Adjusted from 32  to 43 to account for Carbon Pools(Mark Stacy) 
 !      for phenology
        real LAI,bmroot,bmstem,bmleaf,bmplant
        real SLA,L_fall,L_add,litter,seeds
@@ -315,7 +315,7 @@
          READ(110,*)PARAMS
          close(110)
 !*****************************************************************
-!       write(*,*)params
+!        write(*,*)params
 
 !*****************************************************************
 
@@ -352,6 +352,20 @@
          Tcold=PARAMS(1,30)
          Gamma_Wmax=PARAMS(1,31)
          Gamma_Tmax=PARAMS(1,32)
+!         write(*,*)Gamma_Tmax,Gamma_Wmax
+!        initial values of the C pools
+         nsc=PARAMS(1,33)
+         Q_leaf=PARAMS(1,34)
+         Q_wood=PARAMS(1,35)
+         Q_root1=PARAMS(1,36)
+         Q_root2=PARAMS(1,37)
+         Q_root3=PARAMS(1,38)
+         Q_coarse=PARAMS(1,39)
+         Q_fine=PARAMS(1,40)
+         Q_micr=PARAMS(1,41)
+         Q_slow=PARAMS(1,42)
+         Q_pass=PARAMS(1,43)
+!         write(*,*)PARAMS,nsc,Q_pass
 
 !        soil field capacity and wilting point
          WILTPT=wsmin/100.0
@@ -370,18 +384,6 @@
          duration=0
          offset=0
          dormancy=1 
-!        initial values of the C pools
-         nsc=85.35
-         Q_leaf=230.86
-         Q_wood=8996.23
-         Q_root1=1001.16
-         Q_root2=501.3
-         Q_root3=128.57
-         Q_coarse=523.57
-         Q_fine=192.0
-         Q_micr=50.49
-         Q_slow=1502.14
-         Q_pass=260.43
 
          LAI=LAIMIN
          bmstem=Q_wood/0.45
