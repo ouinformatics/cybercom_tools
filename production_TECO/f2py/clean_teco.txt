@@ -1,0 +1,589 @@
+!    -*- f90 -*-
+! Note: the context of this file is case sensitive.
+
+python module clean_teco ! in 
+    interface  ! in :clean_teco
+        subroutine teco(parafile,out_d) ! in :clean_teco:clean_teco.f
+            character*150 intent(in) :: parafile
+            character*150 intent(in) :: out_d
+        end subroutine teco
+        subroutine consts(pi,taul,rhol,rhos,emleaf,emsoil,rconst,sigma,cpair,patm,trefk,h2olv0,airma,h2omw,chi,dheat,wleaf,gsw0,vcmx0,ejmx0,theta,conkc0,conko0,ekc,eko,o2ci,eavm,edvm,eajm,edjm,entrpy,gam0,gam1,gam2) ! in :clean_teco:clean_teco.f
+            real :: pi
+            real dimension(3) :: taul
+            real dimension(3) :: rhol
+            real dimension(3) :: rhos
+            real :: emleaf
+            real :: emsoil
+            real :: rconst
+            real :: sigma
+            real :: cpair
+            real :: patm
+            real :: trefk
+            real :: h2olv0
+            real :: airma
+            real :: h2omw
+            real :: chi
+            real :: dheat
+            real :: wleaf
+            real :: gsw0
+            real :: vcmx0
+            real :: ejmx0
+            real :: theta
+            real :: conkc0
+            real :: conko0
+            real :: ekc
+            real :: eko
+            real :: o2ci
+            real :: eavm
+            real :: edvm
+            real :: eajm
+            real :: edjm
+            real :: entrpy
+            real :: gam0
+            real :: gam1
+            real :: gam2
+        end subroutine consts
+        subroutine canopy(gpp,evap,transp,acanop,hcanop,e___outputs___fwsoil_er,topfws,wscontent,e___from_soil_model___lai_er,sps,doy,hour,radsol,tair,dair,eairp,e___from_climate_data_file_er,e_includ___windu0_er,rain,wethr,rnet,g,esoil,hcrop,ecstot,anet,tsoil,deph2o,wsmax,wsmin,e__constants_specific_to_soil_and_plant___lat_er,co2ca,a1,ds0,vcmx0,extku,xfang,alpha,stom_n,pi,taul,rhol,rhos,emleaf,emsoil,rconst,sigma,cpair,patm,trefk,h2olv0,airma,h2omw,chi,dheat,wleaf,gsw0,ejmx0,theta,conkc0,conko0,ekc,eko,o2ci,eavm,edvm,eajm,edjm,entrpy,gam0,gam1,gam2,tminv,tmaxv,toptv) ! in :clean_teco:clean_teco.f
+            real :: gpp
+            real :: evap
+            real :: transp
+            real :: acanop
+            real :: hcanop
+            real :: e___outputs___fwsoil_er
+            real :: topfws
+            real :: wscontent
+            real :: e___from_soil_model___lai_er
+            real :: sps
+            real :: doy
+            real :: hour
+            real :: radsol
+            real :: tair
+            real :: dair
+            real :: eairp
+            real :: e___from_climate_data_file_er
+            real :: e_includ___windu0_er
+            real :: rain
+            real :: wethr
+            real :: rnet
+            real :: g
+            real :: esoil
+            real :: hcrop
+            real :: ecstot
+            real :: anet
+            real :: tsoil
+            real :: deph2o
+            real :: wsmax
+            real :: wsmin
+            real :: e__constants_specific_to_soil_and_plant___lat_er
+            real :: co2ca
+            real :: a1
+            real :: ds0
+            real :: vcmx0
+            real :: extku
+            real :: xfang
+            real :: alpha
+            real :: stom_n
+            real :: pi
+            real dimension(3) :: taul
+            real dimension(3) :: rhol
+            real dimension(3) :: rhos
+            real :: emleaf
+            real :: emsoil
+            real :: rconst
+            real :: sigma
+            real :: cpair
+            real :: patm
+            real :: trefk
+            real :: h2olv0
+            real :: airma
+            real :: h2omw
+            real :: chi
+            real :: dheat
+            real :: wleaf
+            real :: gsw0
+            real :: ejmx0
+            real :: theta
+            real :: conkc0
+            real :: conko0
+            real :: ekc
+            real :: eko
+            real :: o2ci
+            real :: eavm
+            real :: edvm
+            real :: eajm
+            real :: edjm
+            real :: entrpy
+            real :: gam0
+            real :: gam1
+            real :: gam2
+            real :: tminv
+            real :: tmaxv
+            real :: toptv
+        end subroutine canopy
+        subroutine respiration(laimin,gpp,tair,tsoil,deph2o,lai,sla,bmstem,bmroot,bmleaf,stemsap,rootsap,nsc,fnsc,raleaf,rastem,raroot,rauto) ! in :clean_teco:clean_teco.f
+            real :: laimin
+            real :: gpp
+            real :: tair
+            real :: tsoil
+            real :: deph2o
+            real :: lai
+            real :: sla
+            real :: bmstem
+            real :: bmroot
+            real :: bmleaf
+            real :: stemsap
+            real :: rootsap
+            real :: nsc
+            real :: fnsc
+            real :: raleaf
+            real :: rastem
+            real :: raroot
+            real :: rauto
+        end subroutine respiration
+        subroutine plantgrowth(tair,tavg72,omega,glmax,grmax,gsmax,lai,laimax,laimin,sla,tau_l,bmleaf,bmroot,bmstem,bmplant,rootmax,stemmax,saps,sapr,stemsap,rootsap,storage,gdd5,stor_use,onset,accumulation,gddonset,sps,nsc,fnsc,nscmin,nscmax,store,add,l_fall,tcold,gamma_wmax,gamma_tmax,npp,alpha_l,alpha_w,alpha_r) ! in :clean_teco:clean_teco.f
+            real :: tair
+            real :: tavg72
+            real :: omega
+            real :: glmax
+            real :: grmax
+            real :: gsmax
+            real :: lai
+            real :: laimax
+            real :: laimin
+            real :: sla
+            real :: tau_l
+            real :: bmleaf
+            real :: bmroot
+            real :: bmstem
+            real :: bmplant
+            real :: rootmax
+            real :: stemmax
+            real :: saps
+            real :: sapr
+            real :: stemsap
+            real :: rootsap
+            real :: storage
+            real :: gdd5
+            real :: stor_use
+            integer :: onset
+            real :: accumulation
+            real :: gddonset
+            real :: sps
+            real :: nsc
+            real :: fnsc
+            real :: nscmin
+            real :: nscmax
+            real :: store
+            real :: add
+            real :: l_fall
+            real :: tcold
+            real :: gamma_wmax
+            real :: gamma_tmax
+            real :: npp
+            real :: alpha_l
+            real :: alpha_w
+            real :: alpha_r
+        end subroutine plantgrowth
+        subroutine tcs(tair,tsoil,omega,npp,alpha_l,alpha_w,alpha_r,l_fall,tau_l,tau_w,tau_r,tau_f,tau_c,tau_micr,tau_slow,tau_pass,q_leaf,q_wood,q_root,q_fine,q_coarse,q_micr,q_slow,q_pass,rh_f,rh_c,rh_micr,rh_slow,rh_pass) ! in :clean_teco:clean_teco.f
+            real :: tair
+            real :: tsoil
+            real :: omega
+            real :: npp
+            real :: alpha_l
+            real :: alpha_w
+            real :: alpha_r
+            real :: l_fall
+            real :: tau_l
+            real :: tau_w
+            real :: tau_r
+            real :: tau_f
+            real :: tau_c
+            real :: tau_micr
+            real :: tau_slow
+            real :: tau_pass
+            real :: q_leaf
+            real :: q_wood
+            real :: q_root
+            real :: q_fine
+            real :: q_coarse
+            real :: q_micr
+            real :: q_slow
+            real :: q_pass
+            real :: rh_f
+            real :: rh_c
+            real :: rh_micr
+            real :: rh_slow
+            real :: rh_pass
+        end subroutine tcs
+        subroutine xlayers(sps,tair,dair,radabv,g,esoil,fbeam,eairp,windu0,co2ca,fwsoil,flait,coszen,idoy,hours,taul,rhol,rhos,xfang,extkd,extku,wleaf,rconst,sigma,emleaf,emsoil,theta,a1,ds0,cpair,patm,trefk,h2olv0,airma,h2omw,dheat,gsw0,alpha,stom_n,vcmx0,ejmx0,conkc0,conko0,ekc,eko,o2ci,eavm,edvm,eajm,edjm,entrpy,gam0,gam1,gam2,extkb,rnst1,qcan1,acan1,ecan1,hcan1,gbwc1,gswc1,tleaf1,rnst2,qcan2,acan2,ecan2,hcan2,gbwc2,gswc2,tleaf2,rcan1,rcan2,rsoilabs,hsoil,rnstl,qcanl,rcanl,acanl,ecanl,hcanl,gbwcl,gswcl,tminv,tmaxv,toptv) ! in :clean_teco:clean_teco.f
+            real :: sps
+            real :: tair
+            real :: dair
+            real dimension(2) :: radabv
+            real :: g
+            real :: esoil
+            real :: fbeam
+            real :: eairp
+            real :: windu0
+            real :: co2ca
+            real :: fwsoil
+            real :: flait
+            real :: coszen
+            integer :: idoy
+            real :: hours
+            real dimension(3) :: taul
+            real dimension(3) :: rhol
+            real dimension(3) :: rhos
+            real :: xfang
+            real :: extkd
+            real :: extku
+            real :: wleaf
+            real :: rconst
+            real :: sigma
+            real :: emleaf
+            real :: emsoil
+            real :: theta
+            real :: a1
+            real :: ds0
+            real :: cpair
+            real :: patm
+            real :: trefk
+            real :: h2olv0
+            real :: airma
+            real :: h2omw
+            real :: dheat
+            real :: gsw0
+            real :: alpha
+            real :: stom_n
+            real :: vcmx0
+            real :: ejmx0
+            real :: conkc0
+            real :: conko0
+            real :: ekc
+            real :: eko
+            real :: o2ci
+            real :: eavm
+            real :: edvm
+            real :: eajm
+            real :: edjm
+            real :: entrpy
+            real :: gam0
+            real :: gam1
+            real :: gam2
+            real :: extkb
+            real :: rnst1
+            real :: qcan1
+            real :: acan1
+            real :: ecan1
+            real :: hcan1
+            real :: gbwc1
+            real :: gswc1
+            real :: tleaf1
+            real :: rnst2
+            real :: qcan2
+            real :: acan2
+            real :: ecan2
+            real :: hcan2
+            real :: gbwc2
+            real :: gswc2
+            real :: tleaf2
+            real :: rcan1
+            real :: rcan2
+            real :: rsoilabs
+            real :: hsoil
+            real dimension(5) :: rnstl
+            real dimension(5) :: qcanl
+            real dimension(5) :: rcanl
+            real dimension(5) :: acanl
+            real dimension(5) :: ecanl
+            real dimension(5) :: hcanl
+            real dimension(5) :: gbwcl
+            real dimension(5) :: gswcl
+            real :: tminv
+            real :: tmaxv
+            real :: toptv
+        end subroutine xlayers
+        subroutine goudriaan(flai,coszen,radabv,fbeam,reff,kpr,scatt,xfang,qabs) ! in :clean_teco:clean_teco.f
+            real :: flai
+            real :: coszen
+            real dimension(2) :: radabv
+            real :: fbeam
+            real dimension(3,2) :: reff
+            real dimension(3,2) :: kpr
+            real dimension(2) :: scatt
+            real :: xfang
+            real dimension(3,2) :: qabs
+        end subroutine goudriaan
+        subroutine radiso(flai,flait,qabs,extkd,tair,eairp,cpair,patm,fbeam,airma,rconst,sigma,emleaf,emsoil,emair,rnstar,grdn) ! in :clean_teco:clean_teco.f
+            real :: flai
+            real :: flait
+            real dimension(3,2) :: qabs
+            real :: extkd
+            real :: tair
+            real :: eairp
+            real :: cpair
+            real :: patm
+            real :: fbeam
+            real :: airma
+            real :: rconst
+            real :: sigma
+            real :: emleaf
+            real :: emsoil
+            real :: emair
+            real dimension(2) :: rnstar
+            real :: grdn
+        end subroutine radiso
+        subroutine agsean_day(sps,qabs,rnstar,grdn,windux,tair,dair,co2ca,wleaf,raero,theta,a1,ds0,fwsoil,idoy,hours,rconst,cpair,patm,trefk,h2olv0,airma,h2omw,dheat,gsw0,alpha,stom_n,vcmxx,ejmxx,conkc0,conko0,ekc,eko,o2ci,eavm,edvm,eajm,edjm,entrpy,gam0,gam1,gam2,aleaf,eleaf,hleaf,tleaf,gbleaf,gsleaf,co2ci,tminv,tmaxv,toptv) ! in :clean_teco:clean_teco.f
+            real :: sps
+            real dimension(3,2) :: qabs
+            real dimension(2) :: rnstar
+            real :: grdn
+            real :: windux
+            real :: tair
+            real :: dair
+            real :: co2ca
+            real :: wleaf
+            real :: raero
+            real :: theta
+            real :: a1
+            real :: ds0
+            real :: fwsoil
+            integer :: idoy
+            real :: hours
+            real :: rconst
+            real :: cpair
+            real :: patm
+            real :: trefk
+            real :: h2olv0
+            real :: airma
+            real :: h2omw
+            real :: dheat
+            real :: gsw0
+            real :: alpha
+            real :: stom_n
+            real :: vcmxx
+            real :: ejmxx
+            real :: conkc0
+            real :: conko0
+            real :: ekc
+            real :: eko
+            real :: o2ci
+            real :: eavm
+            real :: edvm
+            real :: eajm
+            real :: edjm
+            real :: entrpy
+            real :: gam0
+            real :: gam1
+            real :: gam2
+            real dimension(2) :: aleaf
+            real dimension(2) :: eleaf
+            real dimension(2) :: hleaf
+            real dimension(2) :: tleaf
+            real dimension(2) :: gbleaf
+            real dimension(2) :: gsleaf
+            real dimension(2) :: co2ci
+            real :: tminv
+            real :: tmaxv
+            real :: toptv
+        end subroutine agsean_day
+        subroutine agsean_ngt(sps,qabs,rnstar,grdn,windux,tair,dair,co2ca,wleaf,raero,theta,a1,ds0,fwsoil,idoy,hours,rconst,cpair,patm,trefk,h2olv0,airma,h2omw,dheat,gsw0,alpha,stom_n,vcmxx,ejmxx,conkc0,conko0,ekc,eko,o2ci,eavm,edvm,eajm,edjm,entrpy,gam0,gam1,gam2,aleaf,eleaf,hleaf,tleaf,gbleaf,gsleaf,co2ci) ! in :clean_teco:clean_teco.f
+            real :: sps
+            real dimension(3,2) :: qabs
+            real dimension(2) :: rnstar
+            real :: grdn
+            real :: windux
+            real :: tair
+            real :: dair
+            real :: co2ca
+            real :: wleaf
+            real :: raero
+            real :: theta
+            real :: a1
+            real :: ds0
+            real :: fwsoil
+            integer :: idoy
+            real :: hours
+            real :: rconst
+            real :: cpair
+            real :: patm
+            real :: trefk
+            real :: h2olv0
+            real :: airma
+            real :: h2omw
+            real :: dheat
+            real :: gsw0
+            real :: alpha
+            real :: stom_n
+            real :: vcmxx
+            real :: ejmxx
+            real :: conkc0
+            real :: conko0
+            real :: ekc
+            real :: eko
+            real :: o2ci
+            real :: eavm
+            real :: edvm
+            real :: eajm
+            real :: edjm
+            real :: entrpy
+            real :: gam0
+            real :: gam1
+            real :: gam2
+            real dimension(2) :: aleaf
+            real dimension(2) :: eleaf
+            real dimension(2) :: hleaf
+            real dimension(2) :: tleaf
+            real dimension(2) :: gbleaf
+            real dimension(2) :: gsleaf
+            real dimension(2) :: co2ci
+        end subroutine agsean_ngt
+        subroutine cianda(gma,bta,g0,x,rd,co2cs,gammas,ciquad,aquad) ! in :clean_teco:clean_teco.f
+            real :: gma
+            real :: bta
+            real :: g0
+            real :: x
+            real :: rd
+            real :: co2cs
+            real :: gammas
+            real :: ciquad
+            real :: aquad
+        end subroutine cianda
+        subroutine goud1(flait,coszen,radabv,fbeam,tair,eairp,emair,emsoil,emleaf,sigma,taul,rhol,rhos,xfang,extkb,extkd,reffbm,reffdf,extkbm,extkdm,qcan) ! in :clean_teco:clean_teco.f
+            real :: flait
+            real :: coszen
+            real dimension(3) :: radabv
+            real :: fbeam
+            real :: tair
+            real :: eairp
+            real :: emair
+            real :: emsoil
+            real :: emleaf
+            real :: sigma
+            real dimension(3) :: taul
+            real dimension(3) :: rhol
+            real dimension(3) :: rhos
+            real :: xfang
+            real :: extkb
+            real :: extkd
+            real dimension(3) :: reffbm
+            real dimension(3) :: reffdf
+            real dimension(3) :: extkbm
+            real dimension(3) :: extkdm
+            real dimension(3,2) :: qcan
+        end subroutine goud1
+        subroutine photosyn(sps,co2ca,co2csx,dleafx,tlkx,qaparx,gbcx,theta,a1,ds0,fwsoil,varqc,weighr,g0,alpha,vcmx1,ejmx1,weighj,conkc0,conko0,ekc,eko,o2ci,rconst,trefk,eavm,edvm,eajm,edjm,entrpy,gam0,gam1,gam2,aleafx,gscx,tminv,tmaxv,toptv) ! in :clean_teco:clean_teco.f
+            real :: sps
+            real :: co2ca
+            real :: co2csx
+            real :: dleafx
+            real :: tlkx
+            real :: qaparx
+            real :: gbcx
+            real :: theta
+            real :: a1
+            real :: ds0
+            real :: fwsoil
+            real :: varqc
+            real :: weighr
+            real :: g0
+            real :: alpha
+            real :: vcmx1
+            real :: ejmx1
+            real :: weighj
+            real :: conkc0
+            real :: conko0
+            real :: ekc
+            real :: eko
+            real :: o2ci
+            real :: rconst
+            real :: trefk
+            real :: eavm
+            real :: edvm
+            real :: eajm
+            real :: edjm
+            real :: entrpy
+            real :: gam0
+            real :: gam1
+            real :: gam2
+            real :: aleafx
+            real :: gscx
+            real :: tminv
+            real :: tmaxv
+            real :: toptv
+        end subroutine photosyn
+        function funej(alpha,ejmxt,qaparx) ! in :clean_teco:clean_teco.f
+            real :: alpha
+            real :: ejmxt
+            real :: qaparx
+            real :: funej
+        end function funej
+        function esat(t) ! in :clean_teco:clean_teco.f
+            real :: t
+            real :: esat
+        end function esat
+        function evapor(td,tw,patm) ! in :clean_teco:clean_teco.f
+            real :: td
+            real :: tw
+            real :: patm
+            real :: evapor
+        end function evapor
+        function vjmax(tk,trefk,vjmax0,eactiv,edeact,rconst,entrop) ! in :clean_teco:clean_teco.f
+            real :: tk
+            real :: trefk
+            real :: vjmax0
+            real :: eactiv
+            real :: edeact
+            real :: rconst
+            real :: entrop
+            real :: vjmax
+        end function vjmax
+        function fune(extkbd,flait) ! in :clean_teco:clean_teco.f
+            real :: extkbd
+            real :: flait
+            real :: fune
+        end function fune
+        function vjtemp(tlf,tminvj,tmaxvj,toptvj,vjmax0) ! in :clean_teco:clean_teco.f
+            real :: tlf
+            real :: tminvj
+            real :: tmaxvj
+            real :: toptvj
+            real :: vjmax0
+            real :: vjtemp
+        end function vjtemp
+        function fjqres(ejmx,alpha,q,theta) ! in :clean_teco:clean_teco.f
+            real :: ejmx
+            real :: alpha
+            real :: q
+            real :: theta
+            real :: fjqres
+        end function fjqres
+        function enzk(tk,trefk,enzk0,rconst,eactiv) ! in :clean_teco:clean_teco.f
+            real :: tk
+            real :: trefk
+            real :: enzk0
+            real :: rconst
+            real :: eactiv
+            real :: enzk
+        end function enzk
+        function sinbet(doy,lat,pi,timeh) ! in :clean_teco:clean_teco.f
+            real :: doy
+            real :: lat
+            real :: pi
+            real :: timeh
+            real :: sinbet
+        end function sinbet
+        subroutine yrday(doy,hour,lat,radsol,fbeam) ! in :clean_teco:clean_teco.f
+            real :: doy
+            real :: hour
+            real :: lat
+            real :: radsol
+            real :: fbeam
+        end subroutine yrday
+        subroutine init_random_seed ! in :clean_teco:clean_teco.f
+        end subroutine init_random_seed
+    end interface 
+end python module clean_teco
+
+! This file was auto-generated with f2py (version:2).
+! See http://cens.ioc.ee/projects/f2py2e/
