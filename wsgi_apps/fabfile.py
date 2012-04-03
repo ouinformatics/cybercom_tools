@@ -134,6 +134,7 @@ def upgrade_requirements():
     """ 
     Install the contents of requirements.txt to the virtual environment 
     """
+    put('requirements.txt', '%(path)s/requirements.txt' % env)
     check = exists('%(path)s/requirements.txt' % env)
     if check:
         virtualenv('pip install --upgrade -E %(virtpy)s -r %(path)s/requirements.txt' % env)

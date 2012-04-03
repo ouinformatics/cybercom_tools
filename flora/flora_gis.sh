@@ -1,0 +1,1 @@
+mongoexport -h fire.rccc.ou.edu -d flora -c data --csv -f REF_NO,Latitude_N_edge,Latitude_S_edge,Longitude_E_edge,Longitude_W_edge | sed 's/Latitude_N_edge/latitudenedge/g;s/Latitude_S_edge/latitudesedge/g;s/Longitude_E_edge/longitudeeedge/g;s/Longitude_W_edge/longitudewedge/g' > floras.csv
