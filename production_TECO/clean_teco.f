@@ -73,7 +73,8 @@
        real,dimension(5):: Gaussx,Gaussw,Gaussw_cum 
 !      parameters to tune
        real,dimension(32):: randnums	! added by myself
-       real,dimension(1,43):: params	! Adjusted from 32  to 43 to account for Carbon Pools(Mark Stacy) 
+       real,dimension(1,45):: params	! Adjusted from 32  to 43 to account for Carbon Pools(Mark Stacy)
+       real S_w_min,Q10_h !Added to set from input parameters (Mark Stacy) Adjust to 45 added two params
 !      for phenology
        real LAI,bmroot,bmstem,bmleaf,bmplant
        real SLA,L_fall,L_add,litter,seeds
@@ -365,6 +366,8 @@
          Q_micr=PARAMS(1,41)
          Q_slow=PARAMS(1,42)
          Q_pass=PARAMS(1,43)
+         S_w_min=PARAMS(1,44)
+         Q10_h=PARAMS(1,45)
 !         write(*,*)PARAMS,nsc,Q_pass
 
 !        soil field capacity and wilting point
@@ -555,7 +558,7 @@
      &           tau_F,tau_C,tau_Micr,tau_Slow,tau_Pass,
      &           Q_leaf,Q_wood,Q_root,
      &           Q_fine,Q_coarse,Q_Micr,Q_Slow,Q_Pass,
-     &           Rh_f,Rh_c,Rh_Micr,Rh_Slow,Rh_Pass)
+     &           Rh_f,Rh_c,Rh_Micr,Rh_Slow,Rh_Pass,S_w_min,Q10_h)
 
                Rhetero=Rh_f + Rh_c + Rh_Micr + Rh_Slow + Rh_Pass
                NEE=Rauto+Rhetero - GPP
@@ -1294,7 +1297,7 @@ c============================================================================
      &   tau_F,tau_C,tau_Micr,tau_Slow,tau_Pass,
      &   Q_leaf,Q_wood,Q_root,
      &   Q_fine,Q_coarse,Q_Micr,Q_Slow,Q_Pass,
-     &   Rh_f,Rh_c,Rh_Micr,Rh_Slow,Rh_Pass)
+     &   Rh_f,Rh_c,Rh_Micr,Rh_Slow,Rh_Pass,S_w_min,Q10_h)
        implicit none
        real NPP,NPP_L,NPP_W,NPP_R
        real L_fall,L_add,LAI,SLA
@@ -1331,7 +1334,8 @@ c============================================================================
        integer day,week,month,year
 
 !      calculating soil scaling factors, S_omega and S_tmperature
-       S_w_min=0.5 !minimum decomposition rate at zero soil moisture
+!       write(*,*)S_w_min
+!       S_w_min=0.5 !minimum decomposition rate at zero soil moisture
        S_omega=S_w_min + (1.-S_w_min)*amin1(1.0,2.0*omega)
        S_t=1.5-1./(1.+19.*exp(-0.15*(Tsoil-15.0)))
 
@@ -1341,7 +1345,9 @@ c============================================================================
        NPP_R=alpha_R*NPP
 
 !      new 10-07-2009 weng
-       Q10_h=2.2
+!       Q10_h=2.2
+!       write(*,*)Q10_h
+!       write(*,*)params
        S_t=Q10_h**((Tsoil-25.)*0.1)
        Out_leaf=L_fall
        Out_wood=Q_wood/tau_W    * S_T*S_omega
