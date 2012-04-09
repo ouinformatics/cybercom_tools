@@ -2179,6 +2179,7 @@ c============================================================================
        real function EnzK(Tk,Trefk,EnzK0,Rconst,Eactiv)
 
        temp1=(Eactiv/(Rconst* Trefk))*(1.-Trefk/Tk)
+       EnzK=EnzK0*EXP((Eactiv/(Rconst*Trefk))*(1.-Trefk/Tk))
        return
        end
 
