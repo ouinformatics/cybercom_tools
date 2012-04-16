@@ -1,0 +1,215 @@
+Model:  TECO
+name:  TECO Model Result File
+variables:
+    - name: year
+      label: Year
+      unit: year
+      code_variable: year
+    - name: doy
+      label: Day of Year
+      unit: day
+      code_variable: doy 
+    - name: hour
+      label: Hour
+      unit: hour
+      code_variable: hour
+    - name: carbon_Leaf
+      label: Carbon Leaf
+      unit: kg C/m2
+      code_variable: NA_L   
+    - name: carbon_Wood
+      label: Carbon Wood
+      unit: kg C/m2
+      code_variable: NA_W
+    - name: carbon_Root
+      label: Carbon Root
+      unit: kg C/m2
+      code_variable: NA_R
+    - name: carbon_Flitter
+      label: Carbon Flitter
+      unit: kg C/m2
+      code_variable: NA_F
+    - name: carbon_Clitter
+      label: Carbon Clitter
+      unit: kg C/m2
+      code_variable: NA_C
+    - name: SOM_Miro
+      label: SOM Micro
+      unit: kg C/m2
+      code_variable: NA_Micr
+    - name: SOM_SLOW
+      label: SOM SLOW
+      unit: kg C/m2
+      code_variable: NA_slow
+    - name: SOM_Pass
+      label: SOM Pass
+      unit: kg C/m2
+      code_variable: NA_pass
+    - name: carbon_canopy
+      label: Carbon Canopy
+      unit: kg C/m2
+      code_variable: NA_can
+    - name: carbon_biomass
+      label: Carbon Biomass
+      unit: kg C/m2
+      code_variable: NA_BM
+    - name: carbon_soil
+      label: Carbon Soil
+      unit: kg C/m2
+      code_variable: NA_S
+    - name: gpp
+      label: GPP
+      unit: kg C/m2/s
+      code_variable: NA_GPP
+    - name: npp
+      label: NPP
+      unit: kg C/m2/s
+      code_variable: NA_NPP
+    - name: nee_simulate
+      label: NEE Simulate
+      unit: kg C/m2/s
+      code_variable: NA_NEE
+    - name: nee_observed
+      label: NEE Observed
+      unit: kg C/m2/s
+      code_variable: NA_obs
+    - name: resp_auto
+      label: Respiration Auto
+      unit: kg C/m2/s
+      code_variable: NA_Ra
+    - name: resp_hetero
+      label: Respiration Hetero
+      unit: kg C/m2/s
+      code_variable: NA_Rh
+    - name: resp_tot
+      label: Respiration Total
+      unit: kg C/m2/s
+      code_variable: NA_Rt
+    - name: ET
+      label: Evapotranspiration
+      unit: mm/m2/h
+      code_variable: NA_ET
+    - name: Transpiration
+      label: Transpiration
+      unit: mm/m2/h
+      code_variable: NA_TR
+    - name: Runoff
+      label: Runoff
+      unit: mm/m2/h
+      code_variable: NA_Run
+    - name: LatentHeat
+      label: Latent Heat
+      unit: W/m2
+      code_variable: Qle
+    - name: LAI
+      label: Leaf Area Index
+      unit: m2/m2
+      code_variable: LAI
+    - name: RootMoist
+      label: Root Moisture
+      unit: mm
+      code_variable: WaterR
+    - name: SoilWater
+      label: Soil Water Content
+      unit: ratio (m/m)
+      code_variable: wscontent
+    - name: soilwater_1
+      label: Soil Moisture Layer 1
+      unit: mm/m2
+      code_variable: WaterS(k)
+    - name: soilwater_2
+      label: Soil Moisture Layer 2
+      unit: mm/m2
+      code_variable: WaterS(k)
+    - name: soilwater_3
+      label: Soil Moisture Layer 3
+      unit: mm/m2
+      code_variable: WaterS(k)
+    - name: soilwater_4
+      label: Soil Moisture Layer 4
+      unit: mm/m2
+      code_variable: WaterS(k)
+    - name: soilwater_5
+      label: Soil Moisture Layer 5
+      unit: mm/m2
+      code_variable: WaterS(k)
+    - name: soilwater_6
+      label: Soil Moisture Layer 6
+      unit: mm/m2
+      code_variable: WaterS(k)
+    - name: soilwater_7
+      label: Soil Moisture Layer 7
+      unit: mm/m2
+      code_variable: WaterS(k)
+    - name: soilwater_8
+      label: Soil Moisture Layer 8
+      unit: mm/m2
+      code_variable: WaterS(k)
+    - name: soilwater_9
+      label: Soil Moisture Layer 9
+      unit: mm/m2
+      code_variable: WaterS(k)
+    - name: soilwater_10
+      label: Soil Moisture Layer 10
+      unit: mm/m2
+      code_variable: WaterS(k)
+    - name: satfrac_1
+      label: Saturation Fraction Layer 1
+      unit: ratio (mm/mm)
+      code_variable: SatFracL(k)
+    - name: satfrac_2
+      label: Saturation Fraction Layer 2
+      unit: ratio (mm/mm)
+      code_variable: SatFracL(k)
+    - name: satfrac_3
+      label: Saturation Fraction Layer 3
+      unit: ratio (mm/mm)
+      code_variable: SatFracL(k)
+    - name: satfrac_4
+      label: Saturation Fraction Layer 4
+      unit: ratio (mm/mm)
+      code_variable: SatFracL(k)
+    - name: satfrac_5
+      label: Saturation Fraction Layer 5
+      unit: ratio (mm/mm)
+      code_variable: SatFracL(k)
+    - name: satfrac_6
+      label: Saturation Fraction Layer 6
+      unit: ratio (mm/mm)
+      code_variable: SatFracL(k)
+    - name: satfrac_7
+      label: Saturation Fraction Layer 7
+      unit: ratio (mm/mm)
+      code_variable: SatFracL(k)
+    - name: satfrac_8
+      label: Saturation Fraction Layer 8
+      unit: ratio (mm/mm)
+      code_variable: SatFracL(k)
+    - name: satfrac_9
+      label: Saturation Fraction Layer 9
+      unit: ratio (mm/mm)
+      code_variable: SatFracL(k)
+    - name: satfrac_10
+      label: Saturation Fraction Layer 10
+      unit: ratio (mm/mm)
+      code_variable: SatFracL(k)
+    - name: CO2concentration
+      label: CO2 Concentration
+      unit: ppm
+      code_variable: CO2ca
+    - name: AirSpecificHumudity
+      label: Air Specific Humidity
+      unit: kg/kg
+      code_variable: Qair
+    - name: rain_div_3600
+      label: Rain
+      unit: kg/m2/s
+      code_variable: rain
+    - name: scale_sw
+      label: Global Radiation
+      unit: W/m2
+      code_variable: radsol
+    - name: TairPlus273_15
+      label: Air Temperature
+      unit: K
+      code_variable: Tair
