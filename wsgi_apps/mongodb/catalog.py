@@ -29,7 +29,7 @@ class Root(object):
     def __init__(self,mongoHost='fire.rccc.ou.edu',port=27017,database='cybercom_queue',collection='task_log'):
         self.mongo = mdb_model.mongo_catalog()
     @cherrypy.expose
-    def data(self,db=None,col=None,query={},record=1,page=1,nPerpage=500, **kwargs):
+    def data(self,db=None,col=None,query={},record=1,page=1,nPerpage=100, **kwargs):
         fname='data'
         if not db:
             res= self.mongo.getdatabase()
@@ -63,7 +63,8 @@ class Root(object):
             limit=1
             serialized=''
             cur = self.mongo.getDoc(db,col,query,skip,limit)#.skip(int(record)-1).limit(1)
-        nameSpace = dict(database=db,collection=col,data=cur,baseurl=cherrypy.url('/')[:-1],serial=serialized,FName=fname,prev=prev,next=next)
+        info = self.mongo.getInfo(db,col,query,skip,limit)
+        nameSpace = dict(database=db,collection=col,data=cur,baseurl=cherrypy.url('/')[:-1],serial=serialized,FName=fname,prev=prev,next=next,rec_info=info)
         t = Template(file = templatepath + '/data.tmpl', searchList=[nameSpace])
         return t.respond()
     @cherrypy.expose
@@ -81,6 +82,13 @@ class Root(object):
                 return str(inst)
         else:
             return 'Error: Save only accepts posts'
+    @cherrypy.expose
+    @mimetype('application/json')
+    def getIndexes(self,database,collection):
+        indx = self.mongo.getIndexes(database,collection)
+        #cherrypy.response.headers['Content-Type'] = 'application/json'
+        return json.dumps([indx], default = handler, sort_keys=True, indent=4)
+        #pass#self.mongo
 cherrypy.tree.mount(Root())
 application = cherrypy.tree
 

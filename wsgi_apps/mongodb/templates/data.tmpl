@@ -44,12 +44,29 @@ cheetahVarStartToken = @
         #end for
     </div>
  #else
-  Views:
-   <a href='../1/'>FORM</a></td></tr> </table>
-  <pre   style="word-wrap: break-word; white-space: pre-wrap;">
+  @rec_info['startRecord'] - @rec_info['endRecord'] Records of @rec_info['totalRecords']</br>
+  <button type="button" onclick="javascript:alert(getRecordsNeedSave());">Show JSON</button> 
+  </td></tr> </table>
+ <!-- Views:
+   <a href='../1/'>FORM</a></td></tr> </table>-->
+ <!-- <pre   style="word-wrap: break-word; white-space: pre-wrap;">
     <div class="edit">
-  @serial
+  serial
     </div>
   </pre>
+    <script>
+       $(function(){  
+        //var str_json = serial;
+        $('#json_editor').html('');
+        json_editor('json_editor', 'serial' );
+        // add the jquery editing magic
+        apply_editlets();
+       });
+    </script>-->
+  <textarea id="jsoninput" rows="35" cols="24">@serial</textarea>
+  <div id="editarea" class="rounded">
+    <strong>Database:</strong> @database <strong>Collection:</strong> @collection <strong>Records:</strong> @rec_info['startRecord'] - @rec_info['endRecord'] of @rec_info['totalRecords']
+    <div id="json_editor" data-role="myjson"></div>
+  </div>
  #end if
 #end def

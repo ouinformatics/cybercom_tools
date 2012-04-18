@@ -20,7 +20,7 @@ _RE_TYPE = type(re.compile("foo"))
 
 def handler(obj):
     if isinstance(obj, ObjectId):
-        return {"$oid": str(obj)}
+        return str(obj) #{"$oid": str(obj)}
     if isinstance(obj, DBRef):
         return obj.as_doc()
     if isinstance(obj, datetime.datetime):
