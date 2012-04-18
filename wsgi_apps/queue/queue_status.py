@@ -62,7 +62,7 @@ def mimetype(type):
     return decorate
 
 class Root(object):
-    def __init__(self,mongoHost='fire.rccc.ou.edu',port=27017,database='cybercom_queue',collection='task_log'):
+    def __init__(self,mongoHost='localhost',port=27017,database='cybercom_queue',collection='task_log'):
         self.db = Connection(mongoHost,port)#[database]
         self.database = database
         self.collection = collection
