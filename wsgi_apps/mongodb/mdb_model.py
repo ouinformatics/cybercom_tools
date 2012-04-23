@@ -23,6 +23,21 @@ class mongo_catalog():
         return self.dbcon.database_names()
     def getcollections(self,database):
         return self.dbcon[database].collection_names()
+    def getInfo(self,db,collection,query=None,skip=0,limit=0):
+        info={}
+        if query:
+            query = ast.literal_eval(query)
+            info['totalRecords']=self.dbcon[db][collection].find(**query).count()
+        else:
+            info['totalRecords']=self.dbcon[db][collection].find().count()
+        if info['totalRecords'] > skip + limit:
+            info['startRecord']=skip + 1
+            info['endRecord']=skip + limit
+        else:
+            info['startRecord']=skip + 1
+            info['endRecord']=info['totalRecords']
+        return info
+
     def getDoc(self,db,collection,query=None,skip=0,limit=0):
         #return self.db.collection_names()
         if query:
@@ -36,6 +51,8 @@ class mongo_catalog():
         if document['_id']:
             document['_id']=ObjectId(document['_id'])
         return self.dbcon[db][collection].save(document)
+    def getIndexes(self,database,collection):
+            return self.dbcon[database][collection].index_information()
     def getID_timestamp(self,id,type='iso_string'):
         if type == 'iso_string':
             try:

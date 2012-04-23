@@ -94,8 +94,10 @@ class base_html(Template):
 <script type="text/javascript" src="http://static.cybercommons.org/js/jquery.form.js"></script>
 <script type="text/javascript" src="http://static.cybercommons.org/js/jquery.jeditable.mini.js"></script>
 <link type="text/css" href="http://static.cybercommons.org/css/cybercomui/jquery-ui-1.8.13.custom.css" rel="Stylesheet"/>
-<link type="text/css" rel="stylesheet" href="http://static.cybercommons.org/css/bootstrp/bootstrap.min.css"/>
 <link type="text/css" href="http://static.cybercommons.org/css/cybercom/style.css" rel="Stylesheet"/>
+<link type="text/css" href="http://static.cybercommons.org/mstacy/json.css" rel="Stylesheet"/>
+<script type="text/javascript" src="http://static.cybercommons.org/mstacy/json.js"></script>
+<script type="text/javascript" src="http://static.cybercommons.org/mstacy/jquery.contextMenu.js"></script>
 <script>
 $(document).ready(function() { 
     var options = { 
@@ -129,7 +131,8 @@ $(document).ready(function() {
 </body>
 </html>
 ''')
-        
+#<link type="text/css" rel="stylesheet" href="http://static.cybercommons.org/css/bootstrp/bootstrap.min.css"/>
+#        
         ########################################
         ## END - generated method body
         

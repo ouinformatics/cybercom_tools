@@ -30,7 +30,7 @@ def mimetype(type):
     return decorate
 
 class Root(object):
-    def __init__(self,mongoHost='fire.rccc.ou.edu',port=27017,database='teco',collection='forcing'):
+    def __init__(self,mongoHost='localhost',port=27017,database='teco',collection='forcing'):
         self.db = Connection(mongoHost,port)#[database]
         self.database = database
         self.collection = collection
@@ -68,7 +68,7 @@ class Root(object):
         col2 =['GRmax','Gsmax','stom_n','a1','Ds0','Vcmx0','extkU','xfang','alpha','co2ca','Tau_Leaf','Tau_Wood','Tau_Root']
         col3=['Tau_F','Tau_C','Tau_Micro','Tau_SlowSOM','Tau_Passive','TminV','TmaxV','ToptV','Tcold','Gamma_Wmax','Gamma_Tmax']
         hidden=['site','inputfile','NEEfile','outputfile','lat','Longitude']
-        carboncol=['nsc','Q_leaf','Q_wood','Q_root1','Q_root2','Q_root3','Q_coarse','Q_fine','Q_micr','Q_slow','Q_pass']
+        carboncol=['nsc','Q_leaf','Q_wood','Q_root1','Q_root2','Q_root3','Q_coarse','Q_fine','Q_micr','Q_slow','Q_pass','S_w_min','Q10_h']
         #    'vegtype','GRmax','LAIMAX','co2ca','Tau_Leaf','Ds0','extkU','wsmax']
         #col2=['SapR','SapS','Vcmx0','wsmin','stom_n','Gsmax','Tau_Micro','Longitude','xfang','a1',
         #    'Rootmax','lat','alpha','SLA','Tau_F','Tau_C','Tau_Root','gddonset','Tau_SlowSOM','_id','inputfile']
