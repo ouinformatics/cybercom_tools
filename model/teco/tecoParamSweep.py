@@ -30,8 +30,8 @@ for row in output:
     if not tresult.count() == 0:
         resb = pickle.loads(tresult[0]['result'].encode())
         row['tecoresult_task_id']=resb['task_id']
-print output
-# mod_weather is a dictionary, acceptable parameters T_air, Q_air, Wind_speed,Precip, Pressure, R_global_in, R_longwave_in, CO2
+print json.dumps(output)
+# mod_oeather is a dictionary, acceptable parameters T_air, Q_air, Wind_speed,Precip, Pressure, R_global_in, R_longwave_in, CO2
 # accepts a list of tuples [(operator,value)]
 # Operators add, multiply, subtract, divide, * , - , /  
 # + does not work for some reason.Correction + does work but report removes from paramters
