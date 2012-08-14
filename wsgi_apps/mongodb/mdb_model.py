@@ -16,7 +16,7 @@ class mongo_catalog():
         #SECONDARY
         #pymongo.ReadPreference= readpreference
         #self.dbconn = Connection(config.get('database','host'))
-        self.dbcon = Connection()#config.get('database','host'),replicaset=config.get('database','replica_set'))#,read_preference=0)
+        self.dbcon = Connection('129.15.41.76')#config.get('database','host'),replicaset=config.get('database','replica_set'))#,read_preference=0)
         #self.db= self.dbconn[config.get('catalog','database')]
         self.dbcon.read_preference = ReadPreference.SECONDARY
     def getdatabase(self, **kwargs):
@@ -24,7 +24,7 @@ class mongo_catalog():
     def getcollections(self,database):
         return self.dbcon[database].collection_names()
     def getInfo(self,db,collection,query=None,skip=0,limit=0):
-        info={}
+        info = {}
         if query:
             query = ast.literal_eval(query)
             info['totalRecords']=self.dbcon[db][collection].find(**query).count()
@@ -36,6 +36,7 @@ class mongo_catalog():
         else:
             info['startRecord']=skip + 1
             info['endRecord']=info['totalRecords']
+        info['totalCollection']=self.dbcon[db][collection].find().count()
         return info
 
     def getDoc(self,db,collection,query=None,skip=0,limit=0):
@@ -53,6 +54,21 @@ class mongo_catalog():
         return self.dbcon[db][collection].save(document)
     def getIndexes(self,database,collection):
             return self.dbcon[database][collection].index_information()
+    def getkeys(self,database,collection,popID=True):
+        col=database + "." + collection  #+ ".Keys"
+        cur = self.dbcon['mongoSchema'][col].find({'value.type':{'$nin':['function','object']}})#{'$ne':'function'}})
+        cur1= self.dbcon['mongoSchema'][col].find({'value.type':{'$nin':['function']}})
+        out=[]
+        for row in cur:
+            if not (row['_id']['key']=='_id' and popID):
+                out.append(row['_id']['key'])
+        cols=[]
+        for row in cur1:
+            if not (row['_id']['key']=='_id' and popID):
+                cols.append(row['_id']['key'])
+        out.sort()
+        cols.sort()
+        return out,cols
     def getID_timestamp(self,id,type='iso_string'):
         if type == 'iso_string':
             try:

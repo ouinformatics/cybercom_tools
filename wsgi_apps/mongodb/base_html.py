@@ -98,6 +98,15 @@ class base_html(Template):
 <link type="text/css" href="http://static.cybercommons.org/mstacy/json.css" rel="Stylesheet"/>
 <script type="text/javascript" src="http://static.cybercommons.org/mstacy/json.js"></script>
 <script type="text/javascript" src="http://static.cybercommons.org/mstacy/jquery.contextMenu.js"></script>
+<script type="text/javascript" src="http://static.cybercommons.org/mstacy/flaviusmatis-simplePagination.js-c86400c/jquery.simplePagination.js"></script>
+<link rel="stylesheet" src="http://static.cybercommons.org/mstacy/flaviusmatis-simplePagination.js-c86400c/simplePagination.css"></script>
+<style>
+    #feedback { font-size: 1.4em; }
+    #selectable .ui-selecting { background: #E7E1D3; }
+    #selectable .ui-selected { background: #005C81; color: white; }
+    #selectable { list-style-type: none; margin: 0; padding: 0; width: 90%; }
+    #selectable li { margin: 1px; padding: 0.2em; }
+</style>
 <script>
 $(document).ready(function() { 
     var options = { 
@@ -115,7 +124,35 @@ $(document).ready(function() {
         // $.ajax options can be used here too, for example: 
         //timeout:   3000 
     }; 
- 
+    //Field Dialog
+        $( \'#field-dialog\' ).dialog({
+            autoOpen: false,
+           // width:500,
+            async:true,
+            title:"Select Fields",
+           // height:795,
+            modal: true,
+            buttons: {
+                Ok: function() {
+                    $(\'#field-dialog\').dialog(\'close\');
+                }
+            }
+        });
+    $( \'#query\' ).button();
+    $( \'#export\' ).button();
+    $( \'#fopener\' ).button();
+    $( \'#fopener\' ).click(function() {
+       $(\'#field-dialog\').dialog(\'open\');
+    });
+    $(\'#field-dialog\').bind(\'dialogclose\', function(event) {
+       //Include All Fields
+        var result = $( "#rst_fields" ).empty();
+        $( ".ui-selected","#selectable").each(function() {
+            result.append("\'" + $(this).text() + "\'," );
+        });
+    });
+    //$(\'#accordion\' ).accordion(); 
+    $( \'#selectable\' ).selectable();
     // bind form using \'ajaxForm\' 
     $(\'.catform\').ajaxForm(options); 
     $(\'.edit\').editable(\'http://production.cybercommons.org/mongodb/save/\');
