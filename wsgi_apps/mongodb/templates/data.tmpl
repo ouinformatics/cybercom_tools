@@ -6,8 +6,8 @@ cheetahVarStartToken = @
 #def body
 <table class="form-horizontal">
 <tr><td style="width:10%"><a href='@baseurl/@FName/'>Database</a></td><td>@database</td></tr>
-<tr><td><a href='@baseurl/@FName/@database/'>Collection</a></td><td>@collection</td></tr>
-<tr><td>Record</td><td>
+<tr><td><a href='@baseurl/@FName/@database/'>Collection</a></td><td>@collection (@rec_info['totalCollection'] Documents)</td></tr>
+<tr><td>Filter</td><td>
  #if @data != ''
    Views:   
    <a href='../json/'>JSON</a></td></tr></table>
@@ -44,9 +44,117 @@ cheetahVarStartToken = @
         #end for
     </div>
  #else
-  @rec_info['startRecord'] - @rec_info['endRecord'] Records of @rec_info['totalRecords']</br>
-  <button type="button" onclick="javascript:alert(getRecordsNeedSave());">Show JSON</button> 
+ <!-- @rec_info['startRecord'] - @rec_info['endRecord'] Records of @rec_info['totalRecords']</br>-->
+ <!-- <button type="button" onclick="javascript:alert(getRecordsNeedSave());">Show JSON needs Save</button></br>-->
+  <strong>Filter :</strong> <select id="keys1">
+    #for @filterk in @key
+        <option value="@filterk">@filterk</option>
+    #end for 
+    </select><select id="val1"></select>
+    <button id="fopener" type="button">Select Fields Result Set</button>
+    <div id='rst_filter'></div><div id='rst_fields'>
+            #for @filterk in @key
+                '@filterk',
+            #end for
+        </div>
+    <div id="field-dialog">
+        Select Fields to display in query
+        <ol id="selectable">
+            #for @filterk in @qkey
+            <li class="ui-widget-content ui-selected">@filterk</li>
+            #end for
+        </ol>
+    </div>
+    <!--<div class="btn-group" data-toggle="buttons-checkbox">
+        #for @filterk in @qkey
+        <button class="btn">@filterk</button>
+        #end for
+    </div>-->
+    <button id="query" type="button">Query</button>
+    <button id="export" type="button">Export Data as CSV</button>
+    <!--<div id="accContain" style="float:right;clear:both;width:500px;">
+        <h3><a href="#">Export Data</a></h3>
+         <ul>
+            <li><a href="#">Export as CSV</a></li>
+         </ul>
+    </div>-->
   </td></tr> </table>
+<script>
+    function load_distinct(){
+        
+        $("#val1")
+            .find('option')
+            .remove()
+            .end();
+        var url = "http://test.cybercommons.org/mongo/distinct/@database/@collection/" + $('#keys1').val() + "/{}/";
+        $.getJSON(url,function(data){
+             data.sort();
+             $.each(data, function(key,value) {  
+                    //alert(value); 
+                    $('#val1')
+                        .append($("<option></option>")
+                        .attr("value",value)
+                        .text(value)); 
+                });
+        });
+    }
+    $('#keys1').change( function(){
+        $('#rst_filter' ).html('');
+        load_distinct();    
+        $('#rst_filter' ).html('');
+    });
+    $('#val1').change( function(){
+        $('#rst_filter' ).html( $('#keys1').val() + " : " + $('#val1').val() );
+        //var url ="http://production.cybercommons.org/mongodb/data/@database/@collection/{'spec':{'" + $('#keys1').val() + "':'" + $('#val1').val() + "'}}/json/1/100"
+        //window.location.href = url; 
+
+    });
+    $('#query').click( function(){
+        //var url ="http://production.cybercommons.org/mongodb/data/@database/@collection/{'spec':{'" + $('#keys1').val() + "':'" + $('#val1').val() + "'},'fields':[" + $('#rst_fields' ).text() + "]}/json/1/100"
+        //window.location.href = url;
+        var url ="/mongodb/json_data/@database/@collection/{'spec':{'"  + $('#keys1').val() + "':'" + $('#val1').val() + "'},'fields':[" + $('#rst_fields' ).text() + "]}/"
+        $.getJSON(url,function(data){
+            $('#jsoninput').val(JSON.stringify(data[0]['data']));
+            var info = data[0]['info']
+            $('#info').html('<strong>Documents : </strong> ' + info['startRecord'] + ' - ' + info['endRecord'] + ' of ' + info['totalRecords']);
+            $('#json_editor').html('');
+            json_editor('json_editor',$('#jsoninput').val());
+            $('#Page').pagination({
+                items: info['totalRecords'],
+                itemsOnPage: info['endRecord'] - info['startRecord'],
+                cssStyle: 'light-theme'
+            });
+        });
+        //window.location.href = url;
+    });
+    function setdata(url){
+        $.getJSON(url,function(data){
+            $('#jsoninput').val(JSON.stringify(data[0]['data']));
+            var info = data[0]['info']
+            $('#info').html('<strong>Documents : </strong> ' + info['startRecord'] + ' - ' + info['endRecord'] + ' of ' + info['totalRecords']);
+            $('#json_editor').html('');
+            json_editor('json_editor',$('#jsoninput').val());
+            $('#Page').pagination({
+                items: info['totalRecords'],
+                itemsOnPage: info['endRecord'] - info['startRecord'],
+                cssStyle: 'light-theme'
+            });
+        });
+    }
+    $('#export').click( function(){
+     var pathArray = window.location.pathname.split('/');
+     var ind =  jQuery.inArray("@collection",pathArray) + 1;
+     url="http://production.cybercommons.org/mongo/db_find/@database/@collection/{'spec':{'" + $('#keys1').val() + "':'" + $('#val1').val() + "'},'fields':[" + $('#rst_fields' ).text() + "]}/?outtype=csv";//" // + pathArray[ind] + "/?outtype=csv";
+     window.open(url);
+    });
+    $('#rst_filter' ).html( $('#keys1').val() + " : " + $('#val1').val() );
+   
+    $('#Page').pagination({
+        items: @rec_info['totalRecords'],
+        itemsOnPage: @rec_info['endRecord'] - @rec_info['startRecord'],
+        cssStyle: 'light-theme'
+    });
+</script>
  <!-- Views:
    <a href='../1/'>FORM</a></td></tr> </table>-->
  <!-- <pre   style="word-wrap: break-word; white-space: pre-wrap;">
@@ -63,9 +171,10 @@ cheetahVarStartToken = @
         apply_editlets();
        });
     </script>-->
-  <textarea id="jsoninput" rows="35" cols="24">@serial</textarea>
-  <div id="editarea" class="rounded">
-    <strong>Database:</strong> @database <strong>Collection:</strong> @collection <strong>Records:</strong> @rec_info['startRecord'] - @rec_info['endRecord'] of @rec_info['totalRecords']
+    <textarea id="jsoninput" rows="35" cols="24">@serial</textarea>
+    <div id="editarea" class="rounded">
+    <div> <strong>Database:</strong> @database <strong>Collection:</strong> @collection</div> <div id='info'><strong>Documents:</strong> @rec_info['startRecord'] - @rec_info['endRecord'] of @rec_info['totalRecords']</div>
+    <div class="pagination-holder clearfix" id="Page"></div>
     <div id="json_editor" data-role="myjson"></div>
   </div>
  #end if

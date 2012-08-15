@@ -63,10 +63,27 @@ class Root(object):
             limit=1
             serialized=''
             cur = self.mongo.getDoc(db,col,query,skip,limit)#.skip(int(record)-1).limit(1)
+        keys,qcols=self.mongo.getkeys(db,col)
+        if not keys:
+            keys=[]
+        if not qcols:
+            qcols=[]
         info = self.mongo.getInfo(db,col,query,skip,limit)
-        nameSpace = dict(database=db,collection=col,data=cur,baseurl=cherrypy.url('/')[:-1],serial=serialized,FName=fname,prev=prev,next=next,rec_info=info)
+        nameSpace = dict(database=db,collection=col,data=cur,baseurl=cherrypy.url('/')[:-1],serial=serialized,FName=fname,prev=prev,next=next,rec_info=info,key=keys,qkey=qcols,user='mstacy')
         t = Template(file = templatepath + '/data.tmpl', searchList=[nameSpace])
         return t.respond()
+    @cherrypy.expose
+    def json_data(self,db,col,query={},record=1,page=1,nPerpage=100, **kwargs):
+        skip=(int(page)-1)*int(nPerpage)
+        limit= int(nPerpage)
+        dump_out=[]
+        cur = self.mongo.getDoc(db,col,query,skip,limit)
+        info= self.mongo.getInfo(db,col,query,skip,limit)
+        for item in cur:
+            dump_out.append(item)
+        allt=[{'info':info,'data':dump_out}]
+        serialized = json.dumps(allt, default = handler, sort_keys=True)#, indent=4)
+        return serialized
     @cherrypy.expose
     def save(self, **kwrgs):
         if cherrypy.request.method =="POST":
