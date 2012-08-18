@@ -31,29 +31,16 @@ def new_user(request):
     else:
         return HttpResponse("[]")
 def login(request, template_name='registration/login.html'):
-    #django.contrib.auth.views.login
-    #redirect_to = request.REQUEST.get('next', '')
-    #print redirect_to
+    clear =request.REQUEST.get('clear', '')
     response = views.login(request,template_name=template_name)
-    #if request.method == 'GET':
-    #    request.environ['authtkt.forget'](request, response)
+    if not clear =='':
+        request.environ['authtkt.forget'](request, response)
     return response
 def logout_view(request,redirect=None,template_name='registration/logout.html'):
     #django.contrib.auth.views.logout_then_login
     response = views.logout_then_login(request)
-    response.delete_cookie('auth_tkt')
-   # response = views.logout(request,template_name=template_name) 
-    #logout(request)
-    #response = views.logout(request,template_name=template_name)
-    #request.environ['authtkt.forget'](request, response)
-    #logout(request)
-    #request.environ['authtkt.forget'](request, response)
+    request.environ['authtkt.forget'](request, response)
     return response
-    #if redirect:
-    #    url = '/accounts/login/?next= %s ' % (redirect)
-    #else:
-    #    url = '/accounts/login/' #?next=/accounts/login/'
-    #return HttpResponseRedirect(url)#'accounts/login/?next=/dataportal/')
 @login_required()
 def profile(request):
     u = User.objects.get(username__exact= request.user )
@@ -66,15 +53,26 @@ def profile(request):
         host= request.get_host()
         baseurl = request.get_host()#'www.cybercommons.org' 
         where = "event_id in (select event_id from dt_event where commons_id=814 and event_name='%s') order by result_order" % (baseurl)
-        data = md.Search('dt_result',where=where,column=['var_id','result_text','result_type'])
+        data = md.Search('dt_result',where=where,column=['var_id','result_text','result_type','remark'])
     except:
         data=[]
     return render_to_response('registration/profile.html',{'user':name,'baseAccount_path':'/accounts/','apps':data,'host':host})
-    #html = "<h1> Welcome %s </h1><p> Thank you for visiting your profile page. Future development will allow you to set new passwords, share application data with other registered users, plus many other profile tasks.</p>" % (name) 
-    #return HttpResponse(html)
-    #return HttpResponse(str(dir(u)))#"[User account - Profile Page]")
-def testuser(request,**kwargs):
-    return HttpResponse(str(request.environ['authtkt.identify']))
+def cherrypy_userdata(request,**kwargs):
+    callback = request.GET.get('callback', None)
+    user_id = int(request.GET.get('user', '0'))
+    try:
+        u = User.objects.get(id=user_id )
+        if u.get_full_name() is None or u.get_full_name() == '' or u.get_full_name() == '>':
+            name = u.username
+        else:
+            name = u.get_full_name()
+        prof ={'username':u.username,'name':name}
+    except:
+        prof={'username':'guest','name':'guest'}
+    if callback:
+        return HttpResponse('%s(%s)' % (callback,json.dumps({'user':prof},indent=2)))
+    return HttpResponse( json.dumps({'user':prof},indent=2) )
+    #return HttpResponse(str(request.environ['authtkt.identify']))
 
 def userdata(request,**kwargs):
     callback = request.GET.get('callback', '')
@@ -86,7 +84,15 @@ def userdata(request,**kwargs):
             name = u.get_full_name()
         prof ={'username':u.username,'name':name}
     except:
-        prof={'username':'guest','name':'guest'}
+        try:
+            u = User.objects.get(id= int(request.user) )
+            if u.get_full_name() is None or u.get_full_name() == '' or u.get_full_name() == '>':
+                name = u.username
+            else:
+                name = u.get_full_name()
+            prof ={'username':u.username,'name':name}
+        except:
+            prof={'username':'guest','name':'guest'}
     #return JsonResponse(prof,callback=callback)#request.GET.get('jsoncallback'))
     #if request.environ['REMOTE_USER']
     if callback != '':

@@ -4,6 +4,7 @@ cheetahVarStartToken = @
   <div class="ui-widget-header ui-corner-all" style="padding:2px;indent:2px;">Cybercommons Task Parameters</div>
   #for @task in @tasks
   <table cellpadding=2px >
+    <tr><td valign="top" align="right"><strong>Task ID</strong></td><td><strong>@task['task_id']</strong></td></tr>
     <tr><td valign="top" align="right"><strong>Task Name</strong></td><td><strong>@task['task_name']</strong></td></tr>
     <tr><td valign="top" align="right"><strong>Arguments</strong></td><td>
     #for @k in @task['args']
@@ -38,7 +39,19 @@ cheetahVarStartToken = @
   #for @t in @tomb
   <table>
   #for @k,@v in @t.items()
-   <tr><td><strong>@k</strong></td><td>@v</td></tr>
+    #if @k == 'Result'
+        #if @haschild
+            #set @taskid = @v['task_id']
+            <tr><td valign="top" align="right"><strong>@k</strong></td>
+                <td><a href="javascript: alert('checkstatus()');">Subtask Initiated - @v['task_name']</a>
+                    <div id='_status_@taskid'><img  width="20%" height="14" src=" ajax-loader.gif" style="display: inline; "></div>
+                <div id='_@taskid'></div></td></tr>
+        #else
+            <tr><td valign="top" align="right"><strong>@k</strong></td><td>@v</td></tr>
+        #end if
+    #else 
+        <tr><td valign="top" align="right"><strong>@k</strong></td><td>@v</td></tr>
+    #end if
   #end for
   </table>
   #end for

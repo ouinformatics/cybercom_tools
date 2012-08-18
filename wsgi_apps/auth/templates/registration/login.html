@@ -20,11 +20,12 @@
             onload();
             $('#id_username').focus();
             });
+        django.contrib.auth.views.login
     </script>-->
 
 
 <div id="login" style="margin-top:40px;margin-left:40px;">
-  <form method="post" action="{% url 'django.contrib.auth.views.login' %}">
+  <form method="post" action="{% url 'auth.account.views.login' %}">
   {% csrf_token %}
     <table id="table">
     <tr>
@@ -37,7 +38,7 @@
   </tr>
   {% if form.errors %}
   <tr>
-    <td style="width:140px;color:red;" colspan="2"><p>Your username and password didn't match.Please try again.</p></td>
+    <td style="width:140px;color:red;" colspan="2"><p>Error: Username and Password didn't match.</p></td>
   </tr>
   {% endif %}
   </table>
