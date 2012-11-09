@@ -8,6 +8,7 @@ from celery.task.control import inspect
 from pymongo import Connection
 from datetime import datetime
 from Cheetah.Template import Template
+from json_handler import handler
 
 templatepath= os.path.abspath(os.path.join(os.path.dirname(__file__), 'templates'))
 
@@ -123,7 +124,7 @@ class Root(object):
         tresult=db['cybercom_queue_meta'].find({'_id':taskid})
         if not tresult.count() == 0:
             resb['Completed']=str(tresult[0]['date_done'])
-            resb['Result'] = pickle.loads(tresult[0]['result'].encode())
+            resb['Result'] = pickle.loads(tresult[0]['result'])#.encode())
             try:
                 urlcheck = commands.getoutput("wget --spider " + resb['Result'] + " 2>&1| grep 'Remote file exists'")
                 if urlcheck:
@@ -131,7 +132,7 @@ class Root(object):
             except:
                 pass
             resb['Status'] = tresult[0]['status']
-            resb['Traceback'] =pickle.loads( tresult[0]['traceback'].encode())
+            resb['Traceback'] =pickle.loads( tresult[0]['traceback'])#.encode())
             if isinstance(resb['Result'], type(resb)):
                 if 'task_id' in resb['Result']:
                     sub= True
@@ -144,6 +145,7 @@ class Root(object):
                 sub_taskid = None
         else:
             sub = False
+            sub_taskid = None
         for row in res:
             resclone=row
             for k,v in resclone['kwargs'].items():
@@ -175,7 +177,7 @@ class Root(object):
         tresult=db['cybercom_queue_meta'].find({'_id':taskid})
         if not tresult.count() == 0:
             resb['Completed']=str(tresult[0]['date_done'])
-            resb['Result'] = pickle.loads(tresult[0]['result'].encode())
+            resb['Result'] = pickle.loads(tresult[0]['result'])#.encode())
             try:
                 urlcheck = commands.getoutput("wget --spider " + resb['Result'] + " 2>&1| grep 'Remote file exists'")
                 if urlcheck:
@@ -183,7 +185,7 @@ class Root(object):
             except:
                 pass
             resb['Status'] = tresult[0]['status']
-            resb['Traceback'] =pickle.loads( tresult[0]['traceback'].encode())
+            resb['Traceback'] =pickle.loads( tresult[0]['traceback'])#.encode())
             
         if isinstance(resb['Result'], type(resb)):
             if 'task_id' in resb['Result']:
@@ -258,31 +260,32 @@ class Root(object):
             else:
                 return str(callback) + '(' + self.serialize(task_id,type) + ')'
         except Exception as inst:
-            #error = str(type(inst)) + '\n'
-            #error = error + str(inst)
-            return str(inst)#error
+            raise inst
+            #return str(inst)
     def serialize(self,task_id,type):
         if task_id == None:
             return json.dumps({'available_urls':['/<task_id>/','/<task_id>/status/','/<task_id>/tombstone/']},indent=2)
         if type == None:
             res = {}
-            result = urllib.urlopen("http://test.cybercommons.org/mongo/db_find/cybercom_queue/cybercom_queue_meta/{'spec':{'_id':'" + task_id + "'}}")
-            res["tombstone"] = json.loads(result.read())
+            db=self.db[self.database]
+            result= db['cybercom_queue_meta'].find_one({'_id':task_id})
+            res["tombstone"] = [result] 
             if len(res['tombstone']) > 0:
-                res['tombstone'][0]['result'] = pickle.loads(res['tombstone'][0]['result'].encode())
+                res['tombstone'][0]['result'] = pickle.loads(res['tombstone'][0]['result'])
             res['status']=AsyncResult(task_id).status
             res['task_id']=task_id
-            return json.dumps(res,indent=2)
+            return json.dumps(res,indent=2,default = handler)
         if type.lower() == 'status':
             return json.dumps({"status": AsyncResult(task_id).status},indent=2)
         if type.lower() == 'tombstone':
             res={}
-            result = urllib.urlopen("http://test.cybercommons.org/mongo/db_find/cybercom_queue/cybercom_queue_meta/{'spec':{'_id':'" + task_id + "'}}")
-            res['tombstone']=json.loads(result.read())
+            db=self.db[self.database]
+            result= db['cybercom_queue_meta'].find_one({'_id':task_id})
+            res["tombstone"] = [result]
             if len(res['tombstone']) > 0:
-                res['tombstone'][0]['result'] = pickle.loads(res['tombstone'][0]['result'].encode())
+                res['tombstone'][0]['result'] = pickle.loads(res['tombstone'][0]['result'])
             res['task_id']=task_id
-            return json.dumps(res,indent=2) #result.read()
+            return json.dumps(res,indent=2,default = handler) 
         return json.dumps({'available_urls':['/<task_id>/','/<task_id>/status/','/<task_id>/tombstone/']},indent=2)
 cherrypy.tree.mount(Root())
 application = cherrypy.tree

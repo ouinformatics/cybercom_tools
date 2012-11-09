@@ -8,7 +8,7 @@ BROKER_VHOST = "cybercom_test"
 
 CELERY_RESULT_BACKEND = "mongodb"
 CELERY_MONGODB_BACKEND_SETTINGS = {
-    "host": "129.15.41.76",
+    "host": "localhost",
     "database": "cybercom_queue",
     "taskmeta_collection": "cybercom_queue_meta"
 }
