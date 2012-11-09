@@ -86,20 +86,41 @@ class base_html(Template):
 <html>
 <head>
 <title>Cybercommons Catalog</title>
+<!--BaseJavascript-->
+<script type="text/javascript" src="http://static.cybercommons.org/js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="http://static.cybercommons.org/js/jquery.jeditable.mini.js"></script>
+<script type="text/javascript" src="http://static.cybercommons.org/js/jquery-ui-1.8.10.custom.min.js"></script>
+<script type="text/javascript" src="http://static.cybercommons.org/mstacy/jquery.contextMenu.js"></script>
+<script type="text/javascript" src="http://static.cybercommons.org/css/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="http://static.cybercommons.org/pagination/jquery.pagination.js"></script>
+<!--Base CSS-->
+<link type="text/css" href="http://static.cybercommons.org/css/cybercomui/jquery-ui-1.8.13.custom.css" rel="Stylesheet"/>
+<link type="text/css" href="http://static.cybercommons.org/css/bootstrap/css/bootstrap.min.css" rel="Stylesheet"/>
+<link type="text/css" href="http://static.cybercommons.org/css/bootstrap/css/cybercommons.css" rel="Stylesheet"/>
+<link type="text/css" href="http://static.cybercommons.org/css/cybercom/style.css" rel="Stylesheet"/>
+<link type="text/css" href="http://static.cybercommons.org/pagination/pagination.css" rel="Stylesheet"/>
+<!--Custom App JS-CSS-->
+<script type="text/javascript" src="http://static.cybercommons.org/ref/mongodb/filter.js"></script>
+<script type="text/javascript" src="http://static.cybercommons.org/ref/mongodb/json.js"></script>
+<link type="text/css" src="http://static.cybercommons.org/pagination/pagination.css" rel="stylesheet"/>
+<link type="text/css" href="http://static.cybercommons.org/ref/mongodb/json.css" rel="Stylesheet"/>
+
+
 <!--<link type="text/css" href="http://static.cybercommons.org/css/cybercomui/jquery-ui-1.8.13.custom.css" rel="Stylesheet"/>
 <link type="text/css" rel="stylesheet" href="http://static.cybercommons.org/css/bootstrp/bootstrap.min.css"/>
-<link type="text/css" href="http://static.cybercommons.org/css/cybercom/style.css" rel="Stylesheet"/>-->
+<link type="text/css" href="http://static.cybercommons.org/css/cybercom/style.css" rel="Stylesheet"/>
 <script type="text/javascript" src="http://static.cybercommons.org/js/jquery-1.7.min.js"></script>
 <script type="text/javascript" src="http://static.cybercommons.org/js/jquery-ui-1.8.10.custom.min.js"></script>
 <script type="text/javascript" src="http://static.cybercommons.org/js/jquery.form.js"></script>
 <script type="text/javascript" src="http://static.cybercommons.org/js/jquery.jeditable.mini.js"></script>
 <link type="text/css" href="http://static.cybercommons.org/css/cybercomui/jquery-ui-1.8.13.custom.css" rel="Stylesheet"/>
 <link type="text/css" href="http://static.cybercommons.org/css/cybercom/style.css" rel="Stylesheet"/>
-<link type="text/css" href="http://static.cybercommons.org/mstacy/json.css" rel="Stylesheet"/>
-<script type="text/javascript" src="http://static.cybercommons.org/mstacy/json.js"></script>
+<link type="text/css" href="http://static.cybercommons.org/ref/mongodb/json.css" rel="Stylesheet"/>
+<link type="text/css" src="http://static.cybercommons.org/pagination/pagination.css" rel="stylesheet"/>
+<script type="text/javascript" src="http://static.cybercommons.org/ref/mongodb/filter.js"></script>
+<script type="text/javascript" src="http://static.cybercommons.org/ref/mongodb/json.js"></script>
 <script type="text/javascript" src="http://static.cybercommons.org/mstacy/jquery.contextMenu.js"></script>
-<script type="text/javascript" src="http://static.cybercommons.org/mstacy/flaviusmatis-simplePagination.js-c86400c/jquery.simplePagination.js"></script>
-<link rel="stylesheet" src="http://static.cybercommons.org/mstacy/flaviusmatis-simplePagination.js-c86400c/simplePagination.css"></script>
+<script type="text/javascript" src="http://static.cybercommons.org/pagination/jquery.pagination.js"></script>-->
 <style>
     #feedback { font-size: 1.4em; }
     #selectable .ui-selecting { background: #E7E1D3; }
@@ -108,7 +129,10 @@ class base_html(Template):
     #selectable li { margin: 1px; padding: 0.2em; }
 </style>
 <script>
+qry ='{}'
 $(document).ready(function() { 
+    $('#rst_fields').hide();
+    $('#rst_filter').hide();
     var options = { 
         target:        \'#output1\',   // target element(s) to be updated with server response 
         //beforeSubmit:  showRequest,  // pre-submit callback 
@@ -154,8 +178,12 @@ $(document).ready(function() {
     //$(\'#accordion\' ).accordion(); 
     $( \'#selectable\' ).selectable();
     // bind form using \'ajaxForm\' 
-    $(\'.catform\').ajaxForm(options); 
+    //$(\'.catform\').ajaxForm(options); 
     $(\'.edit\').editable(\'http://production.cybercommons.org/mongodb/save/\');
+    var result = $( "#rst_fields" ).empty();
+    $( ".ui-selected","#selectable").each(function() {
+            result.append("\'" + $(this).text() + "\'," );
+    });
 });
 </script>
 </head>

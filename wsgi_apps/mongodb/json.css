@@ -1,12 +1,15 @@
                 body, html {
-                        background: #444;
+                        background: #E7E1D3;
                         font-family: verdana, arial, sans-serif;
                         font-size: 12px;
                         color: #444;
-                        background: #333;
+                        background: #E7E1D3;
                         padding: 0px;
                         margin: 0px;
                 }
+                .row_even{background:#f8f7f2;}
+                .row_odd{background: #e1ded3;}
+                .table{width: 99.4%;}
                 .rounded {
                         -moz-border-radius: 5px;
                         border-radius: 5px;
@@ -38,21 +41,33 @@
                         margin: 5px 10px 0px 0px;
                         bottom: 10px;
                 }
-                #editarea {
-                        margin: 5px;
+                /*#editarea {
+                        margin: 15px;
                         bottom: 10px;
-                        left: 300px;
-                        position: absolute;
+                        left: 10px;
+                       /* position: absolute;
                         right: 10px;
-                        top: 100px;
+                        top: 120px;
                         width: auto;
                         background: #fff;
                         padding: 5px 40px 10px 5px;
                         overflow: auto;
-                }
+                }*/
+	/*	#tabs {
+                        margin: 5px;
+                        bottom: 10px;
+                        left: 10px;
+                       /* position: absolute;
+                        right: 10px;
+                        top: 175px;
+                        width: auto;
+                        /*background: #fff;
+                        padding: 5px 0px 10px 5px;
+                        overflow: auto;
+                }*/
                 #editarea div {
-                        margin-right: 20px;
-                        font-family: courier;
+                        margin-right: 2px;
+                        /*font-family: courier;*/
                 }
                 #toparea h1 {
                         color: #333333;
@@ -71,27 +86,37 @@
                 #json_editor {
                         background: #fff;
                 }
+                #json_editor_meta {
+                        background: #fff;
+                }
+                #json_editor_loc {
+                        background: #fff;
+                }
                 #json_editor span {
                         margin: 2px;
                         padding:1px;
                 }
                 div[data-type="object"] {
+                        
                         border: 1px solid #fcc;
-                        padding-bottom: 8px;
+                        padding-bottom: 2px;
                 }
                 div[data-type="array"] {
                         border: 1px solid #ccf;
-                        padding-bottom: 8px;
+                        padding-bottom: 2px;
                 }
                 div[data-role="arrayitem"] > div  {
                         margin: 2px;
                 }
                 [data-type="string"] {
+                        display: inline-block;
                         color: #4AA150;
                 }
                 pre {
+                        background: transparent;
+			padding: 2px;
                         display: inline;
-                        margin: 2px;
+                        margin: 0px;
                         font-family: courier;
                         white-space: pre-wrap;
                 }
@@ -105,15 +130,17 @@
                         color: #FA6B8F;
                 }
                 div[data-role="value"] {
+                        display: block;
                         margin-left: 20px;
                 }
                 div[data-role="prop"], div[data-role="arrayitem"] {
                         //border: 0px solid #ccf;
                         margin: 1px;
-                        padding: 1px;
+                        padding: 2px;
                         color: #4155A6;
                 }
                 span[data-role="key"] {
+			font-weight: bold;
                         min-width:100px;
                 }
                 .edit_box {
@@ -255,3 +282,16 @@
                 text-align: center;
                 cursor: default;
         }
+
+
+
+
+#tabs {
+    margin-bottom:0px;
+}
+.tab-content > .active, .pill-content > .active { 
+   border: 1px solid white;
+    background-color:white;
+   /*display: block;*/ 
+   /*margin-top: -1px; */
+} 

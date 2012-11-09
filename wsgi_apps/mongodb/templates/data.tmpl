@@ -7,90 +7,73 @@ cheetahVarStartToken = @
 <table class="form-horizontal">
 <tr><td style="width:10%"><a href='@baseurl/@FName/'>Database</a></td><td>@database</td></tr>
 <tr><td><a href='@baseurl/@FName/@database/'>Collection</a></td><td>@collection (@rec_info['totalCollection'] Documents)</td></tr>
-<tr><td>Filter</td><td>
- #if @data != ''
-   Views:   
-   <a href='../json/'>JSON</a></td></tr></table>
-   <div class="row">
-     <ul class="pager">
-      <li class="previous">
-        <a href="../@prev/">&larr; Older</a>
-      </li>
-      <li class="next">
-        <a href="../@next/">Newer &rarr;</a>
-      </li>
-   </div>
-    <div>
-        #for @task in @data
-        <form id="cform" class="catform well form-horizontal"  action="@baseurl/save" method="POST">
-            <fieldset>
-            #for @k,@v in @task.items()
-                <div class="control-group">
-                    <label class="control-label" for="@k">@k</label>
-                    <div class="controls">
-                        <input type="text" name="@k" class="input-xlarge" id="@k" value="@v"/>
-                    </div>
-                </div>
-            #end for
-            <input type="hidden" name="collection" id="collection" value="@collection">
-            <input type="hidden" name="database" id="database" value="@database">
-            <div class="form-actions" >
-                <button type="submit" class="btn btn-primary">Save changes</button>
-                <button class="btn">Cancel</button>
+<tr><td><b>Filter</b></td><td>
+    <div id="filter">
+        <div id="filter_obj">
+            <select id="keys1">
+                #for @filterk in @key
+                    <option value="@filterk">@filterk</option>
+                #end for 
+            </select>
+            <select id="val1"></select>
+            <div id='rst_filter'></div><div id='rst_fields'>
+                #for @filterk in @key
+                    '@filterk',
+                #end for
             </div>
-            </fieldset>
-        </form>
-        <div id="output1"></div>
-        #end for
-    </div>
- #else
- <!-- @rec_info['startRecord'] - @rec_info['endRecord'] Records of @rec_info['totalRecords']</br>-->
- <!-- <button type="button" onclick="javascript:alert(getRecordsNeedSave());">Show JSON needs Save</button></br>-->
-  <strong>Filter :</strong> <select id="keys1">
-    #for @filterk in @key
-        <option value="@filterk">@filterk</option>
-    #end for 
-    </select><select id="val1"></select>
-    <button id="fopener" type="button">Select Fields Result Set</button>
-    <div id='rst_filter'></div><div id='rst_fields'>
-            #for @filterk in @key
-                '@filterk',
-            #end for
+            <div id="field-dialog">
+                Select Fields to display in query
+                <ol id="selectable">
+                    #for @filterk in @qkey
+                    <li class="ui-widget-content ui-selected">@filterk</li>
+                    #end for
+                </ol>
+            </div>
         </div>
-    <div id="field-dialog">
-        Select Fields to display in query
-        <ol id="selectable">
-            #for @filterk in @qkey
-            <li class="ui-widget-content ui-selected">@filterk</li>
-            #end for
-        </ol>
-    </div>
-    <!--<div class="btn-group" data-toggle="buttons-checkbox">
-        #for @filterk in @qkey
-        <button class="btn">@filterk</button>
-        #end for
-    </div>-->
-    <button id="query" type="button">Query</button>
-    <button id="export" type="button">Export Data as CSV</button>
-    <!--<div id="accContain" style="float:right;clear:both;width:500px;">
-        <h3><a href="#">Export Data</a></h3>
-         <ul>
-            <li><a href="#">Export as CSV</a></li>
-         </ul>
-    </div>-->
+        </br></br>
+        <div id="tool_action">
+            <button id="fopener" type="button">Select Fields Result Set</button>
+            <button id="query" type="button">Query</button>
+            <button id="export" type="button">Export Data as CSV</button></br>
+            <div id="qryurl"></div>
+        </div>
+    </div><!--Endof filter-->
   </td></tr> </table>
 <script>
+function pageselectCallback(page_index, jq){
+        //        alert(page_index);
+        var page = page_index+1+''; 
+        var url ="/mongodb/ajax_data/@database/@collection/" + qry + "?page=" + page
+        $.getJSON(url,function(data){
+            $('#jsoninput').val(JSON.stringify(data.data));//[0]['data']));
+            var info = data.info;
+            $('#info').html('<strong>Documents : </strong> ' + info['startRecord'] + ' - ' + info['endRecord'] + ' of ' + info['totalRecords']);
+            $('#json_editor').html('');
+            json_editor('json_editor',$('#jsoninput').val());
+        });
+}
+function setPager(data_count,n_per_page,n_display_entries,n_edge_entries){
+        var optInit = {callback: pageselectCallback,items_per_page:n_per_page,num_display_entries:n_display_entries,num_edge_entries:n_edge_entries,prev_text:"Prev",next_text:"Next"};
+        $("#Pagination").pagination(data_count, optInit);
+
+
+}
+$(function () {
+    setPager( @rec_info['totalRecords'] ,100,10,10);
+    load_filter("@database","@collection","keys1");
+    
+});
+
+//******************old************************************************************************************************
     function load_distinct(){
-        
         $("#val1")
             .find('option')
             .remove()
             .end();
-        var url = "http://test.cybercommons.org/mongo/distinct/@database/@collection/" + $('#keys1').val() + "/{}/";
+        var url = "/mongo/distinct/@database/@collection/" + $('#keys1').val() + "/{}/";
         $.getJSON(url,function(data){
              data.sort();
              $.each(data, function(key,value) {  
-                    //alert(value); 
                     $('#val1')
                         .append($("<option></option>")
                         .attr("value",value)
@@ -100,32 +83,25 @@ cheetahVarStartToken = @
     }
     $('#keys1').change( function(){
         $('#rst_filter' ).html('');
-        load_distinct();    
+        load_filter_args("@database","@collection","val1",$('#keys1').val());
+        //load_distinct();    
         $('#rst_filter' ).html('');
     });
     $('#val1').change( function(){
         $('#rst_filter' ).html( $('#keys1').val() + " : " + $('#val1').val() );
-        //var url ="http://production.cybercommons.org/mongodb/data/@database/@collection/{'spec':{'" + $('#keys1').val() + "':'" + $('#val1').val() + "'}}/json/1/100"
-        //window.location.href = url; 
-
     });
     $('#query').click( function(){
-        //var url ="http://production.cybercommons.org/mongodb/data/@database/@collection/{'spec':{'" + $('#keys1').val() + "':'" + $('#val1').val() + "'},'fields':[" + $('#rst_fields' ).text() + "]}/json/1/100"
-        //window.location.href = url;
-        var url ="/mongodb/json_data/@database/@collection/{'spec':{'"  + $('#keys1').val() + "':'" + $('#val1').val() + "'},'fields':[" + $('#rst_fields' ).text() + "]}/"
-        $.getJSON(url,function(data){
-            $('#jsoninput').val(JSON.stringify(data[0]['data']));
-            var info = data[0]['info']
-            $('#info').html('<strong>Documents : </strong> ' + info['startRecord'] + ' - ' + info['endRecord'] + ' of ' + info['totalRecords']);
-            $('#json_editor').html('');
-            json_editor('json_editor',$('#jsoninput').val());
-            $('#Page').pagination({
-                items: info['totalRecords'],
-                itemsOnPage: info['endRecord'] - info['startRecord'],
-                cssStyle: 'light-theme'
-            });
-        });
-        //window.location.href = url;
+        query("@database","@collection");
+       // qry = "{'spec':{'"  + $('#keys1').val() + "':'" + $('#val1').val() + "'},'fields':[" + $('#rst_fields' ).text() + "]}"
+       // var url ="/mongodb/json_data/@database/@collection/{'spec':{'"  + $('#keys1').val() + "':'" + $('#val1').val() + "'},'fields':[" + $('#rst_fields' ).text() + "]}/"
+       // $.getJSON(url,function(data){
+       //    $('#jsoninput').val(JSON.stringify(data[0]['data']));
+       //    var info = data[0]['info']
+       //     $('#info').html('<strong>Documents : </strong> ' + info['startRecord'] + ' - ' + info['endRecord'] + ' of ' + info['totalRecords']);
+       //     $('#json_editor').html('');
+       //     json_editor('json_editor',$('#jsoninput').val());
+       //     setPager( info['totalRecords'] ,100,10,10);
+       // });
     });
     function setdata(url){
         $.getJSON(url,function(data){
@@ -142,40 +118,15 @@ cheetahVarStartToken = @
         });
     }
     $('#export').click( function(){
-     var pathArray = window.location.pathname.split('/');
-     var ind =  jQuery.inArray("@collection",pathArray) + 1;
-     url="http://production.cybercommons.org/mongo/db_find/@database/@collection/{'spec':{'" + $('#keys1').val() + "':'" + $('#val1').val() + "'},'fields':[" + $('#rst_fields' ).text() + "]}/?outtype=csv";//" // + pathArray[ind] + "/?outtype=csv";
-     window.open(url);
+      var query = "{'spec':{'" + $('#keys1').val() + "':'" + $('#val1').val() + "'},'fields':[" + $('#rst_fields' ).text() + "]}"
+      export_data("@database","@collection",query);
     });
     $('#rst_filter' ).html( $('#keys1').val() + " : " + $('#val1').val() );
-   
-    $('#Page').pagination({
-        items: @rec_info['totalRecords'],
-        itemsOnPage: @rec_info['endRecord'] - @rec_info['startRecord'],
-        cssStyle: 'light-theme'
-    });
 </script>
- <!-- Views:
-   <a href='../1/'>FORM</a></td></tr> </table>-->
- <!-- <pre   style="word-wrap: break-word; white-space: pre-wrap;">
-    <div class="edit">
-  serial
-    </div>
-  </pre>
-    <script>
-       $(function(){  
-        //var str_json = serial;
-        $('#json_editor').html('');
-        json_editor('json_editor', 'serial' );
-        // add the jquery editing magic
-        apply_editlets();
-       });
-    </script>-->
     <textarea id="jsoninput" rows="35" cols="24">@serial</textarea>
     <div id="editarea" class="rounded">
     <div> <strong>Database:</strong> @database <strong>Collection:</strong> @collection</div> <div id='info'><strong>Documents:</strong> @rec_info['startRecord'] - @rec_info['endRecord'] of @rec_info['totalRecords']</div>
-    <div class="pagination-holder clearfix" id="Page"></div>
+    <div id="Pagination" class="pagination"></div>
     <div id="json_editor" data-role="myjson"></div>
   </div>
- #end if
 #end def

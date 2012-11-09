@@ -1,5 +1,5 @@
 from pymongo import ReplicaSetConnection, Connection, ReadPreference
-from pymongo.objectid import ObjectId
+from bson.objectid import ObjectId
 import ConfigParser,os,ast,pymongo
 
 
@@ -16,7 +16,7 @@ class mongo_catalog():
         #SECONDARY
         #pymongo.ReadPreference= readpreference
         #self.dbconn = Connection(config.get('database','host'))
-        self.dbcon = Connection('129.15.41.76')#config.get('database','host'),replicaset=config.get('database','replica_set'))#,read_preference=0)
+        self.dbcon = Connection()#'129.15.41.76')#config.get('database','host'),replicaset=config.get('database','replica_set'))#,read_preference=0)
         #self.db= self.dbconn[config.get('catalog','database')]
         self.dbcon.read_preference = ReadPreference.SECONDARY
     def getdatabase(self, **kwargs):

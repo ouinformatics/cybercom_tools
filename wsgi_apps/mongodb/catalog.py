@@ -26,10 +26,10 @@ def mimetype(type):
     return decorate
 
 class Root(object):
-    def __init__(self,mongoHost='fire.rccc.ou.edu',port=27017,database='cybercom_queue',collection='task_log'):
+    def __init__(self,mongoHost='localhost',port=27017,database='cybercom_queue',collection='task_log'):
         self.mongo = mdb_model.mongo_catalog()
     @cherrypy.expose
-    def data(self,db=None,col=None,query={},record=1,page=1,nPerpage=100, **kwargs):
+    def data(self,db=None,col=None,query={},page=1,nPerpage=100, **kwargs):
         fname='data'
         if not db:
             res= self.mongo.getdatabase()
@@ -43,26 +43,26 @@ class Root(object):
             nameSpace = dict(database=db,collection=res,baseurl=cherrypy.url('/')[:-1],FName=fname)
             t = Template(file = templatepath + '/collection.tmpl', searchList=[nameSpace])
             return t.respond()
-        if record == 'json':
-            skip=(int(page)-1)*int(nPerpage)
-            limit= int(nPerpage)
-            dump_out=[]
-            cur = self.mongo.getDoc(db,col,query,skip,limit)
-            for item in cur:
-                dump_out.append(item)
-            serialized = json.dumps(dump_out, default = handler, sort_keys=True, indent=4)
-            cur =''
-            prev=1
-            next=1
-        else:
-            skip=(int(record)-1)
-            prev=int(record)-1
-            if prev < 1: 
-                prev=1
-            next=int(record)+1
-            limit=1
-            serialized=''
-            cur = self.mongo.getDoc(db,col,query,skip,limit)#.skip(int(record)-1).limit(1)
+        #if record == 'json':
+        skip=(int(page)-1)*int(nPerpage)
+        limit= int(nPerpage)
+        dump_out=[]
+        cur = self.mongo.getDoc(db,col,query,skip,limit)
+        for item in cur:
+            dump_out.append(item)
+        serialized = json.dumps(dump_out, default = handler, sort_keys=True, indent=4)
+        cur =''
+        prev=1
+        next=1
+        #else:
+        #    skip=(int(record)-1)
+        #    prev=int(record)-1
+        #    if prev < 1: 
+        #        prev=1
+        #    next=int(record)+1
+        #    limit=1
+        #    serialized=''
+        #    cur = self.mongo.getDoc(db,col,query,skip,limit)#.skip(int(record)-1).limit(1)
         keys,qcols=self.mongo.getkeys(db,col)
         if not keys:
             keys=[]
@@ -72,6 +72,18 @@ class Root(object):
         nameSpace = dict(database=db,collection=col,data=cur,baseurl=cherrypy.url('/')[:-1],serial=serialized,FName=fname,prev=prev,next=next,rec_info=info,key=keys,qkey=qcols,user='mstacy')
         t = Template(file = templatepath + '/data.tmpl', searchList=[nameSpace])
         return t.respond()
+    @cherrypy.expose
+    def ajax_data(self,db=None,col='data',query={},page=1,nPerpage=100, **kwargs):
+        skip=(int(page)-1)*int(nPerpage)
+        limit= int(nPerpage)
+        dump_out=[]
+        cur = self.mongo.getDoc(db,col,query,skip,limit)
+        info= self.mongo.getInfo(db,col,query,skip,limit)
+        for item in cur:
+            dump_out.append(item)
+        allt={'info':info,'data':dump_out}
+        serialized = json.dumps(allt, default = handler, sort_keys=True)
+        return serialized #json.dumps(dump_out, default = handler, sort_keys=True)
     @cherrypy.expose
     def json_data(self,db,col,query={},record=1,page=1,nPerpage=100, **kwargs):
         skip=(int(page)-1)*int(nPerpage)
