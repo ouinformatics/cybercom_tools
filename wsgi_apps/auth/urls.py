@@ -5,11 +5,12 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     # login
-    #url(r'^login/$','auth.account.views.login',name='login'),
-    url(r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'registration/login.html'}),
+    url(r'^login/$','auth.account.views.login',{'template_name': 'registration/login.html'}),#name='login'),
+    #url(r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'registration/login.html'}),
     url(r'^profile/$','auth.account.views.profile',name='profile'),
     url(r'^userdata/$','auth.account.views.userdata',name='udata'),
-    url(r'^testuser/$','auth.account.views.testuser',name='tdata'),
+    url(r'^userdata_cp/$','auth.account.views.cherrypy_userdata',name='cpyudata'),
+    #url(r'^testuser/$','auth.account.views.testuser',name='tdata'),
     #url(r'^logout/$','django.contrib.auth.views.logout_then_login'),# {'template_name': 'registration/logout.html'}),#
     url(r'^logout/$','auth.account.views.logout_view', name='logout'),
     url(r'^login/createnewuser/$', 'auth.account.views.new_user',name='new_user'),

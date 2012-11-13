@@ -1,19 +1,159 @@
+                var global_divid ='notset'
                 $(function(){
-                        $(document).bind("contextmenu",function(e){
-                          return false;
-                        }); 
-                        
+                        test_auth_tkt();
+                        //$(document).bind("contextmenu",function(e){
+                        //  return false;
+                        //}); 
+                       $('#jsoninput').hide(); 
                         $('#json_editor').html('');
                         json_editor('json_editor',$('#jsoninput').val());
-
+			//META
+                       $('#jsoninput_meta').hide();
+                        $('#json_editor_meta').html('');
+                       // json_editor('json_editor_meta',$('#jsoninput_meta').val());
+                      $('#jsoninput_location').hide();
+			$('#json_editor_loc').html('');
+			//json_editor('json_editor_loc',$('#jsoninput_location').val());
                         // add the jquery editing magic
-                        apply_editlets();
-
-                        $('#jsoninput').click(function(){
-                                $(this).focus();
-                                $(this).select();
-                        });
+                       // apply_editlets();
+                
+                       // $('#jsoninput').click(function(){
+                       //         $(this).focus();
+                       //         $(this).select();
+                       // });
+                   // $('div').click(function(event){
+                   //     alert(event.target.id);
+                   // });
+                    $('.row').dblclick(function(){
+                        $('#editparam-dialog').html("");
+                        $('#editparam-dialog').dialog("open");
+                        //$('#editparam-dialog').html($('#0').html());
+                        var divid= '#' + this.id;
+                        //alert(divid);
+                        $('#editparam-dialog').html($(divid).html());
+                        apply_editlets('editparam-dialog');
+                        global_divid=divid;
+                        //$('#' + String(this.id)).append('#editparam-dialog');
+                        //$('#editparam-dialog').dialog("open");
+                        //alert(this.id);
+                    });
+                    $('#createDC').click(function(){
+                        var cname = $('#form_DC_Name').val();
+                        if (cname==''){
+                            alert('Please enter Commons Name');
+                        }
+                        else{
+                            var link ='/catalog/newCommons/' + cname;
+                            $.getJSON(link,function(data){
+                                if(data[0]['status']=== true){
+                                    //alert('Data Commons: ' + cname + '\n\n' + data[0]['description']);
+                                    document.location.reload(true);
+                                }
+                                else{
+                                    alert('Data Commons: ' + cname + '\n\n' +data[0]['description']);
+                                }        
+                            }); 
+                            //alert($('#form_DC_Name').val());
+                        }
+                    });
+                    $('#dropDC').click(function(){
+                        var cname = $('#dc_name').val();
+                        if (cname==''){
+                            alert('Please enter Commons Name');
+                        }
+                        else{
+                            var link ='/catalog/dropCommons/' + cname;
+                            $.getJSON(link,function(data){
+                                if(data[0]['status']=== true){
+                                    //alert('Data Commons: ' + cname + '\n\n' + data[0]['description']);
+                                    document.location.reload(true);
+                                }
+                                else{
+                                    alert('Data Commons: ' + cname + '\n\n' +data[0]['description']);
+                                }        
+                            }); 
+                            //alert($('#form_DC_Name').val());
+                        }
+                    });
+                    $('#shareDC').click(function(){
+                        var cname = $('#sdc_name').val();
+                        var perm = $('#permission').val();
+                        //var revoke = 'False';
+                        //if (perm=='n'){revoke = 'True';perm='r';}
+                        if (cname==''){
+                            alert('Please enter Commons Name');
+                        }
+                        else{
+                            var link ='/catalog/setPublic/' + cname + '/?auth=' + perm;// + '&revoke=' + revoke;
+                            $.getJSON(link,function(data){
+                                if(data[0]['status']=== true){
+                                    //alert(data[0]['description']);
+                                    document.location.reload(true);
+                                }
+                                else{
+                                    alert(data[0]['description']);
+                                }        
+                            }); 
+                            //alert($('#form_DC_Name').val());
+                        }
+                    });
+                     //$('.row').click(function(){
+                     //   alert("yesy");
+                    //});
+                    loadEdit();
                 });
+                function loadEdit(){
+                    //Site parameter Dialog
+                    $( "#editparam-dialog" ).dialog({
+                        autoOpen: false,
+                        width:1225,
+                        async:true,
+                    title:"Edit Document",
+                    height:795,
+                    modal: true,
+                    buttons: {
+                        Cancel: function() {
+                        $("#editparam-dialog").dialog("close");
+                        },
+                        Save: function(){
+                        var param = {'database':$("#commons_name").text(),'data':glean_json('editparam-dialog', 0),'date_keys':[]}
+                        $.post('http://production.cybercommons.org/catalog/save', param,function(data){
+                                var jdata = JSON.parse(data);
+                                if (jdata.status==true){
+                                    //alert(global_divid);
+                                    remove_editlets('editparam-dialog');
+                                    $(global_divid).html($('#editparam-dialog').html());
+                                    $("#editparam-dialog").dialog("close");
+                                }
+                                else{
+                                    alert(jdata.description);    
+                                }
+                        });
+                        //alert(glean_json('editparam-dialog', 0));
+                        }
+                    }
+                    });
+        
+                    $('#editparam-dialog' ).html('<h1>Loading........</h1>');
+                    //$.getJSON('http://test.cybercommons.org/model/tecositeparam?site=' + site + '&callback=?',function(data){
+                    //    $('#siteparam-dialog' ).html(data.html);
+                    //});
+                }
+                function test_auth_tkt() {
+                   $.getJSON('/accounts/userdata/?callback=?',function(data){
+                        var slink = "/accounts/login/?next=".concat(document.URL);
+                        if ( data['user']['name'] == "guest"){
+                            //var slink = baseurl_auth + "accounts/login/?next=".concat(document.URL);
+                            window.location = slink; 
+                        }
+                        else{
+                            var slink = "/accounts/profile/" 
+                            slogout = '<a data-toggle="modal" href="' + slink + '">' + data['user']['name'] + '</a>'
+                            //slogout = '<a href="' + slink + '">' + data['user']['name'] + '</a>!';
+                            $('#auth_message').html("Welcome, " + data['user']['name']);//slogout);
+                        }       
+                    });
+                }
                 
                 // stuff for the modal ws window
                 function display_ws_modal() {
@@ -50,16 +190,16 @@
                         }, menu_options);
                 }
                 function remove_item(element) {
-                      console.log("# delete");
+                      //console.log("# delete");
                       element.hide(500, function () {
                               $(this).remove();
                       });
                 }
                 function create_item(element) {
-                      console.log("# create");
+                      //console.log("# create");
                 }
                 var menu_options = {
-                        disable_native_context_menu: true,
+                        disable_native_context_menu: false,//true,
                         showMenu: function(element) {
                                 element.addClass('dimmed');
                         },
@@ -67,24 +207,11 @@
                                 element.removeClass('dimmed');
                         },
                 };
-                // functions used for the web service
-                function save_ws(input) {
-                        $json = glean_json(input, 0);
-                        $.post("save.php", { json: $json},
-                                function(data) {
-                                        //alert("You can retrieve your json as a web service at this url: http://json.bubblemix.net/ws/" + data);
-                                        var url = 'http://json.bubblemix.net/ws/' + data;
-                                        $('#past_ws hr').remove();
-                                        var new_row = $('<div>').html('<a href="' + url + '" target="_blank">' + url + '</a>').append('<hr />');
-                                        $('#past_ws').prepend(new_row);
-                                        display_ws_modal();
-                                });
-                }
                 var easy_save_value = function(value, settings) { 
                         $(this).text(value);
                 }
                 var save_value = function(value, settings) { 
-                        console.log(this); console.log(value); // console.log(settings);
+                        //console.log(this); console.log(value); // console.log(settings);
 
                         if ($(this).data('role') == 'value') {
                                 if (value == "null") {
@@ -100,7 +227,7 @@
                                         $(this).editable(save_value,{ cssclass : 'edit_box', height:'20px', width:'100px', data : "{'true':'true','false':'false'}", type : 'select', onblur : 'submit' });
                                 } else {
                                         var num = parseFloat(value);
-                                        console.log(num);
+                                        //console.log(num);
                                         if (isNaN(num)) {
                                                 $(this).attr("data-type", "string");
                                                 $(this).data('type','string');
@@ -131,6 +258,44 @@
                         var json = JSON.stringify(jsObject, null, indent);
                         return json;
                 }
+		function getRecordsNeedSave() {
+			var oldObj = JSON.parse($('#jsoninput').val());
+			///glean_json('json_editor')
+			var base = $('#json_editor');
+			var rootnode = base.children('div[data-role="value"]:first');
+                        var jsObject = parse_node(rootnode);
+			return JSON.stringify(getDifferences(oldObj, jsObject),null,0);
+		}
+		function getDifferences(oldObj, newObj) {
+   			 var diff ={'new':[],'update': [],'delete':[]};
+			var newRec = true;
+   		     	for (var k in oldObj) {
+				var found='N'
+				for (var n in newObj){
+				 if('_id' in newObj[n]){
+				 	if(oldObj[k]._id === newObj[n]._id){//.$oid
+						found='Y'
+						if (JSON.stringify(oldObj[k]) !== JSON.stringify(newObj[n])){
+							diff['update'].push(newObj[n]);
+						}}
+					
+				}else{ if(newRec){diff['new'].push(newObj[n]);}}}
+				newRec=false;
+				if(found ==='N'){diff['delete'].push(oldObj[k])}
+			}
+      				//if (!(k in newObj))
+         			//	diff[k] = undefined;  // property gone so explicitly set it undefined
+      				//else if (JSON.stringify(oldObj[k]) !== JSON.stringify(newObj[k]))
+         			//	diff[k] = newObj[k];  // property in both but has changed
+  				// }	
+
+   			//for (k in newObj) {
+      			//	if (!(k in oldObj))
+         		//		diff[k] = newObj[k]; // property is new
+   			//}
+
+   			return diff;
+		}
                 // convert the work area to a js object
                 function parse_node(node) {
                         var type = node.data('type');
@@ -163,21 +328,21 @@
                                 return "(Unknown Type:" + type + " )";
                         }
                 }
-                function remove_editlets() {
-                        $("span.collapse_box").remove();
-                        $("div.inline_add_box").remove();
-                        $(".context-menu").remove();
+                function remove_editlets(divid) {
+                        $("#" + divid + " span.collapse_box").remove();
+                        $("#" + divid + " div.inline_add_box").remove();
+                        //$(".context-menu").remove();
 
                 }
-                function apply_editlets() {
-                        remove_editlets();
+                function apply_editlets(divid) {
+                        remove_editlets(divid);
                         // add collapse boxes for the arrays and objects
                         var o_collapse_box = $('<span class="collapse_box"><span>[-]</span><span style="display: none">[+] {...}</span></span>');
                         var a_collapse_box = $('<span class="collapse_box"><span>[-]</span><span style="display: none" data-role="counter">[+] []</span></span>');
-                        $('div[data-type="object"]').before(o_collapse_box );
-                        $('div[data-type="array"]').before(a_collapse_box );
+                        $("#" + divid + ' div[data-type="object"]').before(o_collapse_box );
+                        $("#" + divid + ' div[data-type="array"]').before(a_collapse_box );
 
-                        $('.collapse_box').click(function(){
+                        $("#" + divid + ' .collapse_box').click(function(){
                                 var next = $(this).next();
                                 next.toggle();
                                 $(this).find('span').toggle();
@@ -188,10 +353,10 @@
                         });
                         // add the "new" buttons
                         var add_more_box = $('<div class="inline_add_box"><div class="add_box_content">add: <a data-task="add_value" href="#">text</a> | <a data-task="add_array" href="#">array</a> | <a data-task="add_object" href="#">object</a></div></div>');
-                        $('div[data-type="object"]').append(add_more_box);
-                        $('div[data-type="array"]').append(add_more_box);
+                        $("#" + divid + ' div[data-type="object"]').append(add_more_box);
+                        $("#" + divid + ' div[data-type="array"]').append(add_more_box);
                         
-                        $('div.inline_add_box a').click(function(e){
+                        $("#" + divid + ' div.inline_add_box a').click(function(e){
                                 var target = $(e.target);
                                 var task = target.data('task');
                                 var add_box = target.parents(".inline_add_box");
@@ -221,7 +386,7 @@
                                 return false;
                         });
                         
-                        $(".inline_add_box").hover(
+                        $("#" + divid + " .inline_add_box").hover(
                                 function () {
                                         $(this).children().show(100);
                                 },
@@ -231,14 +396,14 @@
                         );
 
                         // make the fields editable in place
-                        $('span[data-role="key"]').editable(easy_save_value,{ cssclass : 'edit_box', height:'20px', width:'100px'});
-                        $('[data-type="string"]').editable(save_value, { cssclass : 'edit_box', height:'20px', width:'150px'});
-                        $('[data-type="number"]').editable(save_value, { cssclass : 'edit_box', height:'20px', width:'50px'});
-                        $('[data-type="null"]').editable(save_value, { cssclass : 'edit_box', height:'20px', width:'150px'});
-                        $('[data-type="boolean"]').editable(save_value,{ cssclass : 'edit_box', height:'20px', width:'100px', data : "{'true':'true','false':'false'}", type : 'select', onblur : 'submit' });
+                        $("#" + divid + ' span[data-role="key"]').editable(easy_save_value,{ cssclass : 'edit_box', height:'20px'});
+                        $("#" + divid + ' [data-type="string"]').editable(save_value, { cssclass : 'edit_box', height:'20px'});
+                        $("#" + divid + ' [data-type="number"]').editable(save_value, { cssclass : 'edit_box', height:'20px'});
+                        $("#" + divid + ' [data-type="null"]').editable(save_value, { cssclass : 'edit_box', height:'20px', width:'150px'});
+                        $("#" + divid + ' [data-type="boolean"]').editable(save_value,{ cssclass : 'edit_box', height:'20px', width:'100px', data : "{'true':'true','false':'false'}", type : 'select', onblur : 'submit' });
                         
                         // make the right click menus
-                        setup_menu();
+                        //setup_menu();
 
                 }
                 // parse the text area into the the workarea, setup the event handlers
@@ -280,14 +445,28 @@
                         var json = JSON.parse('{"error": "parse failed"}');
                         }
                         var base = $('#' + divid);
-                        base.append(make_node(json));
+                        //base.append(make_node(json));
+                        base.append(insertRecordNumber(json));
+                }
+                function insertRecordNumber(node_in){
+                    //alert(Object.prototype.toString.apply(node_in));
+                    var container = $('<div data-role="value" data-type="array"></div>');
+                    var oe_class = 'row_even';
+                    for (var i = 0, j = node_in.length; i < j; i++) {
+                                        var strHtml = '<div id="'+ String(i) + '" class="row ' + oe_class + '" data-role="arrayitem"></div>'
+                                        if (oe_class=='row_even'){oe_class = 'row_odd';}else{oe_class = 'row_even';}
+                                        var row = $(strHtml).append(make_node(node_in[i]));
+                                        //alert(String(row));
+                                        container.append(row);
+                                }
+                    return container;
                 }
                 // recursively make html nodes out of the json
                 function make_node(node_in) {
-                        console.log(" ====> " + JSON.stringify(node_in));
+                        //console.log(" ====> " + JSON.stringify(node_in));
                         var type = Object.prototype.toString.apply(node_in);
-                        console.log("  - " + type);
-
+                        //console.log("  - " + type);
+                        var check = 1;
                         if (type === "[object Object]") {
                                 // TODO create the div for an object here
                                 var container = $('<div data-role="value" data-type="object"></div>');
@@ -302,6 +481,7 @@
                                 var container = $('<div data-role="value" data-type="array"></div>');
                                 for (var i = 0, j = node_in.length; i < j; i++) {
                                         var row = $('<div data-role="arrayitem"></div>').append(make_node(node_in[i]));
+                                        //alert(String(row));
                                         container.append(row);
                                 }
                                 return container;
