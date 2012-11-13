@@ -1,8 +1,11 @@
-mongo_clusters:
+mongo:
     - host: fire.rccc.ou.edu
       port: 27017
       replicaset: cybercom
-      
+    - host: 129.15.41.76
+      port: 27017
+      replicaset: cybercom
+ 
 catalog:
     - host: fire.rccc.ou.edu
       type: postgresql
@@ -15,7 +18,10 @@ catalog:
       production: False
       database: catalog
 
-wsgi_servers:
+varnish:
+    - host: cache.cybercommons.org
+
+wsgi:
     - name: test
       host: test.cybercommons.org
       appdir: /var/www/apps/
@@ -31,7 +37,7 @@ wsgi_servers:
       mod_authtkt: True
       memcache: True
 
-static_servers:
+static:
     - name: static
       host: static.cybercommons.org
       dir: /static/
@@ -48,7 +54,7 @@ queue:
         database: cybercom_queue
         taskmeta_collection: cybercom_queue_meta
 
-celery_workers:
+workers:
     - name: static
       host: static.cybercommons.org
       type: RHEL6
@@ -61,12 +67,7 @@ celery_workers:
       broker: cybercom_queue
     - name: earth
       defaultq: True
-      host: earth.cybercommons.org
-      type: RHEL5
-      dir: /opt/celeryq
-      broker: cybercom_queue
-    - name: arcgis
-      host: 129.15.41.83
+      host: earth.rccc.ou.edu
       type: RHEL5
       dir: /opt/celeryq
       broker: cybercom_queue
