@@ -1,7 +1,6 @@
 import httplib
 from urlparse import urlparse
 import UNQC_CREF
-import cherrypy
 
 def url_exists(url):
     o = urlparse(url)
@@ -13,13 +12,17 @@ def url_exists(url):
     conn.close()
     return response.status == 200
 
-def check_timestep(timestep, template=None):
+def check_timestep(timestep, product='unqc_cref' ,template=None):
     """ 
     Check if all bioscatter tiles exists on the LDM server
     """
+    products = { 'unqc_cref': ('unqc_cref', 'UNQC_CREF'),
+      'compref_mosaic': ('compref_mosaic', 'CREF')
+    }
     if not template:
-        template = 'http://ldm.cybercommons.org/tile%s/unqc_cref/UNQC_CREF.%s.gtiff'
-    return all([ url_exists( template % (tile,timestep) ) for tile in range(1,9) ])
+        template = 'http://ldm.cybercommons.org/tile%s/%s/%s.%s.gtiff'
+    fillin = products[product] + (timestep,)
+    return all([ url_exists( template % ((tile,) + (fillin)) ) for tile in range(1,9) ])
 
 
 

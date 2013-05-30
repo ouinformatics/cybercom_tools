@@ -5,6 +5,12 @@ from UNQC_CREF import UNQC_CREF
 import cherrypy
 import simplejson as json
 
+PRODUCTS = { 
+    'unqc_cref': ('unqc_cref', 'UNQC_CREF'),
+    'compref_mosaic': ('compref_mosaic', 'CREF')
+}
+
+
 def urlExists(url):
     o = urlparse(url)
     site = o.netloc
@@ -19,9 +25,19 @@ def checkTimestep(timestep, product, template=None):
     """ 
     Check if all bioscatter tiles exists on the LDM server
     """
+    
     if not template:
         template = 'http://ldm.cybercommons.org/tile%s/%s/%s.%s.gtiff'
-    return all([ urlExists( template % (tile,product,product.upper(),timestep) ) for tile in range(1,9) ])
+    fillin = PRODUCTS[product] + (timestep,)
+    return all([ urlExists( template % ((tile,) + (fillin)) ) for tile in range(1,9) ])
+
+def fillVRTTemplate(timestep,product):
+    if checkTimestep(timestep, product=product):
+        fname = '%s.%s.gtiff' % ( (PRODUCTS[product][1],) + (timestep,) )
+        return str(UNQC_CREF(searchList={'FNAME': fname, 'FOLDER': PRODUCTS[product][0] }))
+    else:
+        return "<ERROR>Data are missing</ERROR>"
+
 
 class Root(object):
     @cherrypy.expose
@@ -37,8 +53,7 @@ class Root(object):
     @cherrypy.tools.response_headers(headers=[('Content-Type', 'text/xml')])
     def getVrt(self,timestep,product):
         if checkTimestep(timestep,product):
-            fname = 'UNQC_CREF.%s.gtiff' % timestep
-            return str(UNQC_CREF(searchList={'FNAME': fname}))
+            return str(fillVRTTemplate(timestep,product))
         else:
             return "<ERROR>Data missing</ERROR>"
 

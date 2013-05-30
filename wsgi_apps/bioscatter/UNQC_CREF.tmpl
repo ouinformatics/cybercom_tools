@@ -1,0 +1,72 @@
+<VRTDataset rasterXSize="7001" rasterYSize="3501">
+  <SRS>GEOGCS[&quot;WGS 84&quot;,DATUM[&quot;WGS_1984&quot;,SPHEROID[&quot;WGS 84&quot;,6378137,298.257223563,AUTHORITY[&quot;EPSG&quot;,&quot;7030&quot;]],AUTHORITY[&quot;EPSG&quot;,&quot;6326&quot;]],PRIMEM[&quot;Greenwich&quot;,0],UNIT[&quot;degree&quot;,0.0174532925199433],AUTHORITY[&quot;EPSG&quot;,&quot;4326&quot;]]</SRS>
+  <GeoTransform> -1.3000500000000000e+02,  1.0000000000000000e-02,  0.0000000000000000e+00,  5.5005000000000003e+01,  0.0000000000000000e+00, -1.0000000000000000e-02</GeoTransform>
+  <VRTRasterBand dataType="Float32" band="1">
+    <NoDataValue>-9.99000000000000E+02</NoDataValue>
+    <ColorInterp>Gray</ColorInterp>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">/vsicurl/http://ldm.cybercommons.org/tile1/$FOLDER/$FNAME</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2001" RasterYSize="1501" DataType="Float32" BlockXSize="2001" BlockYSize="1" />
+      <SrcRect xOff="0" yOff="0" xSize="2001" ySize="1501" />
+      <DstRect xOff="0" yOff="0" xSize="2001" ySize="1501" />
+      <NODATA>-999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">/vsicurl/http://ldm.cybercommons.org/tile2/$FOLDER/$FNAME</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2001" RasterYSize="1501" DataType="Float32" BlockXSize="2001" BlockYSize="1" />
+      <SrcRect xOff="0" yOff="0" xSize="2001" ySize="1501" />
+      <DstRect xOff="2000" yOff="0" xSize="2001" ySize="1501" />
+      <NODATA>-999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">/vsicurl/http://ldm.cybercommons.org/tile3/$FOLDER/$FNAME</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="1001" RasterYSize="1501" DataType="Float32" BlockXSize="1001" BlockYSize="2" />
+      <SrcRect xOff="0" yOff="0" xSize="1001" ySize="1501" />
+      <DstRect xOff="4000" yOff="0" xSize="1001" ySize="1501" />
+      <NODATA>-999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">/vsicurl/http://ldm.cybercommons.org/tile4/$FOLDER/$FNAME</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2001" RasterYSize="1501" DataType="Float32" BlockXSize="2001" BlockYSize="1" />
+      <SrcRect xOff="0" yOff="0" xSize="2001" ySize="1501" />
+      <DstRect xOff="5000" yOff="0" xSize="2001" ySize="1501" />
+      <NODATA>-999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">/vsicurl/http://ldm.cybercommons.org/tile5/$FOLDER/$FNAME</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2001" RasterYSize="2001" DataType="Float32" BlockXSize="2001" BlockYSize="1" />
+      <SrcRect xOff="0" yOff="0" xSize="2001" ySize="2001" />
+      <DstRect xOff="0" yOff="1500" xSize="2001" ySize="2001" />
+      <NODATA>-999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">/vsicurl/http://ldm.cybercommons.org/tile6/$FOLDER/$FNAME</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2001" RasterYSize="2001" DataType="Float32" BlockXSize="2001" BlockYSize="1" />
+      <SrcRect xOff="0" yOff="0" xSize="2001" ySize="2001" />
+      <DstRect xOff="2000" yOff="1500" xSize="2001" ySize="2001" />
+      <NODATA>-999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">/vsicurl/http://ldm.cybercommons.org/tile7/$FOLDER/$FNAME</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="1001" RasterYSize="2001" DataType="Float32" BlockXSize="1001" BlockYSize="2" />
+      <SrcRect xOff="0" yOff="0" xSize="1001" ySize="2001" />
+      <DstRect xOff="4000" yOff="1500" xSize="1001" ySize="2001" />
+      <NODATA>-999</NODATA>
+    </ComplexSource>
+    <ComplexSource>
+      <SourceFilename relativeToVRT="0">/vsicurl/http://ldm.cybercommons.org/tile8/$FOLDER/$FNAME</SourceFilename>
+      <SourceBand>1</SourceBand>
+      <SourceProperties RasterXSize="2001" RasterYSize="2001" DataType="Float32" BlockXSize="2001" BlockYSize="1" />
+      <SrcRect xOff="0" yOff="0" xSize="2001" ySize="2001" />
+      <DstRect xOff="5000" yOff="1500" xSize="2001" ySize="2001" />
+      <NODATA>-999</NODATA>
+    </ComplexSource>
+  </VRTRasterBand>
+</VRTDataset>
