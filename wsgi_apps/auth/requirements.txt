@@ -4,6 +4,6 @@ psycopg2==2.4.2
 pymongo==1.11
 wsgiref==0.1.2
 #cybercom
-pip install https://github.com/ouinformatics/cybercom/tarball/master
+https://github.com/ouinformatics/cybercom/tarball/master
 #django-authtkt
 http://github.com/ouinformatics/django-authtkt/zipball/master

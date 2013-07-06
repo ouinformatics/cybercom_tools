@@ -77,12 +77,16 @@ def cherrypy_userdata(request,**kwargs):
 def userdata(request,**kwargs):
     callback = request.GET.get('callback', '')
     try:
+        uid= request.user.id
+    except:
+        uid=0
+    try:
         u = User.objects.get(username__exact= request.user )
         if u.get_full_name() is None or u.get_full_name() == '' or u.get_full_name() == '>':
             name = u.username
         else:
             name = u.get_full_name()
-        prof ={'username':u.username,'name':name}
+        prof ={'username':u.username,'name':name,'id':str(uid)}
     except:
         try:
             u = User.objects.get(id= int(request.user) )
@@ -90,9 +94,9 @@ def userdata(request,**kwargs):
                 name = u.username
             else:
                 name = u.get_full_name()
-            prof ={'username':u.username,'name':name}
+            prof ={'username':u.username,'name':name,'id':str(uid)}
         except:
-            prof={'username':'guest','name':'guest'}
+            prof={'username':'guest','name':'guest','id':str(uid)}
     #return JsonResponse(prof,callback=callback)#request.GET.get('jsoncallback'))
     #if request.environ['REMOTE_USER']
     if callback != '':
