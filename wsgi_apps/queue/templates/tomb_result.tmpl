@@ -1,0 +1,51 @@
+<html>
+<head>
+#compiler-settings
+cheetahVarStartToken = @
+#end compiler-settings
+<title>Cybercommons task results</title>
+<link type="text/css" href="http://static.cybercommons.org/css/cybercomui/jquery-ui-1.8.13.custom.css" rel="Stylesheet"/>
+<script type="text/javascript" src="http://static.cybercommons.org/js/jquery-1.7.min.js"></script>
+<script type="text/javascript" src="http://static.cybercommons.org/js/jquery-ui-1.8.10.custom.min.js"></script>
+<script type="text/javascript" src="http://static.cybercommons.org/js/jquery.cookie.js"></script>
+<style>
+    BODY{font-family:sans-serif; }
+    #vright{valign:top; align:right}    
+</style>
+</head>
+<body>
+  <div id='result_title' class="ui-widget-header ui-corner-all" style="padding:5px;indent:5px;">Workflow Task Results </div>
+  #for @t in @tomb
+  <table>
+  #for @k,@v in @t.items()
+    #if @k == 'Result'
+        #if @haschild
+            #set @taskid = @v.task_id
+            <tr><td valign="top" align="right"><strong>@k</strong></td>
+             <td><a href="javascript: if ($('#_@taskid').html()=='') {
+                            $.getJSON('/queue/task/@taskid',function(data){
+                                if (data.status.toLowerCase() == 'pending') { $('#_status_@taskid').append('Status: PENDING, Please click link to recheck status!</br>');
+                                }
+                                else{
+                                $('#_status_@taskid').hide();
+                                $('#_@taskid').html( '&nbsp;' ).load('/queue/result/@taskid');
+                                }
+                            });
+                        }
+                        else{
+                            if ($('#_@taskid').is(':hidden')){
+                                $('#_@taskid').show();     }
+                            else { $('#_@taskid').hide();  }
+                                 }">Subtask Initiated - @v['task_name']</a><div id='_status_@taskid'></div>
+             <div id='_@taskid'></div></td></tr>
+        #else
+            <tr><td valign="top" align="right"><strong>@k</strong></td><td>@v</td></tr>
+        #end if
+    #else 
+         <tr><td valign="top" align="right"><strong>@k</strong></td><td>@v</td></tr>
+    #end if
+  #end for
+  </table>
+  #end for
+</body>
+</html>

@@ -1,0 +1,60 @@
+#compiler-settings
+cheetahVarStartToken = @
+#end compiler-settings
+#if @haschild
+    <script>
+        $(function() {
+            $('#_status_@sub_taskid').show();
+            queue_ajax('/queue/task/@sub_taskid','#_status_@sub_taskid','/queue/result/@sub_taskid/?callback=?','#_@sub_taskid');            
+            function queue_ajax(task_url,task_gif,result_url,result_div){ //_taskid() {
+              $.ajax({
+                url:task_url,
+                dataType: 'json',
+                error: function(xhr_data) {
+                    // terminate the script
+                    $(task_gif).hide();// gif spinner
+                    alert('errors: ' + xhr_data);
+                },
+                success: function(xhr_data) {
+                    if (xhr_data.status.toLowerCase() == 'pending') {
+                        // continue polling
+                        $(task_gif).show();
+                        setTimeout(function() { queue_ajax(task_url,task_gif,result_url,result_div); }, 3000);
+                    } 
+                    else {
+                        $(task_gif).hide();
+                        //'http://test.cybercommons.org/queue/result/ taskid/?callback=?'
+                        $.getJSON(result_url,function(data){
+                            $(result_div).html(data.html);
+                            $(result_div).show();
+                        });
+                    }
+                },
+                contentType: 'application/json'
+              }); 
+            }
+        });  
+   </script>   
+#end if
+  <div id='result_title' class="ui-widget-header ui-corner-all" style="padding:5px;indent:5px;">Workflow Task Results </div>
+  #for @t in @tomb
+  <table>
+  #for @k,@v in @t.items()
+    #if @k == 'Result'
+        #if @haschild
+            #set @taskid = @v.task_id
+            <tr><td valign="top" align="right"><strong>@k</strong></td>
+                <td><a href="javascript: if ($('#_@taskid').is(':hidden')){
+                                            $('#_@taskid').show();     }
+                                        else { $('#_@taskid').hide();  }">Subtask Initiated - @v['task_name']</a>
+                    <div id='_status_@taskid'></br><b>Status - In Progress</b> &nbsp;&nbsp; <img  width="40%" height="18" src="http://static.cybercommons.org/media/ajax-loader.gif" style="display: inline; "> </div>
+             <div id='_@taskid'></div></td></tr>
+        #else
+            <tr><td valign="top" align="right"><strong>@k</strong></td><td>@v</td></tr>
+        #end if
+    #else 
+         <tr><td valign="top" align="right"><strong>@k</strong></td><td>@v</td></tr>
+    #end if
+  #end for
+  </table>
+  #end for
