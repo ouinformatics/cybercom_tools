@@ -1,9 +1,7 @@
 import os
-if os.uname()[1] == 'test.cybercommons.org':
-    basedir = '/var/www/apps/'
-elif os.uname()[1] == 'fire.rccc.ou.edu':
+if os.uname()[1] == 'fire.rccc.ou.edu':
     basedir = '/scratch/www/wsgi_sites/'
-elif os.uname()[1] == 'production.cybercommons.org':
+else:
     basedir = '/var/www/apps/'
 
 activate_this = basedir + 'mongodb/virtpy/bin/activate_this.py'

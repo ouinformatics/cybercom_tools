@@ -15,7 +15,9 @@ cheetahVarStartToken = @
                     <option value="@filterk">@filterk</option>
                 #end for 
             </select>
+            <div id="val_div" style="display:inline">
             <select id="val1"></select>
+            </div>
             <div id='rst_filter'></div><div id='rst_fields'>
                 #for @filterk in @key
                     '@filterk',
@@ -39,6 +41,11 @@ cheetahVarStartToken = @
         </div>
     </div><!--Endof filter-->
   </td></tr> </table>
+<style>
+    .ui-autocomplete-loading {
+        background: white url('http://static.cybercommons.org/mstacy/ajax-loader_sm.gif') right center no-repeat;
+    }
+</style>
 <script>
 function pageselectCallback(page_index, jq){
         //        alert(page_index);
