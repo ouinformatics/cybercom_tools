@@ -85,7 +85,7 @@ class base_html(Template):
         write(u'''<!DOCTYPE html>
 <html>
 <head>
-<title>Cybercommons Catalog</title>
+<title>Cybercommons Data</title>
 <!--BaseJavascript-->
 <script type="text/javascript" src="http://static.cybercommons.org/js/jquery-1.7.2.min.js"></script>
 <script type="text/javascript" src="http://static.cybercommons.org/js/jquery.jeditable.mini.js"></script>

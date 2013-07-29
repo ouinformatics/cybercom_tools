@@ -98,13 +98,13 @@ cheetahVarStartToken = @
         <div id='yearcontainer' class="row">
           <div id='Startyear'class="span4 bordered-table selector">
                 <h2>Start Year</h2><br/>
-                <div id='SYresult'><ul id="sortable1" class="connectedSortable"><li class="ui-state-default availyears">1991</li></ul></div><br/>
+                <div id='SYresult'><ul id="sortable1" class="connectedSortable"><li class="ui-state-default availyears">@years[0]</li></ul></div><br/>
                 <br/>( Drop available years to change )<br/>
           </div>
             <div class="span1" style="COLOR:white;"> . </div>
           <div id='Endyear'class="span4 bordered-table selector">
                 <h2>End Year</h2><br/>
-                <div id='EYresult'><ul id="sortable1" class="connectedSortable"><li class="ui-state-default availyears">2006</li></ul></div><br/>
+                <div id='EYresult'><ul id="sortable1" class="connectedSortable"><li class="ui-state-default availyears">@years[-1]</li></ul></div><br/>
                 <br/>( Drop available years to change )<br/>
           </div>
         </div>

@@ -4,10 +4,22 @@ cheetahVarStartToken = @
 <html>
 <head>
 <title>Site: @site Site Parameters</title>
-<link type="text/css" href="http://static.cybercommons.org/css/cybercomui/jquery-ui-1.8.13.custom.css" rel="Stylesheet"/>
 <link rel="stylesheet" href="http://twitter.github.com/bootstrap/1.4.0/bootstrap.min.css">
-<script type="text/javascript" src="http://static.cybercommons.org/js/jquery-1.7.min.js"></script>
-<script type="text/javascript" src="http://static.cybercommons.org/js/jquery-ui-1.8.10.custom.min.js"></script>
+<link type="text/css" href="http://static.cybercommons.org/js/jquery-ui-1.10.3/themes/base/jquery.ui.all.css" rel="Stylesheet"/>
+<link type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/themes/humanity/jquery-ui.css" rel="Stylesheet"/>
+<link type="text/css" href="http://static.cybercommons.org/css/cybercomui/jquery-ui-1.8.13.custom.css" rel="Stylesheet"/>
+
+<script type="text/javascript" src="http://static.cybercommons.org/js/jquery-ui-1.10.3/jquery-1.9.1.js"></script>
+<script type="text/javascript" src="http://static.cybercommons.org/js/jquery-ui-1.10.3/ui/jquery.ui.core.js"></script>
+<script type="text/javascript" src="http://static.cybercommons.org/js/jquery-ui-1.10.3/ui/jquery.ui.widget.js"></script>
+<script type="text/javascript" src="http://static.cybercommons.org/js/jquery-ui-1.10.3/ui/jquery.ui.position.js"></script>
+<script type="text/javascript" src="http://static.cybercommons.org/js/jquery-ui-1.10.3/ui/jquery.ui.tooltip.js"></script>
+<!--<link type="text/css" href="http://static.cybercommons.org/js/jquery-ui-1.10.3/themes/base/jquery.ui.tooltip.css" rel="Stylesheet"/>
+<script type="text/javascript" src="http://static.cybercommons.org/js/jquery-ui-1.10.3/jquery-1.9.1.js"></script>
+<script type="text/javascript" src="http://static.cybercommons.org/js/jquery-1.7.min.js"></script>-->
+<!--<script type="text/javascript" src="http://static.cybercommons.org/js/jquery-ui-1.8.10.custom.min.js"></script>-->
+<!--<script type="text/javascript" src="http://static.cybercommons.org/js/jquery-ui-1.10.3/ui/minified/jquery-ui.min.js"></script>-->
+<!--<script type="text/javascript" src="http://static.cybercommons.org/js/jquery-ui-1.10.3/ui/jquery.ui.tooltip.js"></script>-->
 <script type="text/javascript" src="http://static.cybercommons.org/js/jquery.cookie.js"></script>
 <style>
     BODY{font-family:sans-serif; }
@@ -23,6 +35,9 @@ cheetahVarStartToken = @
     #sortable2{margin:10px;margin-left:30px;padding:5px;width:142;}
 </style>
 <script>
+    $(function() {
+        $( document ).tooltip();
+    });
     function processData(){
             var d = $.param($("#siteparam").serializeArray()).replace(/=/g,"':'").replace(/&/g,"','");
             var params = "{'" + d + "'}"
@@ -40,19 +55,31 @@ cheetahVarStartToken = @
             
             #for @sp in @siteparam
                 #for @col in @col1
-                <label for="@col">@col</label><input type="text" name="@col" id="@col" value="@sp[@col]"><br/>
+                    #if @col in @label
+                    <label for="@col" title="@label[@col]['tooltip']" >@label[@col]['label']</label><input type="text" name="@col" id="@col" value="@sp[@col]"><br/>
+                    #else
+                    <label for="@col">@col</label><input type="text" name="@col" id="@col" value="@sp[@col]"><br/>
+                    #end if
                 #end for
                 </div>
                 <div class="span1"style="float:left;COLOR:white;">.</div>
                 <div class="span4"style="float:left">
                 #for @col in @col2
-                <label for="@col">@col</label><input type="text" name="@col" id="@col" value="@sp[@col]"><br/>
+                    #if @col in @label
+                    <label for="@col" title="@label[@col]['tooltip']" >@label[@col]['label']</label><input type="text" name="@col" id="@col" value="@sp[@col]"><br/>
+                    #else
+                    <label for="@col">@col</label><input type="text" name="@col" id="@col" value="@sp[@col]"><br/>
+                    #end if
                 #end for
                 </div>
                 <div class="span1"style="float:left;COLOR:white;">.</div>
                 <div class="span4"style="float:left">
                 #for @col in @col3
-                <label for="@col">@col</label><input type="text" name="@col" id="@col" value="@sp[@col]"><br/>
+                    #if @col in @label
+                    <label for="@col" title="@label[@col]['tooltip']" >@label[@col]['label']</label><input type="text" name="@col" id="@col" value="@sp[@col]"><br/>
+                    #else
+                    <label for="@col">@col</label><input type="text" name="@col" id="@col" value="@sp[@col]"><br/>
+                    #end if
                 #end for
                 </div>
                 <div class="span1"style="float:left;COLOR:white;">.</div>

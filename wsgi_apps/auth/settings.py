@@ -89,8 +89,9 @@ STATICFILES_FINDERS = (
 #SECRET_KEY = 'ip03&xep8j-++xigu*+#np%ytdgna$xi9+c6+f$3$k^06g4yi#'
 SECRET_KEY = "cc90e55712bd08830fd3a82adbeb2cfb" #cybercommons Mod_auth_tkt secret
 LOGIN_URL = '/accounts/login/'
-SESSION_COOKIE_DOMAIN ='.cybercommons.org'
-CSRF_COOKIE_DOMAIN = '.cybercommons.org'
+# Switch on differnet domains
+SESSION_COOKIE_DOMAIN ='.oklahomawatersurvey.org'
+CSRF_COOKIE_DOMAIN = '.oklahomawatersurvey.org'
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',

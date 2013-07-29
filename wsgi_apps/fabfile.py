@@ -9,6 +9,24 @@ env.psql_host = 'fire.rccc.ou.edu'
 env.apache_config = '/etc/httpd/conf.d/%(sitename)s.conf' % env
 env.python = '/usr/bin/python2.6'
 
+def ows_test():
+    """
+    Work on staging environment
+    """
+    env.settings = 'ows_test'
+    env.path = '/var/www/apps/%(sitename)s' % env
+    env.virtpy = '%(path)s/virtpy' % env
+    env.log_path = '%(path)s/log' % env
+    env.hosts = ['test.oklahomawatersurvey.org']
+def ows_data():
+    """
+    Work on staging environment
+    """
+    env.settings = 'ows_data'
+    env.path = '/var/www/apps/%(sitename)s' % env
+    env.virtpy = '%(path)s/virtpy' % env
+    env.log_path = '%(path)s/log' % env
+    env.hosts = ['data.oklahomawatersurvey.org']
  
 def testing():
     """
@@ -101,10 +119,10 @@ def apache_config(secure=False):
 <Location /%(sitename)s>
   AuthType Basic 
   require valid-user
-  TKTAuthLoginURL http://test.cybercommons.org/accounts/login/
-  TKTAuthTimeoutURL http://test.cybercommons.org/accounts/login/?timeout=1 
-  TKTAuthPostTimeoutURL http://test.cybercommons.org/accounts/login/?posttimeout=1 
-  TKTAuthUnauthURL http://test.cybercommons.org/accounts/login/?unauth=1 
+  TKTAuthLoginURL /accounts/login/
+  TKTAuthTimeoutURL /accounts/login/?timeout=1 
+  TKTAuthPostTimeoutURL /accounts/login/?posttimeout=1 
+  TKTAuthUnauthURL /accounts/login/?unauth=1 
   TKTAuthIgnoreIP on
   TKTAuthBackArgName next
 </Location>
@@ -126,7 +144,7 @@ def install_requirements():
     """
     check = exists('%(path)s/requirements.txt' % env)
     if check:
-        virtualenv('pip install -E %(virtpy)s -r %(path)s/requirements.txt' % env)
+        virtualenv('pip install -r %(path)s/requirements.txt' % env)
     else:
         print red("Can't find requirements.txt!")
 
@@ -136,6 +154,6 @@ def upgrade_requirements():
     """
     check = exists('%(path)s/requirements.txt' % env)
     if check:
-        virtualenv('pip install --upgrade -E %(virtpy)s -r %(path)s/requirements.txt' % env)
+        virtualenv('pip install --upgrade -r %(path)s/requirements.txt' % env)
     else:
         print red("Can't find requirements.txt!")

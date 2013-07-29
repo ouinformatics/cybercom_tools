@@ -73,7 +73,7 @@ class Root(object):
         doc = """<html><body><ul><li><a href="report">report</a></li><li><a href="usertasks">tasks</a></li> </ul></body></html>"""
         return doc
     @cherrypy.expose
-    @mimetype('application/javascript')
+    @mimetype('text/html')
     def usertasks(self,task_name=None,pageNumber=1,nPerPage=1500,callback=None,**kwargs):
         ''' usertasks returns celery tasks perform and the link to the task result page.
             task_name-  string optional
