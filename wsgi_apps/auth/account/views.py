@@ -18,10 +18,10 @@ def new_user(request):
     if request.method == 'POST':
         try:
             user = User.objects.create_user(request.POST['name'], request.POST['email'] , request.POST['password'])
-            md= datalayer.Metadata()
-            md.Inserts('dt_people',[{"people_id":request.POST['name'],"person_name":request.POST['name'],"email":request.POST['email']}])
             #load example to everyones commons
             try:
+                md= datalayer.Metadata()
+                md.Inserts('dt_people',[{"people_id":request.POST['name'],"person_name":request.POST['name'],"email":request.POST['email']}])
                 md.Inserts('dt_contributors',[{"commons_id" :803 ,"people_id" :request.POST['name']}])
             except:
                 pass
