@@ -8,7 +8,10 @@ activate_this = basedir + 'mongo/virtpy/bin/activate_this.py'
 execfile(activate_this, dict(__file__=activate_this))
 
 import site
-site.addsitedir(basedir + 'mongo')
+try:
+    site.addsitedir(basedir + 'mongo')
+except:
+    pass
 import cherrypy
 from cherrypy import wsgiserver
 from cybercom.api.mongo.mongoapi import Root
